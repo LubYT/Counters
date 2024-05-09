@@ -167,8 +167,14 @@ class Doom:
             self.doom_count+=amount
         else:
             self.doom_count=1
-        if self.auto_pause=='enabled' and float(self.auto_pause_num)<=self.doom_count:
-            self.doom_count=float(self.auto_pause_num)
+        try:
+            if float(self.auto_pause_num)>=1:
+                if self.auto_pause=='enabled' and float(self.auto_pause_num)<=self.doom_count:
+                    self.doom_count=float(self.auto_pause_num)
+            else:
+                self.doom_count = 1
+        except ValueError:
+            pass
         if self.game.Menu.curMenu=='Doom':
             self.game.main_canvas.itemconfigure(self.text_1,text='Power of doomed destruction:\n'+str("{:.2e}".format(Decimal(self.doom_count**0.8))))
             text_0=str("{:.2e}".format(Decimal(self.doom_count)))
