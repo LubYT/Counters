@@ -106,7 +106,7 @@ class Doom:
     def add_symbol(self,event):
         if self.curbar!='N':
             try:
-                if (int(event.keysym) < 10 and int(event.keysym) > -1):
+                if (int(event.keysym) < 10 and int(event.keysym) > -1) and len(str(self.auto_pause_num))<=8:
                     if self.auto_pause_num[:1:] == 'i':
                         self.auto_pause_num = ''
                     elif self.auto_pause_num == '0':
