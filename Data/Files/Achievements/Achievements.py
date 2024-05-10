@@ -9,6 +9,7 @@ class Achievements:
                       'N','N','N','N','N',
                       'N','N','N','N','N',
                       'N',]
+
         self.texts=[['First. Again','Get 1st counter after Infinity','multi to 1st counter 1.1'],['Twice a week','Get 2nd counter after Infinity','multi to 2nd counter 1.1'],
                     ['3^2=9?','Get 3rd counter after Infinity','multi to 3rd counter 1.1'],['True mathematics','Get 4th counter after Infinity','multi to 4th counter 1.1'],
                     ['Time to BOOST!','Get 5th counter after Infinity','multi to 5th counter 1.1'],['VI','Get 6th counter after Infinity','multi to 6th counter 1.1'],
