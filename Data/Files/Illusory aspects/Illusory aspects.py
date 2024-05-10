@@ -5,7 +5,7 @@ import math
 class Illusory_aspects:
     def __init__(self,game):
         self.game=game
-        self.active_1st=True
+        self.active_1st=False
 
     def place(self):
         pass

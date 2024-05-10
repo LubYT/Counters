@@ -10,6 +10,7 @@ import Data.Files.Layers.Infinity as I_import
 import Data.Files.Doom.Doom as Doom_import
 import Data.Files.Counters.Time_accelerator as TA_import
 Aspects_import=importlib.import_module('Data.Files.Illusory aspects.Illusory aspects')
+import Data.Files.Achievements.Achievements as achieve_import
 import Data.Files.Counters.counter1 as counter1_import
 import Data.Files.Counters.counter2 as counter2_import
 import Data.Files.Counters.counter3 as counter3_import
@@ -45,6 +46,7 @@ class Game:
         self.Doom=Doom_import.Doom(self)
         self.Value_PS = value_per_sec_import.Value_per_second(self)
         self.Aspects=Aspects_import.Illusory_aspects(self)
+        self.Achievements=achieve_import.Achievements(self)
         self.Tickspeed = game_time_import.Tickspeed(self)
         self.Counter_1=counter1_import.Counter1(self)
         self.Counter_2 = counter2_import.Counter2(self)
@@ -55,7 +57,7 @@ class Game:
         self.Counter_7 = counter7_import.Counter7(self)
         self.Counter_8 = counter8_import.Counter8(self)
         self.boost_cheat=False
-        self.box=self.main_canvas.create_rectangle(geometry[0]-50,160,geometry[0]-(geometry[0]-50),geometry[1]+10,width=2,fill='black',outline='#ad0000')
+        self.box=self.main_canvas.create_rectangle(geometry[0]-45,190,geometry[0]-(geometry[0]-45),geometry[1]+10,width=2,fill='black',outline='#ad0000')
         self.Value.place()
         self.Value_PS.place()
         self.Tickspeed.place()
@@ -95,7 +97,7 @@ class Game:
     def menu_place(self):
         self.Menu.place_menus()
         self.Counter_1.return_place()
-        self.main_canvas.coords(self.box, self.geometry[0]-50,160,self.geometry[0]-(self.geometry[0]-120),self.geometry[1]+10)
+        self.main_canvas.coords(self.box, self.geometry[0]-125,190,self.geometry[0]-(self.geometry[0]-125),self.geometry[1]+10)
 
     def max(self,event):
         self.Tickspeed.max_buy()
@@ -132,6 +134,10 @@ class Game:
             if event.x > coords_menu_3[0] and event.y > coords_menu_3[1] and event.x < coords_menu_3[2] and event.y < \
                     coords_menu_3[3]:
                 self.Menu.open_new_cur('automatick')
+            coords_menu_5 = self.main_canvas.coords(self.Menu.box_4)
+            if event.x > coords_menu_5[0] and event.y > coords_menu_5[1] and event.x < coords_menu_5[2] and event.y < \
+                    coords_menu_5[3]:
+                self.Menu.open_new_cur('achievements')
             if 'doom' in self.Menu.Allowed_menus:
                 coords_menu_4 = self.main_canvas.coords(self.Menu.box_3)
                 if event.x > coords_menu_4[0] and event.y > coords_menu_4[1] and event.x < coords_menu_4[2] and event.y < \

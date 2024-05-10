@@ -6,20 +6,28 @@ class Menu:
         self.image_2 = PhotoImage(file='Data/Files/images/infinity.png')
         self.image_3 = PhotoImage(file='Data/Files/images/automatick.png')
         self.image_4 = PhotoImage(file='Data/Files/images/doom.png')
+        self.image_5 = PhotoImage(file='Data/Files/images/achievementes.png')
         self.game=game
         self.active=False
         self.curMenu='Counters'
         self.Allowed_menus=[]
+        self.curStage='Basic mode'
+        self.textStage=self.game.main_canvas.create_text(self.game.geometry[0] // 2, 10, anchor='n',
+                                                        text=self.curStage,
+                                                        fill='#707070', justify='center',
+                                                        font=('bahnschrift', 12))
 
     def place_menus(self):
         self.active=True
-        self.Allowed_menus.append('counters'),self.Allowed_menus.append('infinity'),self.Allowed_menus.append('automatick')
-        self.box=self.game.main_canvas.create_rectangle(0,160,110,240,width=2,fill='black',outline='#e80923')
-        self.box_1 = self.game.main_canvas.create_rectangle(0, 250, 110, 330, width=2, fill='black', outline='#e88009')
-        self.box_2 = self.game.main_canvas.create_rectangle(0, 340, 110, 420, width=2, fill='black', outline='#4ac9ff')
-        self.image_1_cnvs=self.game.main_canvas.create_image(55,200,anchor='center',image=self.image_1)
-        self.image_2_cnvs = self.game.main_canvas.create_image(55, 290, anchor='center', image=self.image_2)
-        self.image_3_cnvs = self.game.main_canvas.create_image(55, 380, anchor='center', image=self.image_3)
+        self.Allowed_menus.append('counters'),self.Allowed_menus.append('infinity'),self.Allowed_menus.append('automatick'),self.Allowed_menus.append('achievements')
+        self.box=self.game.main_canvas.create_rectangle(0,190,110,270,width=2,fill='black',outline='#e80923')
+        self.box_1 = self.game.main_canvas.create_rectangle(0, 280, 110, 360, width=2, fill='black', outline='#e88009')
+        self.box_2 = self.game.main_canvas.create_rectangle(0, 370, 110, 450, width=2, fill='black', outline='#4ac9ff')
+        self.image_1_cnvs=self.game.main_canvas.create_image(55,230,anchor='center',image=self.image_1)
+        self.image_2_cnvs = self.game.main_canvas.create_image(55, 320, anchor='center', image=self.image_2)
+        self.image_3_cnvs = self.game.main_canvas.create_image(55, 410, anchor='center', image=self.image_3)
+        self.box_4 = self.game.main_canvas.create_rectangle(self.game.geometry[0]+5, 190, self.game.geometry[0]-112, 270, width=2, fill='black',outline='#ffe603')
+        self.image_5_cnvs = self.game.main_canvas.create_image(self.game.geometry[0]-55, 230, anchor='center', image=self.image_5)
 
     def open_new_cur(self,argument):
         self.close_cur()
@@ -35,12 +43,15 @@ class Menu:
         if argument=='doom' and argument in self.Allowed_menus:
             self.curMenu='Doom'
             self.game.Doom.place()
+        if argument=='achievements' and argument in self.Allowed_menus:
+            self.curMenu='Achievements'
+            self.game.Achievements.place()
 
     def add(self,argument):
         self.Allowed_menus.append(argument)
         if argument=='doom':
-            self.box_3 = self.game.main_canvas.create_rectangle(0, 430, 110, 510, width=2, fill='black', outline='#691913')
-            self.image_4_cnvs = self.game.main_canvas.create_image(55, 470, anchor='center', image=self.image_4)
+            self.box_3 = self.game.main_canvas.create_rectangle(0, 460, 110, 540, width=2, fill='black', outline='#691913')
+            self.image_4_cnvs = self.game.main_canvas.create_image(55, 500, anchor='center', image=self.image_4)
 
 
     def close_cur(self):
@@ -52,3 +63,5 @@ class Menu:
             self.game.Automatick.hide()
         elif self.curMenu=='Doom':
             self.game.Doom.hide()
+        elif self.curMenu=='Achievements':
+            self.game.Achievements.hide()

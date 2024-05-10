@@ -13,32 +13,32 @@ class Counter5:
 
     def place(self):
         self.placed = True
-        self.box=self.game.main_canvas.create_rectangle(self.game.geometry[0]-60,490,self.game.geometry[0]-(self.game.geometry[0]-60),560,width=2,fill='black',outline='#a244ab')
-        self.text=self.game.main_canvas.create_text(self.game.geometry[0]-(self.game.geometry[0]-85),520,anchor='w',text=str(self.count),fill='#c22f40',font=('bahnschrift',24))
+        self.box=self.game.main_canvas.create_rectangle(self.game.geometry[0]-60,520,self.game.geometry[0]-(self.game.geometry[0]-60),590,width=2,fill='black',outline='#a244ab')
+        self.text=self.game.main_canvas.create_text(self.game.geometry[0]-(self.game.geometry[0]-85),550,anchor='w',text=str(self.count),fill='#c22f40',font=('bahnschrift',24))
         if self.multi * self.game.CB.multi_list[4] < 1000:
             self.text_multi = self.game.main_canvas.create_text(self.game.geometry[0] - (self.game.geometry[0] - 83),
-                                                                545,
+                                                                575,
                                                                 anchor='w',
                                                                 text='x' + str(self.multi * self.game.CB.multi_list[4]*self.game.Infinity.get_boost()),
                                                                 fill='#61c449',
                                                                 font=('bahnschrift', 12))
         else:
             self.text_multi = self.game.main_canvas.create_text(self.game.geometry[0] - (self.game.geometry[0] - 83),
-                                                                545,
+                                                                575,
                                                                 anchor='w',
                                                                 text='x' + str("{:.2e}".format(
                                                                     Decimal(self.multi * self.game.CB.multi_list[4]*self.game.Infinity.get_boost()))),
                                                                 fill='#61c449',
                                                                 font=('bahnschrift', 12))
-        self.box_buy=self.game.main_canvas.create_rectangle(self.game.geometry[0]-70,500,self.game.geometry[0]-270,550,width=2,fill='#63855a',outline='#95db84')
-        self.text_buy = self.game.main_canvas.create_text(self.game.geometry[0]-265, 525,
+        self.box_buy=self.game.main_canvas.create_rectangle(self.game.geometry[0]-70,530,self.game.geometry[0]-270,580,width=2,fill='#63855a',outline='#95db84')
+        self.text_buy = self.game.main_canvas.create_text(self.game.geometry[0]-265, 555,
                                                             anchor='w', text='Cost: ' + str("{:.2e}".format(Decimal(self.cost))), fill='#61c449',
                                                             font=('bahnschrift', 16))
-        self.box_buy_max = self.game.main_canvas.create_rectangle(self.game.geometry[0] - 280, 500,
-                                                                  self.game.geometry[0] - 340, 550, width=2,
+        self.box_buy_max = self.game.main_canvas.create_rectangle(self.game.geometry[0] - 280, 530,
+                                                                  self.game.geometry[0] - 340, 580, width=2,
                                                                   fill='#63855a',
                                                                   outline='#95db84')
-        self.text_buy_max = self.game.main_canvas.create_text(self.game.geometry[0] - 310, 525,
+        self.text_buy_max = self.game.main_canvas.create_text(self.game.geometry[0] - 310, 555,
                                                               anchor='center', text='Max', fill='#61c449',
                                                               font=('bahnschrift', 16))
         if self.game.Infinity.first:
@@ -53,14 +53,14 @@ class Counter5:
 
     def return_place(self):
         if self.placed and self.game.Menu.curMenu=='Counters':
-            self.game.main_canvas.coords(self.text,self.game.geometry[0]-(self.game.geometry[0]-155),520)
-            self.game.main_canvas.coords(self.text_multi, self.game.geometry[0] - (self.game.geometry[0] - 153),545)
-            self.game.main_canvas.coords(self.box,self.game.geometry[0] - 60, 490, self.game.geometry[0] - (self.game.geometry[0] - 130), 560)
-            self.game.main_canvas.coords(self.box_buy, self.game.geometry[0]-70,500,self.game.geometry[0]-270,550)
-            self.game.main_canvas.coords(self.text_buy, self.game.geometry[0]-265, 525)
-            self.game.main_canvas.coords(self.box_buy_max, self.game.geometry[0] - 280, 500,
-                                                                  self.game.geometry[0] - 340, 550)
-            self.game.main_canvas.coords(self.text_buy_max, self.game.geometry[0] - 310, 525)
+            self.game.main_canvas.coords(self.text,self.game.geometry[0]-(self.game.geometry[0]-155),550)
+            self.game.main_canvas.coords(self.text_multi, self.game.geometry[0] - (self.game.geometry[0] - 153),575)
+            self.game.main_canvas.coords(self.box,self.game.geometry[0] - 130, 520, self.game.geometry[0] - (self.game.geometry[0] - 130), 590)
+            self.game.main_canvas.coords(self.box_buy, self.game.geometry[0]-140,530,self.game.geometry[0]-340,580)
+            self.game.main_canvas.coords(self.text_buy, self.game.geometry[0]-335, 555)
+            self.game.main_canvas.coords(self.box_buy_max, self.game.geometry[0] - 350, 530,
+                                                                  self.game.geometry[0] - 410, 580)
+            self.game.main_canvas.coords(self.text_buy_max, self.game.geometry[0] - 380, 555)
             self.conf_cur()
         elif self.placed and self.game.Menu.curMenu != 'Counters':
             self.hide()

@@ -10,9 +10,9 @@ class Value:
         self.first_inf=False
 
     def place(self):
-        self.line=self.game.main_canvas.create_line(self.game.geometry[0],150,0,150,width=2,fill='#ad0000')
+        self.line=self.game.main_canvas.create_line(self.game.geometry[0],180,0,180,width=2,fill='#ad0000')
         self.line_2 = self.game.main_canvas.create_line(self.game.geometry[0], 10, 0, 10, width=2, fill='#ad0000')
-        self.text=self.game.main_canvas.create_text(self.game.geometry[0]//2,30,anchor='center',text=str(self.value),fill='#a9cf9b',font=('bahnschrift',26))
+        self.text=self.game.main_canvas.create_text(self.game.geometry[0]//2,60,anchor='center',text=str(self.value),fill='#a9cf9b',font=('bahnschrift',26))
         self.get_count(0)
 
     def get_count(self,count):

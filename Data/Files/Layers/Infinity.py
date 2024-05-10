@@ -17,29 +17,29 @@ class Infinity:
     def place(self):
         self.placed=True
         if self.infinity_counter < 20:
-            self.text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 520, 56,
+            self.text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 520, 86,
                                                           anchor='center',
                                                           text='Infinity Count: ' + str(round(self.infinity_counter,2)),
                                                           fill='#d99000', justify='center',
                                                           font=('bahnschrift', 14))
         elif 20 <= self.infinity_counter < 1000:
-            self.text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 520, 56,
+            self.text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 520, 86,
                                                           anchor='center',
                                                           text='Infinity Count: \n' + str(
                                                               round(self.infinity_counter, 2)),
                                                           fill='#d99000', justify='center',
                                                           font=('bahnschrift', 14))
         else:
-            self.text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 520, 56,
+            self.text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 520, 86,
                                                           anchor='center',
                                                           text='Infinity Count: \n' + "{:.2e}".format(
                                                               Decimal(self.infinity_counter)),
                                                           fill='#d99000', justify='center',
                                                           font=('bahnschrift', 14))
-        self.box_buy = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 440, 80,
-                                                              self.game.geometry[0] // 2 - 600, 140, width=1,
+        self.box_buy = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 440, 110,
+                                                              self.game.geometry[0] // 2 - 600, 170, width=1,
                                                               fill='black', outline='#ffbc36')
-        self.text_buy = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 520, 110,
+        self.text_buy = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 520, 140,
                                                           anchor='center', justify='center', text='Cost: ' + str(
                 "{:.2e}".format(Decimal(self.cost))) + '\nGet ' + str(self.income) + ' IC', fill='#d99000',
                                                           font=('bahnschrift', 10))
@@ -259,11 +259,11 @@ class Infinity:
 
     def place_upgrades(self):
         if self.upgrades[0]=='N':
-            self.upgr_1_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 500, 180,
-                                                                     self.game.geometry[0] // 2 - 300, 280, width=1,
+            self.upgr_1_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 500, 210,
+                                                                     self.game.geometry[0] // 2 - 300, 310, width=1,
                                                                      fill='black', outline='#e5b045')
             if 0 < self.infinity_counter <= 1000:
-                self.upgr_1_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 400, 230,
+                self.upgr_1_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 400, 260,
                                                                      anchor='center',
                                                                      text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
                                                                          round(1 + (self.infinity_counter / (
@@ -272,7 +272,7 @@ class Infinity:
                                                                      fill='#d99000', justify='center',
                                                                      font=('bahnschrift', 12))
             else:
-                self.upgr_1_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 400, 230,
+                self.upgr_1_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 400, 260,
                                                                      anchor='center',
                                                                      text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x 1' +'\nCost: 1 IC',
                                                                      fill='#d99000', justify='center',
@@ -286,11 +286,11 @@ class Infinity:
                                                                                         5 + math.log(
                                                                                     self.infinities)))))))
         else:
-            self.upgr_1_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 500, 180,
-                                                                     self.game.geometry[0] // 2 - 300, 280, width=1,
+            self.upgr_1_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 500, 210,
+                                                                     self.game.geometry[0] // 2 - 300, 310, width=1,
                                                                      fill='#c28e0a', outline='#e5b045')
             if 0 < self.infinity_counter <= 1000:
-                self.upgr_1_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 400, 230,
+                self.upgr_1_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 400, 260,
                                                                      anchor='center',
                                                                      text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
                                                                          round(1 + (self.infinity_counter / (
@@ -299,7 +299,7 @@ class Infinity:
                                                                      , justify='center',
                                                                      font=('bahnschrift', 12))
             else:
-                self.upgr_1_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 400, 230,
+                self.upgr_1_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 400, 260,
                                                                      anchor='center',
                                                                      text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x 1',
                                                                      fill='#4a1111', justify='center',
@@ -314,127 +314,127 @@ class Infinity:
                                                                                     self.infinities)))))))
 
         if self.upgrades[1] == 'N':
-            self.upgr_2_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 250, 180,
-                                                                     self.game.geometry[0] // 2 - 50, 280, width=1,
+            self.upgr_2_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 250, 210,
+                                                                     self.game.geometry[0] // 2 - 50, 310, width=1,
                                                                      fill='black', outline='#e5b045')
-            self.upgr_2_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 150, 230,
+            self.upgr_2_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 150, 260,
                                                                  anchor='center',
                                                                  text='Gain multiplier to\n Game Speed * 1.25' + '\nCost: 2 IC',
                                                                      fill='#d99000', justify='center',
                                                                      font=('bahnschrift', 12))
         else:
-            self.upgr_2_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 250, 180,
-                                                                     self.game.geometry[0] // 2 - 50, 280, width=1,
+            self.upgr_2_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 250, 210,
+                                                                     self.game.geometry[0] // 2 - 50, 310, width=1,
                                                                      fill='#c28e0a', outline='#e5b045')
-            self.upgr_2_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 150, 230,
+            self.upgr_2_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 150, 260,
                                                                  anchor='center',
                                                                  text='Gain multiplier to\n Game Speed * 1.25',
                                                                  fill='#4a1111', justify='center',
                                                                  font=('bahnschrift', 12))
         if self.upgrades[2] == 'N':
-            self.upgr_3_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 250, 180,
-                                                                     self.game.geometry[0] // 2 + 50, 280, width=1,
+            self.upgr_3_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 250, 210,
+                                                                     self.game.geometry[0] // 2 + 50, 310, width=1,
                                                                      fill='black', outline='#e5b045')
-            self.upgr_3_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 150, 230,
+            self.upgr_3_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 150, 260,
                                                                  anchor='center',
                                                                  text='Start any reset\nwith 1e5 C' + '\nCost: 2 IC',
                                                                      fill='#d99000', justify='center',
                                                                      font=('bahnschrift', 12))
         else:
-            self.upgr_3_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 250, 180,
-                                                                     self.game.geometry[0] // 2 + 50, 280, width=1,
+            self.upgr_3_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 250, 210,
+                                                                     self.game.geometry[0] // 2 + 50, 310, width=1,
                                                                      fill='#c28e0a', outline='#e5b045')
-            self.upgr_3_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 150, 230,
+            self.upgr_3_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 150, 260,
                                                                  anchor='center',
                                                                  text='Start any reset\nwith 1e5 C',
                                                                  fill='#4a1111', justify='center',
                                                                  font=('bahnschrift', 12))
         if self.upgrades[3] == 'N':
-            self.upgr_4_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 500, 180,
-                                                                     self.game.geometry[0] // 2 + 300, 280, width=1,
+            self.upgr_4_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 500, 210,
+                                                                     self.game.geometry[0] // 2 + 300, 310, width=1,
                                                                      fill='black', outline='#e5b045')
             if 10<self.game.Value.value < 1.8e308:
-                self.upgr_4_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 400, 230,
+                self.upgr_4_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 400, 260,
                                                                      anchor='center',
                                                                      text='Gain multiplier to counters\nbased on Count:\n x '+
                                                                      str(round((math.log(self.game.Value.value,10)**0.75),2))+'\nCost: 5 IC',
                                                                          fill='#d99000', justify='center',
                                                                          font=('bahnschrift', 12))
             else:
-                self.upgr_4_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 400, 230,
+                self.upgr_4_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 400, 260,
                                                                      anchor='center',
                                                                      text='Gain multiplier to counters\nbased on Count:\n x ' +
                                                                           '1'+'\nCost: 5 IC',
                                                                      fill='#d99000', justify='center',
                                                                      font=('bahnschrift', 12))
         else:
-            self.upgr_4_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 500, 180,
-                                                                     self.game.geometry[0] // 2 + 300, 280, width=1,
+            self.upgr_4_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 500, 210,
+                                                                     self.game.geometry[0] // 2 + 300, 310, width=1,
                                                                      fill='#c28e0a', outline='#e5b045')
             if 10<self.game.Value.value < 1.8e308:
-                self.upgr_4_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 400, 230,
+                self.upgr_4_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 400, 260,
                                                                      anchor='center',
                                                                      text='Gain multiplier to counters\nbased on Count:\n x '+
                                                                      str(round((math.log(self.game.Value.value,10)**0.75),2)),
                                                                      fill='#4a1111', justify='center',
                                                                      font=('bahnschrift', 12))
             else:
-                self.upgr_4_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 400, 230,
+                self.upgr_4_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 400, 260,
                                                                      anchor='center',
                                                                      text='Gain multiplier to counters\nbased on Count:\n x ' +
                                                                           '1',
                                                                      fill='#4a1111', justify='center',
                                                                      font=('bahnschrift', 12))
         if self.upgrades[4] == 'N':
-            self.upgr_5_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 100, 300,
-                                                                     self.game.geometry[0] // 2 + 100, 400, width=1,
+            self.upgr_5_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 100, 330,
+                                                                     self.game.geometry[0] // 2 + 100, 430, width=1,
                                                                      fill='black', outline='#e5b045')
-            self.upgr_5_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 , 350,
+            self.upgr_5_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 , 380,
                                                                  anchor='center',
                                                                  text='Unlock Doom counter\nCost: 10 IC',
                                                                      fill='#d99000', justify='center',
                                                                      font=('bahnschrift', 12))
         else:
-            self.upgr_5_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 100, 300,
-                                                                     self.game.geometry[0] // 2 + 100, 400, width=1,
+            self.upgr_5_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 100, 330,
+                                                                     self.game.geometry[0] // 2 + 100, 430, width=1,
                                                                      fill='#c28e0a', outline='#e5b045')
-            self.upgr_5_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2, 350,
+            self.upgr_5_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2, 380,
                                                                  anchor='center',
                                                                  text='Doom counters unlocked',
                                                                  fill='#4a1111', justify='center',
                                                                  font=('bahnschrift', 12))
         if self.upgrades[5] == 'N':
-            self.upgr_6_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 350, 300,
-                                                                     self.game.geometry[0] // 2 - 150, 400, width=1,
+            self.upgr_6_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 350, 330,
+                                                                     self.game.geometry[0] // 2 - 150, 430, width=1,
                                                                      fill='black', outline='#e5b045')
-            self.upgr_6_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 250, 350,
+            self.upgr_6_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 250, 380,
                                                                  anchor='center',
                                                                  text='Unlock boost and\ntime auto-blocks\nCost: 2 IC',
                                                                      fill='#d99000', justify='center',
                                                                      font=('bahnschrift', 12))
         else:
-            self.upgr_6_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 350, 300,
-                                                                     self.game.geometry[0] // 2 - 150, 400, width=1,
+            self.upgr_6_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 350, 330,
+                                                                     self.game.geometry[0] // 2 - 150, 430, width=1,
                                                                      fill='#c28e0a', outline='#e5b045')
-            self.upgr_6_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2-250, 350,
+            self.upgr_6_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2-250, 380,
                                                                  anchor='center',
                                                                  text='Unlocked boost and\ntime auto-blocks',
                                                                  fill='#4a1111', justify='center',
                                                                  font=('bahnschrift', 12))
         if self.upgrades[6] == 'N':
-            self.upgr_7_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 350, 300,
-                                                                     self.game.geometry[0] // 2 + 150, 400, width=1,
+            self.upgr_7_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 350, 330,
+                                                                     self.game.geometry[0] // 2 + 150, 430, width=1,
                                                                      fill='black', outline='#e5b045')
-            self.upgr_7_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 250, 350,
+            self.upgr_7_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 250, 380,
                                                                  anchor='center',
                                                                  text='Gain progressive multi\nto 1 counter\nx'+str(round(self.multi_progressive_7,2))+'\nCost: 4 IC',
                                                                      fill='#d99000', justify='center',
                                                                      font=('bahnschrift', 12))
         else:
-            self.upgr_7_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 350, 300,
-                                                                     self.game.geometry[0] // 2 + 150, 400, width=1,
+            self.upgr_7_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 350, 330,
+                                                                     self.game.geometry[0] // 2 + 150, 430, width=1,
                                                                      fill='#c28e0a', outline='#e5b045')
-            self.upgr_7_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 250, 350,
+            self.upgr_7_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 250, 380,
                                                                  anchor='center',
                                                                  text='Gain progressive multi\nto 1 counter\nx' + str(round(self.multi_progressive_7,2)),
                                                                  fill='#4a1111', justify='center',

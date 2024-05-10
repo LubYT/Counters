@@ -28,134 +28,134 @@ class Automatick:
 
         self.chosen_block = 'N'
 
-        self.rect=self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 500, 170,
-                                                              self.game.geometry[0] // 2 + 100, 570, width=1,
+        self.rect=self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 500, 200,
+                                                              self.game.geometry[0] // 2 + 100, 610, width=1,
                                                               fill='#062b3b', outline='#4c9ec2')
-        self.rect_1_2 = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 490, 180,
-                                                           self.game.geometry[0] // 2 + 90, 520, width=1,
+        self.rect_1_2 = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 490, 210,
+                                                           self.game.geometry[0] // 2 + 90, 550, width=1,
                                                            fill='#00031f', outline='#070e47')
-        self.rect_2 = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +103, 170,
-                                                           self.game.geometry[0] // 2 + 320, 250, width=1,
+        self.rect_2 = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +103, 200,
+                                                           self.game.geometry[0] // 2 + 320, 280, width=1,
                                                            fill='#515859', outline='#4c9ec2')
 
         self.buttons.append([[
-            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 490, 525,
-                                                               self.game.geometry[0] // 2 - 450, 565, width=1,
+            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 490, 555,
+                                                               self.game.geometry[0] // 2 - 450, 595, width=1,
                                                                fill='#012e00', outline='#40ff3d'),
-            self.game.main_canvas.create_image(self.game.geometry[0] // 2 - 468, 545,image=play,anchor='center')
+            self.game.main_canvas.create_image(self.game.geometry[0] // 2 - 468, 575,image=play,anchor='center')
         ],[
-            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 400, 525,
-                                                                        self.game.geometry[0] // 2 - 440, 565, width=1,
+            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 400, 555,
+                                                                        self.game.geometry[0] // 2 - 440, 595, width=1,
                                                                         fill='#141002', outline='#ffd53d'),
-            self.game.main_canvas.create_image(self.game.geometry[0] // 2 - 419, 545, image=pause,
+            self.game.main_canvas.create_image(self.game.geometry[0] // 2 - 419, 575, image=pause,
                                                                      anchor='center')]
             , [
-                self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 390, 525,
-                                                       self.game.geometry[0] // 2 - 350, 565, width=1,
+                self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 390, 555,
+                                                       self.game.geometry[0] // 2 - 350, 595, width=1,
                                                        fill='#121212', outline='#b3b3b3'),
-                self.game.main_canvas.create_image(self.game.geometry[0] // 2 - 369, 545, image=delete,
+                self.game.main_canvas.create_image(self.game.geometry[0] // 2 - 369, 575, image=delete,
                                                    anchor='center')]
             , [
-                self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 340, 525,
-                                                       self.game.geometry[0] // 2 - 300, 565, width=1,
+                self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 340, 555,
+                                                       self.game.geometry[0] // 2 - 300, 595, width=1,
                                                        fill='#330a0a', outline='#ff3d3d'),
-                self.game.main_canvas.create_image(self.game.geometry[0] // 2 - 319, 545, image=reset,
+                self.game.main_canvas.create_image(self.game.geometry[0] // 2 - 319, 575, image=reset,
                                                    anchor='center')]
         ])
 
 
-        self.text=self.game.main_canvas.create_text(self.game.geometry[0] // 2 +105, 210,anchor='w',
+        self.text=self.game.main_canvas.create_text(self.game.geometry[0] // 2 +105, 240,anchor='w',
                                                       text='Automatick programm.\nMake full cycle every '+str(round(self.time_cycle/1000,2))+' seconds.\n'
                                                             'You can add blocks in programm.\nYou can choose and delete any block.\nYou can put max 32 blocks.',
                                                       fill='#bef1f7', justify='left',font=('bahnschrift', 10))
-        self.timer=self.game.main_canvas.create_text(self.game.geometry[0] // 2 +95, 545, anchor='e',
+        self.timer=self.game.main_canvas.create_text(self.game.geometry[0] // 2 +95, 575, anchor='e',
                                               text=str(round(self.time_cycle_cur/1000,5)),
                                               fill='#00cad9', justify='right', font=('bahnschrift', 24))
         self.blocks.append([[
-            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +110, 260,
-                                                              self.game.geometry[0] // 2 + 150, 300, width=1,
+            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +110, 290,
+                                                              self.game.geometry[0] // 2 + 150, 330, width=1,
                                                               fill='#04093b', outline='#484e8a'),
-            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 130, 280, anchor='center',
+            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 130, 310, anchor='center',
                                               text='Count 1\nBuy',
                                               fill='#263cff', justify='center', font=('bahnschrift', 8)),
             'COUNT_1_BUY',
             'Counter 1\nsingle',
             'n'
         ],[
-            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +160, 260,
-                                                              self.game.geometry[0] // 2 + 200, 300, width=1,
+            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +160, 290,
+                                                              self.game.geometry[0] // 2 + 200, 330, width=1,
                                                               fill='#04093b', outline='#484e8a'),
-            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 180, 280, anchor='center',
+            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 180, 310, anchor='center',
                                               text='Count 2\nBuy',
                                               fill='#263cff', justify='center', font=('bahnschrift', 8)),
             'COUNT_2_BUY',
             'Counter 2\nsingle',
             'n'
         ],[
-            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +210, 260,
-                                                              self.game.geometry[0] // 2 + 250, 300, width=1,
+            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +210, 290,
+                                                              self.game.geometry[0] // 2 + 250, 330, width=1,
                                                               fill='#04093b', outline='#484e8a'),
-            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 230, 280, anchor='center',
+            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 230, 310, anchor='center',
                                               text='Count 3\nBuy',
                                               fill='#263cff', justify='center', font=('bahnschrift', 8)),
             'COUNT_3_BUY',
             'Counter 3\nsingle',
             'n'
         ],[
-            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +260, 260,
-                                                              self.game.geometry[0] // 2 + 300, 300, width=1,
+            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +260, 290,
+                                                              self.game.geometry[0] // 2 + 300, 330, width=1,
                                                               fill='#04093b', outline='#484e8a'),
-            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 280, 280, anchor='center',
+            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 280, 310, anchor='center',
                                               text='Count 4\nBuy',
                                               fill='#263cff', justify='center', font=('bahnschrift', 8)),
             'COUNT_4_BUY',
             'Counter 4\nsingle',
             'n'
         ],[
-            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +310, 260,
-                                                              self.game.geometry[0] // 2 + 350, 300, width=1,
+            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +310, 290,
+                                                              self.game.geometry[0] // 2 + 350, 330, width=1,
                                                               fill='#04093b', outline='#484e8a'),
-            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 330, 280, anchor='center',
+            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 330, 310, anchor='center',
                                               text='Count 5\nBuy',
                                               fill='#263cff', justify='center', font=('bahnschrift', 8)),
             'COUNT_5_BUY',
             'Counter 5\nsingle',
             'n'
         ],[
-            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +360, 260,
-                                                              self.game.geometry[0] // 2 + 400, 300, width=1,
+            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +360, 290,
+                                                              self.game.geometry[0] // 2 + 400, 330, width=1,
                                                               fill='#04093b', outline='#484e8a'),
-            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 380, 280, anchor='center',
+            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 380, 310, anchor='center',
                                               text='Count 6\nBuy',
                                               fill='#263cff', justify='center', font=('bahnschrift', 8)),
             'COUNT_6_BUY',
             'Counter 6\nsingle',
             'n'
         ],[
-            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +410, 260,
-                                                              self.game.geometry[0] // 2 + 450, 300, width=1,
+            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +410, 290,
+                                                              self.game.geometry[0] // 2 + 450, 330, width=1,
                                                               fill='#04093b', outline='#484e8a'),
-            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 430, 280, anchor='center',
+            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 430, 310, anchor='center',
                                               text='Count 7\nBuy',
                                               fill='#263cff', justify='center', font=('bahnschrift', 8)),
             'COUNT_7_BUY',
             'Counter 7\nsingle',
             'n'
         ],[
-            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +460, 260,
-                                                              self.game.geometry[0] // 2 + 500, 300, width=1,
+            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +460, 290,
+                                                              self.game.geometry[0] // 2 + 500, 330, width=1,
                                                               fill='#04093b', outline='#484e8a'),
-            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 480, 280, anchor='center',
+            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 480, 310, anchor='center',
                                               text='Count 8\nBuy',
                                               fill='#263cff', justify='center', font=('bahnschrift', 8)),
             'COUNT_8_BUY',
             'Counter 8\nsingle',
             'n'
         ],[
-            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +110, 310,
-                                                              self.game.geometry[0] // 2 + 180, 350, width=1,
+            self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +110, 340,
+                                                              self.game.geometry[0] // 2 + 180, 380, width=1,
                                                               fill='#04093b', outline='#484e8a'),
-            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 145, 330, anchor='center',
+            self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 145, 360, anchor='center',
                                               text='Game speed\nBuy',
                                               fill='#263cff', justify='center', font=('bahnschrift', 8)),
             'GAME_SPEED_BUY',
@@ -174,7 +174,7 @@ class Automatick:
     def save_data_get(self):
         for command in self.commands:
             x = len(self.main_list) * 70
-            y = 0
+            y = 30
             while x >= 560:
                 x -= 560
                 y += 50
@@ -305,19 +305,19 @@ class Automatick:
     def place_temp(self):
         if self.allowed[0]=='Y':
             self.blocks[0].append([
-                self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 430, 310,
-                                                       self.game.geometry[0] // 2 + 500, 380, width=1,
+                self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 430, 340,
+                                                       self.game.geometry[0] // 2 + 500, 410, width=1,
                                                        fill='#04093b', outline='#484e8a'),
-                self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 465, 330, anchor='center',
+                self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 465, 360, anchor='center',
                                                   text='CNTR boost\nLimit:',
                                                   fill='#263cff', justify='center', font=('bahnschrift', 8)),
                 'C_BOOST_BUY_',
                 'CNTR boost\n',
                 'limited',
-                self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 435, 355,
-                                                       self.game.geometry[0] // 2 + 495, 375, width=1,
+                self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 435, 385,
+                                                       self.game.geometry[0] // 2 + 495, 405, width=1,
                                                        fill='#000', outline='#484e8a'),
-                self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 465, 365, anchor='center',
+                self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 465, 395, anchor='center',
                                                   text='input',
                                                   fill='#263cff', justify='center', font=('bahnschrift', 8)),
                 self.saved_nums_for_bars[1],
@@ -325,19 +325,19 @@ class Automatick:
             ])
         if self.allowed[1]=='Y':
             self.blocks[0].append([
-                self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 350, 310,
-                                                       self.game.geometry[0] // 2 + 420, 380, width=1,
+                self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 350, 340,
+                                                       self.game.geometry[0] // 2 + 420, 410, width=1,
                                                        fill='#04093b', outline='#484e8a'),
-                self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 385, 330, anchor='center',
+                self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 385, 360, anchor='center',
                                                   text='Time accel\nLimit:',
                                                   fill='#263cff', justify='center', font=('bahnschrift', 8)),
                 'T_ACCEL_BUY_',
                 'Time accel\n',
                 'limited',
-                self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 355, 355,
-                                                       self.game.geometry[0] // 2 + 415, 375, width=1,
+                self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 355, 385,
+                                                       self.game.geometry[0] // 2 + 415, 405, width=1,
                                                        fill='#000', outline='#484e8a'),
-                self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 385, 365, anchor='center',
+                self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 385, 395, anchor='center',
                                                   text='input',
                                                   fill='#263cff', justify='center', font=('bahnschrift', 8)),
                 self.saved_nums_for_bars[2],
@@ -448,7 +448,7 @@ class Automatick:
                 if coords.x > coord[0] and coords.y>coord[1] and coords.x < coord[2] and coords.y<coord[3] and len(self.commands) < 32:
                     self.type_command_add=block[2]
                     x=len(self.main_list)*70
-                    y=0
+                    y=30
                     while x>=560:
                         x-=560
                         y+=50
@@ -474,7 +474,7 @@ class Automatick:
                         use=str(block[7])
                     self.type_command_add = block[2]+use
                     x = len(self.main_list) * 70
-                    y = 0
+                    y = 30
                     while x >= 560:
                         x -= 560
                         y += 50
@@ -505,7 +505,7 @@ class Automatick:
 
     def place_blocks(self):
         x=0
-        y=0
+        y=30
         for list in self.main_list:
             if x>=560:
                 x-=560

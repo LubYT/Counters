@@ -123,7 +123,7 @@ class Doom:
                         self.auto_pause_num = '0'
                     self.game.main_canvas.itemconfigure(self.curbar,
                                                             text=self.auto_pause_num)
-                elif event.keysym == 'e' and self.auto_pause_num != '':
+                elif event.keysym == 'e' and self.auto_pause_num != '' and len(str(self.auto_pause_num))<=8:
                     if self.auto_pause_num[:1:] == 'i':
                         self.auto_pause_num = '0'
                     if self.auto_pause_num!='0':
@@ -220,13 +220,13 @@ class Doom:
         box.append(self.game.main_canvas.create_rectangle(130, 430,self.game.geometry[0] // 2 -10, 500,width=1,
                                                             fill='#121212', outline='#3b0000'))
         box.append(
-            self.game.main_canvas.create_rectangle(self.game.geometry[0]-60, 430, self.game.geometry[0] // 2 + 10, 500, width=1,
+            self.game.main_canvas.create_rectangle(self.game.geometry[0]-130, 430, self.game.geometry[0] // 2 + 10, 500, width=1,
                                                fill='#121212', outline='#3b0000'))
         box.append(
             self.game.main_canvas.create_rectangle(130, 510, self.game.geometry[0] // 2 - 10, 580, width=1,
                                                fill='#121212', outline='#3b0000'))
         box.append(
-            self.game.main_canvas.create_rectangle(self.game.geometry[0] - 60, 510, self.game.geometry[0] // 2 + 10, 580,
+            self.game.main_canvas.create_rectangle(self.game.geometry[0] - 130, 510, self.game.geometry[0] // 2 + 10, 580,
                                                width=1,
                                                fill='#121212', outline='#3b0000'))
         self.boxes.append(box)
@@ -354,18 +354,18 @@ class Doom:
                                                               font=('bahnschrift', 14))
                             ])
         if self.costs[1]< 1000:
-            boxes_2.append([self.game.main_canvas.create_rectangle(self.game.geometry[0] - 70, 440, self.game.geometry[0] - 250, 490, width=1,
+            boxes_2.append([self.game.main_canvas.create_rectangle(self.game.geometry[0] - 140, 440, self.game.geometry[0] - 320, 490, width=1,
                                                                    fill='#470404', outline='#823535'),
-                self.game.main_canvas.create_text(self.game.geometry[0]- 245, 465,
+                self.game.main_canvas.create_text(self.game.geometry[0]- 315, 465,
                                                                          anchor='w',
                                                                          text='Cost: '+str(round(self.costs[1],0))+' IC',
                                                                          fill='#000', justify='center',
                                                                          font=('bahnschrift', 14))
                             ])
         elif self.costs[1] >= 1000:
-            boxes_2.append([self.game.main_canvas.create_rectangle(self.game.geometry[0] - 70, 440, self.game.geometry[0] - 250, 490, width=1,
+            boxes_2.append([self.game.main_canvas.create_rectangle(self.game.geometry[0] - 140, 440, self.game.geometry[0] - 320, 490, width=1,
                                                                    fill='#470404', outline='#823535'),
-                self.game.main_canvas.create_text(self.game.geometry[0]- 245, 465,
+                self.game.main_canvas.create_text(self.game.geometry[0]- 315, 465,
                                                               anchor='w',
                                                               text='Cost: ' + str("{:.2e}".format(Decimal(self.costs[1])))+' IC',
                                                               fill='#000', justify='center',
@@ -390,9 +390,9 @@ class Doom:
                                                               fill='#000', justify='center',
                                                               font=('bahnschrift', 14))
                             ])
-        boxes_2.append([self.game.main_canvas.create_rectangle(self.game.geometry[0] - 70, 520, self.game.geometry[0] - 250, 570, width=1,
+        boxes_2.append([self.game.main_canvas.create_rectangle(self.game.geometry[0] - 140, 520, self.game.geometry[0] - 320, 570, width=1,
                                                                    fill='#470404', outline='#823535'),
-                self.game.main_canvas.create_text(self.game.geometry[0]- 245, 545,
+                self.game.main_canvas.create_text(self.game.geometry[0]- 315, 545,
                                                               anchor='w',
                                                               text='Cost: ' + str("{:.2e}".format(Decimal(self.costs[3])))+' IC',
                                                               fill='#000', justify='center',

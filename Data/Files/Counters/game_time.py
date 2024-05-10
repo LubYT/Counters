@@ -10,15 +10,15 @@ class Tickspeed:
         self.cost_up=10
 
     def place(self):
-        self.text=self.game.main_canvas.create_text(self.game.geometry[0]//2,90,anchor='center',text='Game speed: '+str(self.tickspeed),fill='#c22f40',font=('bahnschrift',10))
-        self.box_buy=self.game.main_canvas.create_rectangle(self.game.geometry[0]//2-100,100,self.game.geometry[0]//2+100,140,width=1,fill='black',outline='#c22f40')
-        self.text_buy = self.game.main_canvas.create_text(self.game.geometry[0]//2, 120,
+        self.text=self.game.main_canvas.create_text(self.game.geometry[0]//2,120,anchor='center',text='Game speed: '+str(self.tickspeed),fill='#c22f40',font=('bahnschrift',10))
+        self.box_buy=self.game.main_canvas.create_rectangle(self.game.geometry[0]//2-100,130,self.game.geometry[0]//2+100,170,width=1,fill='black',outline='#c22f40')
+        self.text_buy = self.game.main_canvas.create_text(self.game.geometry[0]//2, 150,
                                                             anchor='center',justify='center', text='Cost: ' + str(self.cost)+'\n'+'Game speed * '+str(round(self.tickspeed_upper+(self.game.TA.accel-1),2)), fill='#61c449',
                                                             font=('bahnschrift', 12))
-        self.box_buy_max = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 120, 100,
-                                                              self.game.geometry[0] // 2 + 170, 140, width=1,
+        self.box_buy_max = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 120, 130,
+                                                              self.game.geometry[0] // 2 + 170, 170, width=1,
                                                               fill='black', outline='#c22f40')
-        self.text_buy_max = self.game.main_canvas.create_text(self.game.geometry[0] //2 + 145, 120,
+        self.text_buy_max = self.game.main_canvas.create_text(self.game.geometry[0] //2 + 145, 150,
                                                           anchor='center', justify='center',
                                                           text='Max', fill='#61c449',
                                                           font=('bahnschrift', 12))

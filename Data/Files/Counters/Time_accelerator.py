@@ -9,14 +9,14 @@ class Time_accelerator:
         self.cost=float(self.game.Save.TA_data[0][3])
         self.cost_up=1e75
     def place(self):
-        self.text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 320, 56,
+        self.text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 320, 86,
                                                       anchor='center', text='Time accelerator: ' + str(self.amount),
                                                       fill='#410eb0',
                                                       font=('bahnschrift', 14))
-        self.box_buy = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 240, 80,
-                                                              self.game.geometry[0] // 2 + 400, 140, width=1,
+        self.box_buy = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 240, 110,
+                                                              self.game.geometry[0] // 2 + 400, 170, width=1,
                                                               fill='black', outline='#4002c4')
-        self.text_buy = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 320, 110,
+        self.text_buy = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 320, 140,
                                                           anchor='center', justify='center', text='Cost: ' + str(
                 "{:.2e}".format(Decimal(self.cost))) + '\nBoost game speed\nupgrades (*1.03)', fill='#4d00b3',
                                                           font=('bahnschrift', 10))
