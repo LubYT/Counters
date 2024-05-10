@@ -30,6 +30,7 @@ class Achievements:
         self.box=self.game.main_canvas.create_rectangle(140, 200,self.game.geometry[0]-140, 700, width=2, fill='black', outline='#736005')
         self.place_achieves()
 
+
     def place_achieves(self):
         x_2=0
         index=0
