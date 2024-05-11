@@ -65,6 +65,8 @@ class Tickspeed:
         elif self.tickspeed > 10000:
             self.game.main_canvas.itemconfigure(self.text, text='Game speed is massively altered: ' + str(
                 "{:.2e}".format(Decimal(self.tickspeed))), fill='#5d2fc2')
+        elif self.tickspeed ==1:
+            self.game.main_canvas.itemconfigure(self.text, text='Game speed: ' + str(self.tickspeed), fill='#c22f40')
         else:
             self.game.main_canvas.itemconfigure(self.text,
                                                 text='Game speed is altered: ' + str(round(self.tickspeed, 3)),
