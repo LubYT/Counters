@@ -10,7 +10,7 @@ class Save:
         self.Doom_data=[]
         self.Infinity_data=[]
         self.Achieve_data=[]
-        with open('Data/Files/Saves/SAVE.txt','r') as file:
+        with (open('Data/Files/Saves/SAVE.txt','r') as file):
             self.total_count=float(file.readline()[:-1:])
             for i in range(8):
                 list=[]
@@ -124,13 +124,14 @@ class Save:
             data = data[1:-2:]
             list=[]
             while data.find(',') != -1:
-                print(data)
                 index = data.find(',')
                 list.append(data[:index:])
                 data = data[index + 1::]
                 print(data)
             print(list)
             self.Achieve_data=list
+
+            self.Aspect_data = file.readline()
 
 
 

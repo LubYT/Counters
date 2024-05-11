@@ -64,18 +64,12 @@ class Achievements:
         list.append('plus')
 
         index=len(self.boxes)
-        print(index)
         while True:
             try:
-                print(index)
-                print(self.boxes[index])
                 index+=1
-                print(index)
             except:
-                print(index)
                 self.boxes[index]=list
                 break
-        print(index,'good')
         self.game.window.after(250,lambda: self.move(index))
 
     def move(self,index):
@@ -112,6 +106,8 @@ class Achievements:
 
 
     def get_achieve(self,num):
+        if num==20:
+            self.game.Menu.add('Illusory')
         if self.achieve[num-1]=='N':
             self.achieve[num-1]='Y'
             self.create_box(num-1)

@@ -39,6 +39,8 @@ class Doom:
         self.active=bool(self.game.Save.Doom_data[0][5])
 
     def init_text(self):
+        self.count_text=[]
+        self.main_texts=[]
         self.len = 0
         for font_size in range(3):
             print(font_size)
