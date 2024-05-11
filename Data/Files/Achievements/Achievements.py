@@ -39,6 +39,7 @@ class Achievements:
         self.created=[]
         self.boxes={}
         self.chosen='N'
+        self.first_20=False
 
     def place(self):
         self.box=self.game.main_canvas.create_rectangle(140, 200,self.game.geometry[0]-140, 700, width=2, fill='black', outline='#736005')
@@ -64,10 +65,15 @@ class Achievements:
         list.append('plus')
 
         index=len(self.boxes)
+        print(index)
         while True:
             try:
+                print(index)
+                print(self.box[index])
                 index+=1
+                print(index)
             except:
+                print(index)
                 self.boxes[index]=list
                 break
         self.game.window.after(250,lambda: self.move(index))
@@ -82,6 +88,7 @@ class Achievements:
         elif self.boxes[index][2]<=-3:
             self.boxes[index][2] += 3
             x = -3
+        print(index)
         obj=self.boxes[index][0]
         obj1 = self.boxes[index][1]
         if x!=0:
@@ -93,7 +100,7 @@ class Achievements:
                 self.boxes[index][3] = 'minus'
                 self.game.window.after(4000,lambda: self.move(index))
             else:
-                self.game.main_canvas.delete(obj),self.game.main_canvas.delete(obj)
+                self.game.main_canvas.delete(obj),self.game.main_canvas.delete(obj1)
                 self.boxes.pop(index)
 
     def moving_process(self,*objects):
@@ -106,7 +113,8 @@ class Achievements:
 
 
     def get_achieve(self,num):
-        if num==20:
+        if num==20 and self.first_20==False:
+            self.first_20=True
             self.game.Menu.add('Illusory')
         if self.achieve[num-1]=='N':
             self.achieve[num-1]='Y'

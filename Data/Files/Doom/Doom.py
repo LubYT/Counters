@@ -181,12 +181,16 @@ class Doom:
         if self.game.Menu.curMenu=='Doom':
             self.game.main_canvas.itemconfigure(self.text_1,text='Power of doomed destruction:\n'+str("{:.2e}".format(Decimal(self.doom_count**0.8))))
             text_0=str("{:.2e}".format(Decimal(self.doom_count)))
-            for letter in self.count_text:
-                y = 0
-                for letter_2 in letter:
-                    letter_1=text_0[y]
-                    self.game.main_canvas.itemconfigure(letter_2,text=str(letter_1))
-                    y+=1
+            try:
+                for letter in self.count_text:
+                    y = 0
+                    for letter_2 in letter:
+                        letter_1=text_0[y]
+                        self.game.main_canvas.itemconfigure(letter_2,text=str(letter_1))
+                        y+=1
+            except:
+                self.hide_text()
+                self.init_text()
 
 
     def hide_text(self):
@@ -196,6 +200,7 @@ class Doom:
         for text in self.count_text:
             for letter in text:
                 self.game.main_canvas.delete(letter)
+        self.main_texts,self.count_text=[],[]
 
     def hide(self):
         self.hide_text()
