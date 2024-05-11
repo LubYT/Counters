@@ -24,7 +24,11 @@ class Time_accelerator:
         if self.game.Value.value >= self.cost and not self.game.Value.lock:
             self.game.Value.value -= self.cost
             self.cost = self.cost * self.cost_up
+            if self.game.Infinity.first:
+                self.game.Achievements.get_achieve(9)
             self.amount+=1
+            if self.game.Infinity.first and self.amount>=4:
+                self.game.Achievements.get_achieve(12)
             self.game.main_canvas.itemconfigure(self.text, text='Time accelerators: ' + str(self.amount))
             self.accel*=self.upper
             self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str("{:.2e}".format(Decimal(self.cost))) + '\nBoost game speed\nupgrades (*1.03)')

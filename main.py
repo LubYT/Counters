@@ -168,6 +168,9 @@ class Game:
         if self.Menu.curMenu == 'Doom':
             self.Doom.click(event)
 
+        if self.Menu.curMenu == 'Achievements':
+            self.Achievements.click(event)
+
 
         if self.Menu.curMenu == 'Infinity':
             coords_upgr_1 = self.main_canvas.coords(self.Infinity.upgr_1_box)

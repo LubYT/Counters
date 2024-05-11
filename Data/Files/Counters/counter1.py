@@ -12,14 +12,14 @@ class Counter1:
     def place(self):
         self.box=self.game.main_canvas.create_rectangle(self.game.geometry[0]-60,200,self.game.geometry[0]-(self.game.geometry[0]-60),270,width=2,fill='black',outline='#a244ab')
         self.text=self.game.main_canvas.create_text(self.game.geometry[0]-(self.game.geometry[0]-85),230,anchor='w',text=str(self.count),fill='#c22f40',font=('bahnschrift',24))
-        if self.multi * self.game.CB.multi_list[0]*self.game.Infinity.get_boost('1 counter') < 1000:
+        if self.multi * self.game.CB.multi_list[0]*self.game.Infinity.get_boost('1 counter')*self.game.Achievements.achieve_mult('1 Counter') < 1000:
             self.text_multi = self.game.main_canvas.create_text(self.game.geometry[0] - (self.game.geometry[0] - 83), 255,
-                                                          anchor='w', text='x'+str(self.multi*self.game.CB.multi_list[0]*self.game.Infinity.get_boost('1 counter')), fill='#61c449',
+                                                          anchor='w', text='x'+str(self.multi*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]*self.game.Infinity.get_boost('1 counter')), fill='#61c449',
                                                           font=('bahnschrift', 12))
         else:
             self.text_multi = self.game.main_canvas.create_text(self.game.geometry[0] - (self.game.geometry[0] - 83),255,
                                                                 anchor='w',
-                                                                text='x'+str("{:.2e}".format(Decimal(self.multi*self.game.CB.multi_list[0]*self.game.Infinity.get_boost('1 counter')))),
+                                                                text='x'+str("{:.2e}".format(Decimal(self.multi*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]*self.game.Infinity.get_boost('1 counter')))),
                                                                 fill='#61c449',
                                                                 font=('bahnschrift', 12))
         self.box_buy=self.game.main_canvas.create_rectangle(self.game.geometry[0]-70,210,self.game.geometry[0]-270,260,width=2,fill='#63855a',outline='#95db84')
@@ -35,9 +35,9 @@ class Counter1:
         if self.first:
             self.game.Counter_2.place()
     def produce(self):
-        self.produce_count_PS=(self.produce_base*self.count*self.multi*self.game.Tickspeed.tickspeed*self.game.CB.multi_list[0]
+        self.produce_count_PS=(self.produce_base*self.count*self.multi*self.game.Tickspeed.tickspeed*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]
                                *self.game.Infinity.get_boost('1 counter'))
-        self.produce_count=(self.produce_base*self.count*self.multi*self.game.Tickspeed.tickspeed*self.game.CB.multi_list[0]
+        self.produce_count=(self.produce_base*self.count*self.multi*self.game.Tickspeed.tickspeed*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]
                             *self.game.Infinity.get_boost('1 counter')/25)
         if self.game.Aspects.active_1st:
             self.produce_count=self.produce_count**0.625
@@ -82,6 +82,8 @@ class Counter1:
                 self.game.Counter_2.place()
             else:
                 self.multi = self.multi * 2
+            if self.game.Infinity.first:
+                self.game.Achievements.get_achieve(1)
             self.game.Value.value-=self.cost
             self.cost=self.cost*self.cost_up
             self.count+=1
@@ -94,10 +96,12 @@ class Counter1:
                 self.game.Counter_2.place()
             else:
                 self.multi = self.multi * 2
+            if self.game.Infinity.first:
+                self.game.Achievements.get_achieve(1)
             self.game.Value.value-=self.cost
             self.cost=self.cost*self.cost_up
             self.count+=1
-            self.conf()
+        self.conf()
 
     def conf_cur(self):
         if self.first==False:
@@ -110,15 +114,17 @@ class Counter1:
 
     def conf(self):
 
-        if self.multi * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter') > 1000:
+        if self.multi * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter')*self.game.Achievements.achieve_mult('1 Counter') > 1000:
             self.game.main_canvas.itemconfigure(self.text_multi, fill='#61c449', text='x' + str(
-                "{:.2e}".format(Decimal(self.multi * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter')))))
-        elif self.multi * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter') < 1:
+                "{:.2e}".format(Decimal(self.multi * self.game.CB.multi_list[0]*self.game.Achievements.achieve_mult('1 Counter') * self.game.Infinity.get_boost('1 counter')))))
+        elif self.multi * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter')*self.game.Achievements.achieve_mult('1 Counter') < 1:
             self.game.main_canvas.itemconfigure(self.text_multi, fill='#454443', text='x' + str(
-                round(self.multi * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter'), 3)))
+                round(self.multi * self.game.CB.multi_list[0]*self.game.Achievements.achieve_mult('1 Counter') * self.game.Infinity.get_boost('1 counter'), 3)))
         else:
             self.game.main_canvas.itemconfigure(self.text_multi, fill='#61c449', text='x' + str(
-                round(self.multi * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter'), 1)))
+                round(self.multi * self.game.CB.multi_list[0]*self.game.Achievements.achieve_mult('1 Counter') * self.game.Infinity.get_boost('1 counter'), 1)))
+        if self.game.Infinity.first and self.multi * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter')*self.game.Achievements.achieve_mult('1 Counter')>=1e50:
+            self.game.Achievements.get_achieve(11)
 
         if self.count>10000:
             self.game.main_canvas.itemconfigure(self.text, text=str("{:.2e}".format(Decimal(self.count))))

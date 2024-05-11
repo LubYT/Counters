@@ -164,7 +164,8 @@ class Doom:
 
     def get_doomed_count(self,amount):
         if amount!='1':
-            self.doom_count+=amount
+            self.game.Achievements.get_achieve(18)
+            self.doom_count+=amount*self.game.Achievements.achieve_mult('DD')
         else:
             self.doom_count=1
         try:
@@ -175,6 +176,8 @@ class Doom:
                 self.doom_count = 1
         except ValueError:
             pass
+        if self.doom_count>=1e8:
+            self.game.Achievements.get_achieve(20)
         if self.game.Menu.curMenu=='Doom':
             self.game.main_canvas.itemconfigure(self.text_1,text='Power of doomed destruction:\n'+str("{:.2e}".format(Decimal(self.doom_count**0.8))))
             text_0=str("{:.2e}".format(Decimal(self.doom_count)))
@@ -497,6 +500,7 @@ class Doom:
                     self.game.main_canvas.itemconfigure(self.boxes[3][num][1],text='Cost: '+str("{:.2e}".format(Decimal(self.costs[2])))+' IC')
         elif num == 3:
             if self.game.Infinity.infinity_counter>=self.costs[3]:
+                self.game.Achievements.get_achieve(19)
                 self.game.Infinity.get_points(0-self.costs[3])
                 self.costs[3]*=self.up_costs[3]
                 self.doom_counter_4+=1

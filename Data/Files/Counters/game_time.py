@@ -38,7 +38,7 @@ class Tickspeed:
                                                 fill='#c22fa2')
 
     def reset(self):
-        self.tickspeed = 1.000*self.game.Infinity.get_boost_1()
+        self.tickspeed = 1.000*self.game.Infinity.get_boost_1()*self.game.Achievements.achieve_mult('Time speed')
         self.tickspeed_upper=1.12
         self.cost = 10
         self.cost_up = 10

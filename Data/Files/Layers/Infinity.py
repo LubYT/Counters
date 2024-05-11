@@ -55,11 +55,19 @@ class Infinity:
 
     def buy(self):
         if self.game.Value.value >= self.cost:
+            if self.first:
+                self.game.Achievements.get_achieve(10)
+            if self.game.Infinity.first and self.game.TA.amount==0:
+                self.game.Achievements.get_achieve(13)
+            if self.game.Infinity.first and self.game.CB.amount<=4:
+                self.game.Achievements.get_achieve(14)
             if self.first == False:
                 self.first = True
                 self.game.menu_place()
             self.infinities += 1
-            self.get_points(self.income*(self.game.Doom.doom_count**0.8))
+            if self.infinities==25:
+                self.game.Achievements.get_achieve(15)
+            self.get_points(self.income*(self.game.Doom.doom_count**0.8)*self.game.Achievements.achieve_mult('IC'))
             self.game.I_reset()
             if self.game.Menu.curMenu=='Infinity':
                 self.conf_upgrades()
@@ -135,6 +143,7 @@ class Infinity:
                 self.game.main_canvas.itemconfigure(self.upgr_5_box, fill='#c28e0a')
                 self.game.main_canvas.itemconfigure(self.upgr_5_text, fill='#4a1111',
                                                     text='Doom counters unlocked')
+                self.game.Achievements.get_achieve(16)
         elif index == 6 and self.upgrades[5] == 'N':
             if self.infinity_counter >= 2:
                 self.get_points(-2)
@@ -152,6 +161,8 @@ class Infinity:
                 self.game.main_canvas.itemconfigure(self.upgr_7_text, fill='#4a1111',text=
                                                     'Gain progressive multi\nto 1 counter\nx' + str(round(
                                                         self.multi_progressive_7, 2)))
+        if self.upgrades[0]=='Y' and self.upgrades[1]=='Y' and self.upgrades[2]=='Y' and self.upgrades[3]=='Y' and self.upgrades[4]=='Y' and self.upgrades[5]=='Y' and self.upgrades[6]=='Y':
+            self.game.Achievements.get_achieve(17)
         self.conf_upgrades()
 
     def post_save(self):
@@ -249,13 +260,13 @@ class Infinity:
 
             ###
         if self.placed:
-            if self.income*(self.game.Doom.doom_count**0.8)<10000:
+            if self.income*(self.game.Doom.doom_count**0.8)*self.game.Achievements.achieve_mult('IC')<10000:
                 self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                        "{:.2e}".format(Decimal(self.cost))) + '\nGet ' + str(round(self.income*(self.game.Doom.doom_count**0.8),1)) + ' IC', fill='#d99000')
+                        "{:.2e}".format(Decimal(self.cost))) + '\nGet ' + str(round(self.income*(self.game.Doom.doom_count**0.8)*self.game.Achievements.achieve_mult('IC'),1)) + ' IC', fill='#d99000')
             else:
                 self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
                     "{:.2e}".format(Decimal(self.cost))) + '\nGet ' + str(
-                    "{:.2e}".format(Decimal(round(self.income * (self.game.Doom.doom_count ** 0.8), 1)))) + ' IC', fill='#d99000')
+                    "{:.2e}".format(Decimal(round(self.income * (self.game.Doom.doom_count ** 0.8)*self.game.Achievements.achieve_mult('IC'), 1)))) + ' IC', fill='#d99000')
 
     def place_upgrades(self):
         if self.upgrades[0]=='N':
