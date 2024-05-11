@@ -18,10 +18,10 @@ class Doom:
         self.up_costs=[5,25,500,10000]
         self.bought_counter=[self.game.Save.Doom_data[0][4][0],self.game.Save.Doom_data[0][4][1],self.game.Save.Doom_data[0][4][2],
                              self.game.Save.Doom_data[0][4][3]]
-        self.produce_1=0.01
-        self.produce_2 = 0.01
-        self.produce_3 = 0.01
-        self.produce_4 = 0.01
+        self.produce_1=0.02
+        self.produce_2 = 0.02
+        self.produce_3 = 0.02
+        self.produce_4 = 0.02
         self.main_texts=[]
         self.count_text=[]
         self.sub_texts=[]
