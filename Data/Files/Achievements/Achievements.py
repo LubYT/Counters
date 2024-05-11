@@ -18,7 +18,7 @@ class Achievements:
                     ['Particle accelerator','Buy Time accelerator','-'],['Infinity*2','Buy Infinity after first Infinity','-'],
 
                     ["It's A LOT!",'Gain 1e50 multi on 1st counter','-'],['Uh..Oh..','Buy 4 Time accelerators','Time speed * 1.01'],
-                    ['Timeless Infinity','Buy Infinity without Time accelerators','Time speed * 1.01'],['Boostless Infinity','Buy Infinity with 4 or less boosts','All counters * 1.01'],
+                    ['Timeless Infinity','Buy Infinity without Time accelerators','Time speed * 1.1'],['Boostless Infinity','Buy Infinity with 4 or less boosts','All counters * 1.01'],
                     ['Infinity Baron','Have 25 Infinities(not IC)','IC gain *2'],['Doom my mood','Unlock Doom','-'],
                     ['Fully upgraded!','Buy all Infinity upgrades','IC gain *2'],['New currency','Start produce Doomed Destruction','-'],
                     ['Doomed game','Buy 4th Doom Counter','DD gain *1.5'],['Destroy em all','Gain 1e8 DD','Unlock first Illusory Aspect'],
@@ -146,7 +146,7 @@ class Achievements:
             if self.achieve[11]=='Y':
                 x*=1.01
             if self.achieve[12]=='Y':
-                x*=1.01
+                x*=1.1
         if '1 Counter' in type or '2 Counter' in type or '3 Counter' in type or '4 Counter' in type or '5 Counter' in type or '6 Counter' in type or '7 Counter' in type or '8 Counter' in type:
             if self.achieve[13]=='Y':
                 x*=1.01
