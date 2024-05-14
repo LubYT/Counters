@@ -190,7 +190,7 @@ class Infinity:
         if self.upgrades[4] == 'Y':
             x=x/(self.game.Doom.doom_count**0.8)
         if self.game.boost_cheat:
-            x*=3
+            x*=5
         if '1 counter' in arg:
             if self.upgrades[6] == 'Y':
                 x *= self.multi_progressive_7

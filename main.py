@@ -100,7 +100,6 @@ class Game:
         self.main_canvas.coords(self.box, self.geometry[0]-125,190,self.geometry[0]-(self.geometry[0]-125),self.geometry[1]+10)
 
     def max(self,event):
-        self.Tickspeed.max_buy()
         self.Counter_1.buy_max()
         if self.Counter_1.first:
             self.Counter_2.buy_max()
@@ -116,6 +115,7 @@ class Game:
             self.Counter_7.buy_max()
         if self.Counter_7.first and self.CB.amount>=4:
             self.Counter_8.buy_max()
+        self.Tickspeed.max_buy()
 
     def hide_counters(self):
         self.Counter_8.hide(), self.Counter_7.hide(), self.Counter_6.hide(), self.Counter_5.hide(), self.Counter_4.hide(), self.Counter_3.hide(), self.Counter_2.hide(), self.Counter_1.hide()

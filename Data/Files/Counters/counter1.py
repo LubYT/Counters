@@ -1,3 +1,4 @@
+import math
 from decimal import Decimal
 class Counter1:
     def __init__(self,game):
@@ -22,9 +23,11 @@ class Counter1:
                                                                 text='x'+str("{:.2e}".format(Decimal(self.multi*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]*self.game.Infinity.get_boost('1 counter')))),
                                                                 fill='#61c449',
                                                                 font=('bahnschrift', 12))
-        self.box_buy=self.game.main_canvas.create_rectangle(self.game.geometry[0]-70,210,self.game.geometry[0]-270,260,width=2,fill='#63855a',outline='#95db84')
+        self.box_buy=self.game.main_canvas.create_rectangle(self.game.geometry[0]-70,210,self.game.geometry[0]-270,260,width=2,fill='black',outline='#95db84')
+        self.box_1_buy = self.game.main_canvas.create_rectangle(self.game.geometry[0] - 71, 211,
+                                                              self.game.geometry[0] - 269, 259, width=0, fill='#63855a')
         self.text_buy = self.game.main_canvas.create_text(self.game.geometry[0]-265, 235,
-                                                            anchor='w', text='Cost: ' + str(self.cost), fill='#61c449',
+                                                            anchor='w', text='Cost: ' + str(self.cost), fill='#e0d900',
                                                             font=('bahnschrift', 16))
         self.box_buy_max = self.game.main_canvas.create_rectangle(self.game.geometry[0] - 280, 210,
                                                               self.game.geometry[0] - 340, 260, width=2, fill='#63855a',
@@ -55,12 +58,14 @@ class Counter1:
         self.produce_base = 1
         self.first = False
         self.conf()
+        self.game.main_canvas.itemconfigure(self.text_buy, fill='#e0d900')
 
     def return_place(self):
         self.game.main_canvas.coords(self.text,self.game.geometry[0]-(self.game.geometry[0]-155),230)
         self.game.main_canvas.coords(self.text_multi, self.game.geometry[0] - (self.game.geometry[0] - 153),255)
         self.game.main_canvas.coords(self.box,self.game.geometry[0] - 130, 200, self.game.geometry[0] - (self.game.geometry[0] - 130), 270)
         self.game.main_canvas.coords(self.box_buy, self.game.geometry[0]-140,210,self.game.geometry[0]-340,260)
+        self.game.main_canvas.coords(self.box_1_buy, self.game.geometry[0] - 141, 211, self.game.geometry[0] - 339, 259)
         self.game.main_canvas.coords(self.text_buy, self.game.geometry[0]-335, 235)
         self.game.main_canvas.coords(self.box_buy_max, self.game.geometry[0] - 350, 210,
                                                               self.game.geometry[0] - 410, 260)
@@ -68,6 +73,7 @@ class Counter1:
         self.conf_cur()
 
     def hide(self):
+        self.game.main_canvas.coords(self.box_1_buy, -999,-999,-999,-999)
         self.game.main_canvas.coords(self.text, -999,-999)
         self.game.main_canvas.coords(self.text_multi, -999,-999)
         self.game.main_canvas.coords(self.box, -999,-999, -999,-999)
@@ -123,13 +129,42 @@ class Counter1:
         else:
             self.game.main_canvas.itemconfigure(self.text_multi, fill='#61c449', text='x' + str(
                 round(self.multi * self.game.CB.multi_list[0]*self.game.Achievements.achieve_mult('1 Counter') * self.game.Infinity.get_boost('1 counter'), 1)))
-        if self.game.Infinity.first and self.multi * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter')*self.game.Achievements.achieve_mult('1 Counter')>=1e50:
+        if self.game.Infinity.first and self.game.Infinity.first and self.multi * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter')*self.game.Achievements.achieve_mult('1 Counter')>=1e50:
             self.game.Achievements.get_achieve(11)
 
         if self.count>10000:
             self.game.main_canvas.itemconfigure(self.text, text=str("{:.2e}".format(Decimal(self.count))))
         else:
             self.game.main_canvas.itemconfigure(self.text, text=str(round(self.count, 1)))
+
+        if self.game.Menu.curMenu == 'Counters':
+            try:
+                log=math.log10(self.game.Value.value)
+            except:
+                log=1
+            try:
+                log_1=math.log10(self.cost)
+            except:
+                log_1=1
+            try:
+                log_2=math.log10(self.cost_up)
+            except:
+                log_2=1
+            main_log=(log_1-log)/log_2
+            if main_log<=0:
+                self.game.main_canvas.itemconfigure(self.text_buy,fill='#61c449')
+                coords_mult=0
+            elif main_log>=1:
+                self.game.main_canvas.itemconfigure(self.text_buy, fill='#9c3333')
+                coords_mult=1
+            else:
+                self.game.main_canvas.itemconfigure(self.text_buy, fill='#9c3333')
+                coords_mult=main_log
+            if self.game.Infinity.first:
+                self.game.main_canvas.coords(self.box_1_buy, self.game.geometry[0] - 141-(198*coords_mult), 211, self.game.geometry[0] - 339, 259)
+            else:
+                self.game.main_canvas.coords(self.box_1_buy, self.game.geometry[0] - 71 - (198 * coords_mult), 211,
+                                             self.game.geometry[0] - 269, 259)
 
         if self.cost > 10000:
             self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str("{:.2e}".format(Decimal(self.cost))))
