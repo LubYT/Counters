@@ -50,7 +50,7 @@ class Counter5:
         if self.first and self.game.CB.amount >= 2:
             self.game.Counter_6.place()
     def produce(self):
-        if self.game.Counter_4.first and self.game.CB.amount>=1:
+        if self.game.Counter_4.first:
             self.produce_count=(self.produce_base*self.game.Achievements.achieve_mult('5 Counter')*self.count*self.multi*self.game.Tickspeed.tickspeed*self.game.CB.multi_list[4]
                                 *self.game.Infinity.get_boost()/25)
             self.game.Counter_4.get_count(self.produce_count)
