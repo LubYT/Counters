@@ -17,7 +17,7 @@ class Achievements:
                     ['Lucky number','Get 7th counter after Infinity','multi to 7th counter 1.1'],['Where is 9th?','Get 8th counter after Infinity','multi to 8th counter 1.1'],
                     ['Particle accelerator','Buy Time accelerator','-'],['Infinity*2','Buy Infinity after first Infinity','-'],
 
-                    ["It's A LOT!",'Gain 1e50 multi on 1st counter','-'],['Uh..Oh..','Buy 4 Time accelerators','Time speed * 1.01'],
+                    ["It's A LOT!",'Gain 1e50 multi on 1st counter','-'],['Uh..Oh..Missed up','Buy 4 Time accelerators','Time speed * 1.01'],
                     ['Timeless Infinity','Buy Infinity without Time accelerators','Time speed * 1.1'],['Boostless Infinity','Buy Infinity with 4 or less boosts','All counters * 1.05'],
                     ['Infinity Baron','Have 25 Infinities(not IC)','IC gain *2'],['Doom my mood','Unlock Doom','-'],
                     ['Fully upgraded!','Buy all Infinity upgrades','IC gain *2'],['New currency','Start produce Doomed Destruction','-'],
