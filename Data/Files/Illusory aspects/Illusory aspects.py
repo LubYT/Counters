@@ -11,7 +11,7 @@ class Illusory_aspects:
             self.game.Menu.add('Illusory')
 
     def place(self):
-        self.box1=self.game.main_canvas.create_rectangle(10,10,990,990, fill='#303030', outline='a0a000', borderwidth=4)
+        pass
 
     def hide(self):
-        self.game.main_canvas.delete(self.box1)
+        pass

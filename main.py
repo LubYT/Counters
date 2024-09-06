@@ -7,6 +7,7 @@ import Data.Files.Counters.value_per_sec as value_per_sec_import
 import Data.Files.Counters.Counter_boost as CB_import
 import Data.Files.Saves.reader as save_import
 import Data.Files.Layers.Infinity as I_import
+import Data.Files.other.stats as Stats_import
 import Data.Files.Doom.Doom as Doom_import
 import Data.Files.Counters.Time_accelerator as TA_import
 Aspects_import=importlib.import_module('Data.Files.Illusory aspects.Illusory aspects')
@@ -47,6 +48,7 @@ class Game:
         self.Value_PS = value_per_sec_import.Value_per_second(self)
         self.Aspects=Aspects_import.Illusory_aspects(self)
         self.Achievements=achieve_import.Achievements(self)
+        self.Stats = Stats_import.Stats(self)
         self.Tickspeed = game_time_import.Tickspeed(self)
         self.Counter_1=counter1_import.Counter1(self)
         self.Counter_2 = counter2_import.Counter2(self)
@@ -76,6 +78,7 @@ class Game:
         self.Counter_1.produce()
         self.Infinity.other_funcs()
         self.Doom.produce()
+        self.Stats.time()
         window.after(40, self.tick)
     def counters_reset(self):
         self.Counter_8.reset(),self.Counter_7.reset(),self.Counter_6.reset(),self.Counter_5.reset(),self.Counter_4.reset(), self.Counter_3.reset(),self.Counter_2.reset(),self.Counter_1.reset()
@@ -138,6 +141,15 @@ class Game:
             if event.x > coords_menu_5[0] and event.y > coords_menu_5[1] and event.x < coords_menu_5[2] and event.y < \
                     coords_menu_5[3]:
                 self.Menu.open_new_cur('achievements')
+            coords_menu_6 = self.main_canvas.coords(self.Menu.box_6)
+            if event.x > coords_menu_6[0] and event.y > coords_menu_6[1] and event.x < coords_menu_6[2] and event.y < \
+                    coords_menu_6[3]:
+                self.Menu.open_new_cur('Illusory')
+
+            coords_menu_7 = self.main_canvas.coords(self.Menu.box_5)
+            if event.x > coords_menu_7[0] and event.y > coords_menu_7[1] and event.x < coords_menu_7[2] and event.y < \
+                    coords_menu_7[3]:
+                self.Menu.open_new_cur('Stats')
             if 'doom' in self.Menu.Allowed_menus:
                 coords_menu_4 = self.main_canvas.coords(self.Menu.box_3)
                 if event.x > coords_menu_4[0] and event.y > coords_menu_4[1] and event.x < coords_menu_4[2] and event.y < \

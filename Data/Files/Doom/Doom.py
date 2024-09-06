@@ -22,6 +22,7 @@ class Doom:
         self.produce_2 = 0.05
         self.produce_3 = 0.05
         self.produce_4 = 0.05
+        self.mult_doom=0.8
         self.main_texts=[]
         self.count_text=[]
         self.sub_texts=[]
@@ -84,7 +85,7 @@ class Doom:
                                                                     self.game.geometry[0] // 2 + 420, 390, width=1,
                                                                     fill='#0a0000', outline='#380000')
         self.text_auto_pause = self.game.main_canvas.create_text(self.game.geometry[0] // 2+ 375, 293, anchor='n',
-                                                        text='Auto pause\n'+self.auto_pause+' on:\n'+'\n\n'+'DD',
+                                                        text='Limit\n'+self.auto_pause+' on:\n'+'\n\n'+'DD',
                                                         fill=self.color_auto_pause_text, justify='center',
                                                         font=('bahnschrift', 12))
         self.button_auto_pause_input = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 340, 335,
@@ -172,6 +173,9 @@ class Doom:
             if float(self.auto_pause_num)>=1:
                 if self.auto_pause=='enabled' and float(self.auto_pause_num)<=self.doom_count:
                     self.doom_count=float(self.auto_pause_num)
+            elif float(self.auto_pause_num)==0:
+                if self.auto_pause=='enabled' and float(self.auto_pause_num)<=self.doom_count:
+                    self.doom_count=1
             else:
                 self.doom_count = 1
         except ValueError:
@@ -179,7 +183,7 @@ class Doom:
         if self.doom_count>=1e8:
             self.game.Achievements.get_achieve(20)
         if self.game.Menu.curMenu=='Doom':
-            self.game.main_canvas.itemconfigure(self.text_1,text='Power of doomed destruction:\n'+str("{:.2e}".format(Decimal(self.doom_count**0.8))))
+            self.game.main_canvas.itemconfigure(self.text_1,text='Power of doomed destruction:\n'+str("{:.2e}".format(Decimal(self.doom_count)))+' ^ '+str(self.mult_doom)+' = '+str("{:.2e}".format(Decimal(self.doom_count**0.8))))
             text_0=str("{:.2e}".format(Decimal(self.doom_count)))
             try:
                 for letter in self.count_text:
@@ -469,7 +473,7 @@ class Doom:
     def buy_counter(self,num):
         if num == 0:
             if self.game.Infinity.infinity_counter>=self.costs[0]:
-                self.game.Infinity.get_points(0-self.costs[0])
+                self.game.Infinity.get_points(0-self.costs[0], 'buy')
                 self.costs[0]*=self.up_costs[0]
                 self.doom_counter_1+=1
                 if self.bought_counter[0]>0:
@@ -481,7 +485,7 @@ class Doom:
                     self.game.main_canvas.itemconfigure(self.boxes[3][num][1],text='Cost: '+str("{:.2e}".format(Decimal(self.costs[0])))+' IC')
         elif num == 1:
             if self.game.Infinity.infinity_counter>=self.costs[1]:
-                self.game.Infinity.get_points(0-self.costs[1])
+                self.game.Infinity.get_points(0-self.costs[1], 'buy')
                 self.costs[1]*=self.up_costs[1]
                 self.doom_counter_2+=1
                 if self.bought_counter[1]>0:
@@ -493,7 +497,7 @@ class Doom:
                     self.game.main_canvas.itemconfigure(self.boxes[3][num][1],text='Cost: '+str("{:.2e}".format(Decimal(self.costs[1])))+' IC')
         elif num == 2:
             if self.game.Infinity.infinity_counter>=self.costs[2]:
-                self.game.Infinity.get_points(0-self.costs[2])
+                self.game.Infinity.get_points(0-self.costs[2], 'buy')
                 self.costs[2]*=self.up_costs[2]
                 self.doom_counter_3+=1
                 if self.bought_counter[2]>0:
@@ -506,7 +510,7 @@ class Doom:
         elif num == 3:
             if self.game.Infinity.infinity_counter>=self.costs[3]:
                 self.game.Achievements.get_achieve(19)
-                self.game.Infinity.get_points(0-self.costs[3])
+                self.game.Infinity.get_points(0-self.costs[3], 'buy')
                 self.costs[3]*=self.up_costs[3]
                 self.doom_counter_4+=1
                 if self.bought_counter[3]>0:

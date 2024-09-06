@@ -8,6 +8,7 @@ class Menu:
         self.image_4 = PhotoImage(file='Data/Files/images/doom.png')
         self.image_5 = PhotoImage(file='Data/Files/images/achievementes.png')
         self.image_6 = PhotoImage(file='Data/Files/images/illusory_aspect.png')
+        self.image_7 = PhotoImage(file='Data/Files/images/stats.png')
         self.game=game
         self.active=False
         self.curMenu='Counters'
@@ -20,7 +21,7 @@ class Menu:
 
     def place_menus(self):
         self.active=True
-        self.Allowed_menus.append('counters'),self.Allowed_menus.append('infinity'),self.Allowed_menus.append('automatick'),self.Allowed_menus.append('achievements')
+        self.Allowed_menus.append('counters'),self.Allowed_menus.append('infinity'),self.Allowed_menus.append('automatick'),self.Allowed_menus.append('achievements'),self.Allowed_menus.append('Stats')
         self.box=self.game.main_canvas.create_rectangle(0,190,110,270,width=2,fill='black',outline='#e80923')
         self.box_1 = self.game.main_canvas.create_rectangle(0, 280, 110, 360, width=2, fill='black', outline='#e88009')
         self.box_2 = self.game.main_canvas.create_rectangle(0, 370, 110, 450, width=2, fill='black', outline='#4ac9ff')
@@ -29,6 +30,10 @@ class Menu:
         self.image_3_cnvs = self.game.main_canvas.create_image(55, 410, anchor='center', image=self.image_3)
         self.box_4 = self.game.main_canvas.create_rectangle(self.game.geometry[0]+5, 190, self.game.geometry[0]-112, 270, width=2, fill='black',outline='#ffe603')
         self.image_5_cnvs = self.game.main_canvas.create_image(self.game.geometry[0]-55, 230, anchor='center', image=self.image_5)
+        self.box_5 = self.game.main_canvas.create_rectangle(self.game.geometry[0] + 5, 280, self.game.geometry[0] - 112,
+                                                            360, width=2, fill='black', outline='#fcacac')
+        self.image_6_cnvs = self.game.main_canvas.create_image(self.game.geometry[0] - 55, 320, anchor='center',
+                                                               image=self.image_7)
 
     def open_new_cur(self,argument):
         self.close_cur()
@@ -50,6 +55,9 @@ class Menu:
         if argument=='Illusory' and argument in self.Allowed_menus:
             self.curMenu='Illusory'
             self.game.Aspects.place()
+        if argument=='Stats' and argument in self.Allowed_menus:
+            self.curMenu='Stats'
+            self.game.Stats.place()
 
     def add(self,argument):
         self.Allowed_menus.append(argument)
@@ -57,8 +65,8 @@ class Menu:
             self.box_3 = self.game.main_canvas.create_rectangle(0, 460, 110, 540, width=2, fill='black', outline='#691913')
             self.image_4_cnvs = self.game.main_canvas.create_image(55, 500, anchor='center', image=self.image_4)
         if argument=='Illusory':
-            self.box_5 = self.game.main_canvas.create_rectangle(self.game.geometry[0]+5, 280, self.game.geometry[0]-112, 360, width=2, fill='black', outline='#56dbd2')
-            self.image_6_cnvs = self.game.main_canvas.create_image(self.game.geometry[0]-55, 320, anchor='center', image=self.image_6)
+            self.box_6 = self.game.main_canvas.create_rectangle(self.game.geometry[0]+5, 370, self.game.geometry[0]-112, 450, width=2, fill='black', outline='#56dbd2')
+            self.image_7_cnvs = self.game.main_canvas.create_image(self.game.geometry[0]-55, 410, anchor='center', image=self.image_6)
 
 
     def close_cur(self):
@@ -74,3 +82,5 @@ class Menu:
             self.game.Achievements.hide()
         elif self.curMenu=='Illusory':
             self.game.Aspects.hide()
+        elif self.curMenu == 'Stats':
+            self.game.Stats.hide()

@@ -113,13 +113,15 @@ class Achievements:
 
 
     def get_achieve(self,num):
-        if num==20 and self.first_20==False:
-            self.first_20=True
-            self.game.Menu.add('Illusory')
         if self.achieve[num-1]=='N':
             self.achieve[num-1]='Y'
             if self.game.Menu.curMenu=='Achievements':
                 self.game.main_canvas.itemconfigure(self.placed[num-1][0],fill='#349606')
+            ##unlocks##
+            if num==20:
+                self.game.Aspects.add()
+
+            ##box
             self.create_box(num-1)
 
     def achieve_mult(self,*type):

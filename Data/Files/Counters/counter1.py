@@ -160,6 +160,8 @@ class Counter1:
             else:
                 self.game.main_canvas.itemconfigure(self.text_buy, fill='#9c3333')
                 coords_mult=main_log
+            if str(coords_mult)=='nan':
+                coords_mult=0
             if self.game.Infinity.first:
                 self.game.main_canvas.coords(self.box_1_buy, self.game.geometry[0] - 141-(198*coords_mult), 211, self.game.geometry[0] - 339, 259)
             else:

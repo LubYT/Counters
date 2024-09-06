@@ -18,20 +18,22 @@ class Time_accelerator:
                                                               fill='black', outline='#4002c4')
         self.text_buy = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 320, 140,
                                                           anchor='center', justify='center', text='Cost: ' + str(
-                "{:.2e}".format(Decimal(self.cost))) + '\nBoost game speed\nupgrades (*1.03)', fill='#4d00b3',
+                "{:.2e}".format(Decimal(self.cost))) + '\nBoost counters speed\nupgrades (*1.03)', fill='#4d00b3',
                                                           font=('bahnschrift', 10))
     def buy(self):
         if self.game.Value.value >= self.cost and not self.game.Value.lock:
             self.game.Value.value -= self.cost
             self.cost = self.cost * self.cost_up
+            print(self.game.Infinity.first)
             if self.game.Infinity.first:
+                print('hi')
                 self.game.Achievements.get_achieve(9)
-                if self.amount>=4:
+                if self.amount>=3:
                     self.game.Achievements.get_achieve(12)
             self.amount+=1
             self.game.main_canvas.itemconfigure(self.text, text='Time accelerators: ' + str(self.amount))
             self.accel*=self.upper
-            self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str("{:.2e}".format(Decimal(self.cost))) + '\nBoost game speed\nupgrades (*1.03)')
+            self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str("{:.2e}".format(Decimal(self.cost))) + '\nBoost counters speed\nupgrades (*1.03)')
             self.game.TA_reset()
 
     def reset(self):
@@ -42,7 +44,7 @@ class Time_accelerator:
         self.cost_up = 1e75
         self.game.main_canvas.itemconfigure(self.text, text='Time accelerators: ' + str(self.amount))
         self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-            "{:.2e}".format(Decimal(self.cost))) + '\nBoost game speed\nupgrades (*1.03)')
+            "{:.2e}".format(Decimal(self.cost))) + '\nBoost counters speed\nupgrades (*1.03)')
 
     def get_save(self):
         data=''

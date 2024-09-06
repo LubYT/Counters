@@ -58,9 +58,10 @@ class Save:
             else:
                 list.append(data[:-1:])
             self.TS_data.append(list)
+
             data=file.readline()
             list=[]
-            for i in range(5):
+            for i in range(6):
                 if i<3:
                     index=data.find(',')
                     list.append(data[:index:])
@@ -76,6 +77,10 @@ class Save:
                     list.append(list_2)
                     data=data[2::]
                 elif i == 4:
+                    index = data.find(',')
+                    list.append(data[:index:])
+                    data = data[index + 1::]
+                elif i == 5:
                     list.append(data[:-1:])
                 self.Infinity_data.append(list)
 
@@ -127,11 +132,54 @@ class Save:
                 index = data.find(',')
                 list.append(data[:index:])
                 data = data[index + 1::]
-                print(data)
-            print(list)
             self.Achieve_data=list
 
-            self.Aspect_data = file.readline()
+            data=file.readline()
+            data = data[:-1:]
+            self.Aspect_data =data
+
+            data = file.readline()
+            data = data[1:-1:]
+            list=[]
+            list_2=[]
+            i=0
+            while data.find(']') != 0:
+                i+=1
+                print(data)
+                index = data.find(',')
+                if i<4:
+                    list.append(int(data[:index:]))
+                else:
+                    list.append(float(data[:index:]))
+                data = data[index + 1::]
+            list_2.append(list)
+            data = data[3::]
+            list = []
+            i = 0
+            while data.find(']') != 0:
+                i += 1
+                print(data)
+                index = data.find(',')
+                if i < 4:
+                    list.append(int(data[:index:]))
+                else:
+                    list.append(float(data[:index:]))
+                data = data[index + 1::]
+            list_2.append(list)
+            data = data[3::]
+            list = []
+            i = 0
+            while data.find(']') != 0:
+                i += 1
+                print(data)
+                index = data.find(',')
+                if i < 4:
+                    list.append(int(data[:index:]))
+                else:
+                    list.append(float(data[:index:]))
+                data = data[index + 1::]
+            list_2.append(list)
+            self.Stats_data = list_2
 
 
 
@@ -148,23 +196,14 @@ class Save:
         with open('Data/Files/Saves/SAVE.txt','w') as file:
             full_save_data=''
             full_save_data+=str(self.game.Value.value)+'\n'
-            for i in range(8):
-                if i==0:
-                    full_save_data+=self.game.Counter_1.get_save()
-                elif i == 1:
-                    full_save_data += self.game.Counter_2.get_save()
-                elif i==2:
-                    full_save_data+=self.game.Counter_3.get_save()
-                elif i == 3:
-                    full_save_data += self.game.Counter_4.get_save()
-                elif i==4:
-                    full_save_data+=self.game.Counter_5.get_save()
-                elif i == 5:
-                    full_save_data += self.game.Counter_6.get_save()
-                elif i==6:
-                    full_save_data+=self.game.Counter_7.get_save()
-                elif i == 7:
-                    full_save_data += self.game.Counter_8.get_save()
+            full_save_data+=self.game.Counter_1.get_save()
+            full_save_data += self.game.Counter_2.get_save()
+            full_save_data+=self.game.Counter_3.get_save()
+            full_save_data += self.game.Counter_4.get_save()
+            full_save_data+=self.game.Counter_5.get_save()
+            full_save_data += self.game.Counter_6.get_save()
+            full_save_data+=self.game.Counter_7.get_save()
+            full_save_data += self.game.Counter_8.get_save()
             full_save_data+=self.game.CB.get_save()
             full_save_data+=self.game.TA.get_save()
             full_save_data+=self.game.Tickspeed.get_save()
@@ -172,4 +211,6 @@ class Save:
             full_save_data+=self.game.Automatick.get_save()
             full_save_data+=self.game.Doom.get_save()
             full_save_data += self.game.Achievements.get_save()
+            full_save_data+=self.game.Aspects.get_save()
+            full_save_data += self.game.Stats.get_save()
             file.write(full_save_data)
