@@ -141,10 +141,11 @@ class Game:
             if event.x > coords_menu_5[0] and event.y > coords_menu_5[1] and event.x < coords_menu_5[2] and event.y < \
                     coords_menu_5[3]:
                 self.Menu.open_new_cur('achievements')
-            coords_menu_6 = self.main_canvas.coords(self.Menu.box_6)
-            if event.x > coords_menu_6[0] and event.y > coords_menu_6[1] and event.x < coords_menu_6[2] and event.y < \
-                    coords_menu_6[3]:
-                self.Menu.open_new_cur('Illusory')
+            if 'Illusory' in self.Menu.Allowed_menus:
+                coords_menu_6 = self.main_canvas.coords(self.Menu.box_6)
+                if event.x > coords_menu_6[0] and event.y > coords_menu_6[1] and event.x < coords_menu_6[2] and event.y < \
+                        coords_menu_6[3]:
+                    self.Menu.open_new_cur('Illusory')
 
             coords_menu_7 = self.main_canvas.coords(self.Menu.box_5)
             if event.x > coords_menu_7[0] and event.y > coords_menu_7[1] and event.x < coords_menu_7[2] and event.y < \
