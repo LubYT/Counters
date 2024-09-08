@@ -65,6 +65,8 @@ class Infinity:
             if self.first == False:
                 self.first = True
                 self.game.menu_place()
+            if self.game.Aspects.active==True:
+                self.game.Aspects.reward()
             self.infinities += 1
             self.game.Stats.inf()
             if self.infinities==25:
@@ -79,16 +81,17 @@ class Infinity:
         self.multi_progressive_7=1
 
     def get_points(self,value,*args):
-        self.infinity_counter += value
-        if not 'buy' in args:
-            self.total_count+=value
-        if self.infinity_counter < 20:
-            self.game.main_canvas.itemconfigure(self.text, text='Infinity Count: ' + str(round(self.infinity_counter,2)))
-        elif self.infinity_counter < 1000:
-            self.game.main_canvas.itemconfigure(self.text, text='Infinity Count: \n' + str(round(self.infinity_counter,2)))
-        else:
-            self.game.main_canvas.itemconfigure(self.text, text='Infinity Count: \n' + "{:.2e}".format(
-                Decimal(self.infinity_counter)))
+        if self.game.Aspects.active==False:
+            self.infinity_counter += value
+            if not 'buy' in args:
+                self.total_count+=value
+            if self.infinity_counter < 20:
+                self.game.main_canvas.itemconfigure(self.text, text='Infinity Count: ' + str(round(self.infinity_counter,2)))
+            elif self.infinity_counter < 1000:
+                self.game.main_canvas.itemconfigure(self.text, text='Infinity Count: \n' + str(round(self.infinity_counter,2)))
+            else:
+                self.game.main_canvas.itemconfigure(self.text, text='Infinity Count: \n' + "{:.2e}".format(
+                    Decimal(self.infinity_counter)))
 
     def buy_upgrade(self, index):
         if index == 1 and self.upgrades[0]=='N':
@@ -178,35 +181,41 @@ class Infinity:
     def get_boost(self,*arg):
         x = 1
         #inf
-        if self.first:
-            x*=1.15
-        if self.upgrades[0] == 'Y':
-            y=1
-            if self.infinity_counter>0:
-                y+=round((self.infinity_counter / (5 + math.log(self.infinity_counter))),1)
-            if self.infinities>0:
-                y+=round((self.infinities / (5 + math.log(self.infinities))), 1)
-            x*=y
-        if self.upgrades[3] == 'Y':
-            if 10 < self.game.Value.value < 1.8e308:
-                x *= round((math.log(self.game.Value.value,10)**0.75),2)
-            else:
-                x *= 1
+        if not (self.game.Aspects.active==True and self.game.Aspects.cur_ill==1):
+            if self.first:
+                x*=1.15
+            if self.upgrades[0] == 'Y':
+                y=1
+                if self.infinity_counter>0:
+                    y+=round((self.infinity_counter / (5 + math.log(self.infinity_counter))),1)
+                if self.infinities>0:
+                    y+=round((self.infinities / (5 + math.log(self.infinities))), 1)
+                x*=y
+            if self.upgrades[3] == 'Y':
+                if 10 < self.game.Value.value < 1.8e308:
+                    x *= round((math.log(self.game.Value.value,10)**0.75),2)
+                else:
+                    x *= 1
         #doom
-        if self.upgrades[4] == 'Y':
-            x=x/(self.game.Doom.doom_count**self.game.Doom.mult_doom)
+        if not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 1):
+            if self.upgrades[4] == 'Y':
+                x=x/(self.game.Doom.doom_count**self.game.Doom.mult_doom)
+        else:
+            x = x *(self.game.Doom.doom_count ** 0.2)
+            x= x/75
         #cheat
         if self.game.boost_cheat:
             x*=5
         #spec
-        if '1 counter' in arg:
-            if self.upgrades[6] == 'Y':
-                x *= self.multi_progressive_7
+        if not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 1):
+            if '1 counter' in arg:
+                if self.upgrades[6] == 'Y':
+                    x *= self.multi_progressive_7
         return x
 
     def get_boost_1(self):
         x=1
-        if self.upgrades[1] == 'Y':
+        if self.upgrades[1] == 'Y' and not (self.game.Aspects.active==True and self.game.Aspects.cur_ill==1):
             x*=1.25
         return x
 
@@ -268,13 +277,18 @@ class Infinity:
 
             ###
         if self.placed:
-            if self.income*(self.game.Doom.doom_count**0.8)*self.game.Achievements.achieve_mult('IC')<10000:
-                self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                        "{:.2e}".format(Decimal(self.cost))) + '\nGet ' + str(round(self.income*(self.game.Doom.doom_count**self.game.Doom.mult_doom)*self.game.Achievements.achieve_mult('IC'),1)) + ' IC', fill='#d99000')
+            if not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 1):
+                self.game.main_canvas.itemconfigure(self.box_buy, outline='#ffbc36')
+                if self.income*(self.game.Doom.doom_count**0.8)*self.game.Achievements.achieve_mult('IC')<10000:
+                    self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
+                            "{:.2e}".format(Decimal(self.cost))) + '\nGet ' + str(round(self.income*(self.game.Doom.doom_count**self.game.Doom.mult_doom)*self.game.Achievements.achieve_mult('IC'),1)) + ' IC', fill='#d99000')
+                else:
+                    self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
+                        "{:.2e}".format(Decimal(self.cost))) + '\nGet ' + str(
+                        "{:.2e}".format(Decimal(round(self.income * (self.game.Doom.doom_count ** self.game.Doom.mult_doom)*self.game.Achievements.achieve_mult('IC'), 1)))) + ' IC', fill='#d99000')
             else:
-                self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                    "{:.2e}".format(Decimal(self.cost))) + '\nGet ' + str(
-                    "{:.2e}".format(Decimal(round(self.income * (self.game.Doom.doom_count ** self.game.Doom.mult_doom)*self.game.Achievements.achieve_mult('IC'), 1)))) + ' IC', fill='#d99000')
+                self.game.main_canvas.itemconfigure(self.box_buy,outline='#93d9d9')
+                self.game.main_canvas.itemconfigure(self.text_buy, text='Reach 1.8e308\nInfinity obeys Illusion\nThere is no IC', fill='#93d9d9')
 
     def place_upgrades(self):
         if self.upgrades[0]=='N':

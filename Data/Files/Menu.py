@@ -14,10 +14,19 @@ class Menu:
         self.curMenu='Counters'
         self.Allowed_menus=[]
         self.curStage='Basic mode'
+        self.colorStage='#707070'
         self.textStage=self.game.main_canvas.create_text(self.game.geometry[0] // 2, 10, anchor='n',
                                                         text=self.curStage,
-                                                        fill='#707070', justify='center',
+                                                        fill=self.colorStage, justify='center',
                                                         font=('bahnschrift', 12))
+
+    def stage_get(self,stage='Basic mode',color='#707070',change='-',color_box='#ad0000'):
+        self.curStage=stage
+        self.colorStage=color
+        self.game.main_canvas.itemconfigure(self.textStage,text=self.curStage,fill=self.colorStage)
+        self.game.color_box(color_box)
+        if change!='-':
+            self.open_new_cur(change)
 
     def place_menus(self):
         self.active=True

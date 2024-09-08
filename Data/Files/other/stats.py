@@ -34,6 +34,12 @@ class Stats:
                                                         anchor='center',
                                                         fill='#d99000', justify='center',
                                                         font=('bahnschrift', 12))
+        if 'doom' in self.game.Menu.Allowed_menus:
+            self.text_4 = self.game.main_canvas.create_text(self.game.geometry[0] // 2, 440,
+                                                            text="During all DOOM you have received " +self.time_get('DD')+" DD",
+                                                            anchor='center',
+                                                            fill='#606060', justify='center',
+                                                            font=('bahnschrift', 12))
         self.conf()
 
 
@@ -47,6 +53,9 @@ class Stats:
                                                     'inf fast'))
             self.game.main_canvas.itemconfigure(self.text_3,
                                                 text="During all "+str(self.game.Infinity.infinities)+" infinities you have received " +self.time_get('IC')+" IC")
+            if 'doom' in self.game.Menu.Allowed_menus:
+                self.game.main_canvas.itemconfigure(self.text_4,
+                                                    text="During all DOOM you have received " +self.time_get('DD')+" DD")
             self.game.window.after(40,self.conf)
 
     def time_get(self,arg):
@@ -72,7 +81,13 @@ class Stats:
             if self.game.Infinity.total_count>=1000:
                 x="{:.2e}".format(Decimal(self.game.Infinity.total_count))
             else:
-                x=self.game.Infinity.total_count
+                x=round(self.game.Infinity.total_count,2)
+            return str(x)
+        if arg=='DD':
+            if self.game.Doom.doom_total>=1000:
+                x="{:.2e}".format(Decimal(self.game.Doom.doom_total))
+            else:
+                x=round(self.game.Doom.doom_total,2)
             return str(x)
 
     def time(self):
@@ -113,11 +128,19 @@ class Stats:
                             self.fastest_inf[3],self.fastest_inf[2],self.fastest_inf[1],self.fastest_inf[0] = self.time_in_inf[3],self.time_in_inf[2],self.time_in_inf[1],self.time_in_inf[0]
         else:
             self.fastest_inf[3],self.fastest_inf[2],self.fastest_inf[1],self.fastest_inf[0] = self.time_in_inf[3],self.time_in_inf[2],self.time_in_inf[1],self.time_in_inf[0]
+        if self.fastest_inf[3]==0 and self.fastest_inf[2]==0 and self.fastest_inf[1]<10:
+            self.game.Achievements.get_achieve(21)
+        if self.fastest_inf[3]==0 and self.fastest_inf[2]==0 and self.fastest_inf[1]<1:
+            self.game.Achievements.get_achieve(23)
         self.time_in_inf[3],self.time_in_inf[2],self.time_in_inf[1],self.time_in_inf[0]=0,0,0,0
 
 
     def hide(self):
         self.game.main_canvas.delete(self.text_0),self.game.main_canvas.delete(self.text_1),self.game.main_canvas.delete(self.text_3),self.game.main_canvas.delete(self.text_2)
+        try:
+            self.game.main_canvas.delete(self.text_4)
+        except:
+            pass
 
     def get_save(self):
         save='['

@@ -23,9 +23,9 @@ class Value:
 
     def check(self):
             if self.value > 10000:
-                self.game.main_canvas.itemconfigure(self.text, text=str("{:.2e}".format(Decimal(self.value))))
+                self.game.main_canvas.itemconfigure(self.text,fill='#a9cf9b', text=str("{:.2e}".format(Decimal(self.value))))
             else:
-                self.game.main_canvas.itemconfigure(self.text,text=str(round(self.value,1)))
+                self.game.main_canvas.itemconfigure(self.text,fill='#a9cf9b',text=str(round(self.value,1)))
             if self.value>1e10 and self.first_e10==False or self.game.CB.amount>0 and self.first_e10==False or self.game.TA.amount>0 and self.first_e10==False or self.first_inf and self.first_e10==False:
                 self.first_e10=True
                 self.game.CB.place()
@@ -38,9 +38,16 @@ class Value:
             if self.value == 1.8e308:
                 self.lock=True
 
+    def Illusion(self):
+        if self.game.Aspects.active:
+            self.game.main_canvas.itemconfigure(self.text,text='Illusion',fill='#93d9d9')
+            self.game.window.after(610,self.Illusion)
+
+
+
     def reset(self):
         self.lock=False
-        if self.game.Infinity.upgrades[2]=='Y':
+        if self.game.Infinity.upgrades[2]=='Y' and not (self.game.Aspects.active==True and self.game.Aspects.cur_ill==1):
             self.value = 1e5
         else:
             self.value = 100

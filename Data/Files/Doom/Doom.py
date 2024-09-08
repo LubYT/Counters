@@ -7,17 +7,18 @@ class Doom:
         self.images=[PhotoImage(file='Data/Files/images/play_dd.png'),PhotoImage(file='Data/Files/images/stop_dd.png')]
         self.game=game
         self.doom_count=float(self.game.Save.Doom_data[0][0])
-        self.doom_counter_1 = self.game.Save.Doom_data[0][1][0]
-        self.doom_counter_2 = self.game.Save.Doom_data[0][1][1]
-        self.doom_counter_3 = self.game.Save.Doom_data[0][1][2]
-        self.doom_counter_4 = self.game.Save.Doom_data[0][1][3]
-        self.multies=[self.game.Save.Doom_data[0][2][0],self.game.Save.Doom_data[0][2][1],self.game.Save.Doom_data[0][2][2],
-                      self.game.Save.Doom_data[0][2][3]]
-        self.costs=[self.game.Save.Doom_data[0][3][0],self.game.Save.Doom_data[0][3][1],self.game.Save.Doom_data[0][3][2],
-                    self.game.Save.Doom_data[0][3][3]]
+        self.doom_total=float(self.game.Save.Doom_data[0][1])
+        self.doom_counter_1 = self.game.Save.Doom_data[0][2][0]
+        self.doom_counter_2 = self.game.Save.Doom_data[0][2][1]
+        self.doom_counter_3 = self.game.Save.Doom_data[0][2][2]
+        self.doom_counter_4 = self.game.Save.Doom_data[0][2][3]
+        self.multies=[self.game.Save.Doom_data[0][3][0],self.game.Save.Doom_data[0][3][1],self.game.Save.Doom_data[0][3][2],
+                      self.game.Save.Doom_data[0][3][3]]
+        self.costs=[self.game.Save.Doom_data[0][4][0],self.game.Save.Doom_data[0][4][1],self.game.Save.Doom_data[0][4][2],
+                    self.game.Save.Doom_data[0][4][3]]
         self.up_costs=[5,25,500,10000]
-        self.bought_counter=[self.game.Save.Doom_data[0][4][0],self.game.Save.Doom_data[0][4][1],self.game.Save.Doom_data[0][4][2],
-                             self.game.Save.Doom_data[0][4][3]]
+        self.bought_counter=[self.game.Save.Doom_data[0][5][0],self.game.Save.Doom_data[0][5][1],self.game.Save.Doom_data[0][5][2],
+                             self.game.Save.Doom_data[0][5][3]]
         self.produce_1=0.05
         self.produce_2 = 0.05
         self.produce_3 = 0.05
@@ -37,7 +38,7 @@ class Doom:
         self.curbar='N'
         self.colors=['#606060','#404040','#202020']
         self.text='Doomed Destruction'
-        self.active=bool(self.game.Save.Doom_data[0][5])
+        self.active=bool(self.game.Save.Doom_data[0][6])
 
     def init_text(self):
         self.len = 0
@@ -66,10 +67,16 @@ class Doom:
 
     def place(self):
         self.init_text()
-        self.sub_texts.append(self.game.main_canvas.create_text(self.game.geometry[0]//2,360,anchor='center',
-                                                      text='Doomed destruction decrease counters production, but increase infinity count gain.',
-                                                      fill=self.colors[0], justify='center',
-                                                      font=('bahnschrift', 12)))
+        if not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 1):
+            self.sub_texts.append(self.game.main_canvas.create_text(self.game.geometry[0]//2,360,anchor='center',
+                                                          text='Doomed destruction decrease counters production, but increase infinity count gain.',
+                                                          fill=self.colors[0], justify='center',
+                                                          font=('bahnschrift', 12)))
+        else:
+            self.sub_texts.append(self.game.main_canvas.create_text(self.game.geometry[0] // 2, 360, anchor='center',
+                                                                    text='Doomed destruction obeys Illusion. It buffs counters production',
+                                                                    fill=self.colors[0], justify='center',
+                                                                    font=('bahnschrift', 12)))
         self.text_1=self.game.main_canvas.create_text(self.game.geometry[0]//2,390,anchor='center',
                                                       text='Power of doomed destruction:\n'+str("{:.2e}".format(Decimal(self.doom_count**0.8))),
                                                       fill=self.colors[0], justify='center',
@@ -147,14 +154,19 @@ class Doom:
             except:
                 self.game.main_canvas.itemconfigure(self.curbar, fill='#c75b5b')
     def produce_counts(self):
-        income=(self.doom_counter_1*self.multies[0]*self.produce_1)/20
+        income=(self.doom_counter_1*self.multies[0]*self.produce_1*self.get_extra_mult(1))/20
         if len(str("{:.2e}".format(Decimal(self.doom_count))))!=self.len and self.game.Menu.curMenu=='Doom':
             self.hide_text()
             self.init_text()
         self.get_doomed_count(income)
-        self.doom_counter_1+=(self.doom_counter_2*self.multies[1]*self.produce_2)/20
-        self.doom_counter_2 += (self.doom_counter_3 * self.multies[2] * self.produce_3) / 20
-        self.doom_counter_3 += (self.doom_counter_4 * self.multies[3] * self.produce_4) / 20
+        self.doom_counter_1+=(self.doom_counter_2*self.multies[1]*self.produce_2*self.get_extra_mult(2))/20
+        self.doom_counter_2 += (self.doom_counter_3 * self.multies[2] * self.produce_3*self.get_extra_mult(3)) / 20
+        self.doom_counter_3 += (self.doom_counter_4 * self.multies[3] * self.produce_4*self.get_extra_mult(4)) / 20
+
+    def get_extra_mult(self,arg):
+        x=1
+        x*=self.game.Aspects.reward_1
+        return x
 
     def reset(self):
         self.get_doomed_count('1')
@@ -166,8 +178,11 @@ class Doom:
     def get_doomed_count(self,amount):
         if amount!='1':
             self.game.Achievements.get_achieve(18)
-            self.doom_count+=amount*self.game.Achievements.achieve_mult('DD')
+            amm = amount * self.game.Achievements.achieve_mult('DD')
+            self.doom_count+=amm
         else:
+            amm = 0
+            self.doom_total+=1
             self.doom_count=1
         try:
             if float(self.auto_pause_num)>=1:
@@ -180,10 +195,19 @@ class Doom:
                 self.doom_count = 1
         except ValueError:
             pass
+        if self.doom_count!=1 or self.auto_pause=='disabled':
+            self.doom_total += amm
         if self.doom_count>=1e8:
             self.game.Achievements.get_achieve(20)
+            if self.doom_count>=1e15:
+                self.game.Achievements.get_achieve(24)
         if self.game.Menu.curMenu=='Doom':
-            self.game.main_canvas.itemconfigure(self.text_1,text='Power of doomed destruction:\n'+str("{:.2e}".format(Decimal(self.doom_count)))+' ^ '+str(self.mult_doom)+' = '+str("{:.2e}".format(Decimal(self.doom_count**0.8))))
+            if not (self.game.Aspects.active==True and self.game.Aspects.cur_ill==1):
+                self.game.main_canvas.itemconfigure(self.text_1,text='Power of doomed destruction:\n'+str("{:.2e}".format(Decimal(self.doom_count)))+' ^ '+str(self.mult_doom)+' = '+str("{:.2e}".format(Decimal(self.doom_count**0.8))))
+            else:
+                self.game.main_canvas.itemconfigure(self.text_1, text='Power of doomed destruction:\n' + str(
+                    "{:.2e}".format(Decimal(self.doom_count))) + ' ^ ' + str(0.2) + ' = ' + str(
+                    "{:.2e}".format(Decimal(self.doom_count ** 0.2))))
             text_0=str("{:.2e}".format(Decimal(self.doom_count)))
             try:
                 for letter in self.count_text:
@@ -195,6 +219,7 @@ class Doom:
             except:
                 self.hide_text()
                 self.init_text()
+
 
 
     def hide_text(self):
@@ -293,54 +318,54 @@ class Doom:
                                                                      font=('bahnschrift', 18)))
         self.boxes.append(counters_values)
         multies=[]
-        if self.multies[0]<1000:
+        if self.multies[0]*self.get_extra_mult(0)<1000:
             multies.append(self.game.main_canvas.create_text(150, 480,
                                                                          anchor='w',
-                                                                         text='x'+str(round(self.multies[0],1)),
+                                                                         text='x'+str(round(self.multies[0]*self.get_extra_mult(0),1)),
                                                                          fill='#7d0000', justify='center',
                                                                          font=('bahnschrift', 12)))
-        elif self.multies[0]>=1000:
+        elif self.multies[0]*self.get_extra_mult(0)>=1000:
             multies.append(self.game.main_canvas.create_text(150, 480,
                                                                      anchor='w',
-                                                                     text='x'+str("{:.2e}".format(Decimal(self.multies[0]))),
+                                                                     text='x'+str("{:.2e}".format(Decimal(self.multies[0]*self.get_extra_mult(0)))),
                                                                      fill='#7d0000', justify='center',
                                                                      font=('bahnschrift', 12)))
-        if self.multies[1] < 1000:
+        if self.multies[1]*self.get_extra_mult(1) < 1000:
             multies.append(self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 30, 480,
                                                              anchor='w',
-                                                             text='x' + str(round(self.multies[1], 1)),
+                                                             text='x' + str(round(self.multies[1]*self.get_extra_mult(1), 1)),
                                                              fill='#7d0000', justify='center',
                                                              font=('bahnschrift', 12)))
-        elif self.multies[1] >= 1000:
+        elif self.multies[1]*self.get_extra_mult(1) >= 1000:
             multies.append(self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 30, 480,
                                                                      anchor='w',
                                                                      text='x' + str(
-                                                                         "{:.2e}".format(Decimal(self.multies[1]))),
+                                                                         "{:.2e}".format(Decimal(self.multies[1]*self.get_extra_mult(1)))),
                                                                      fill='#7d0000', justify='center',
                                                                      font=('bahnschrift', 12)))
-        if self.multies[2]<1000:
+        if self.multies[2]*self.get_extra_mult(2)<1000:
             multies.append(self.game.main_canvas.create_text(150, 560,
                                                                          anchor='w',
-                                                                         text='x'+str(round(self.multies[2],1)),
+                                                                         text='x'+str(round(self.multies[2]*self.get_extra_mult(2),1)),
                                                                          fill='#7d0000', justify='center',
                                                                          font=('bahnschrift', 12)))
-        elif self.multies[2]>=1000:
+        elif self.multies[2]*self.get_extra_mult(2)>=1000:
             multies.append(self.game.main_canvas.create_text(150, 560,
                                                                      anchor='w',
-                                                                     text='x'+str("{:.2e}".format(Decimal(self.multies[2]))),
+                                                                     text='x'+str("{:.2e}".format(Decimal(self.multies[2]*self.get_extra_mult(2)))),
                                                                      fill='#7d0000', justify='center',
                                                                      font=('bahnschrift', 12)))
-        if self.multies[3] < 1000:
+        if self.multies[3]*self.get_extra_mult(3) < 1000:
             multies.append(self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 30, 560,
                                                              anchor='w',
-                                                             text='x' + str(round(self.multies[3], 1)),
+                                                             text='x' + str(round(self.multies[3]*self.get_extra_mult(3), 1)),
                                                              fill='#7d0000', justify='center',
                                                              font=('bahnschrift', 12)))
-        elif self.multies[3] >= 1000:
+        elif self.multies[3]*self.get_extra_mult(3) >= 1000:
             multies.append(self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 30, 560,
                                                                      anchor='w',
                                                                      text='x' + str(
-                                                                         "{:.2e}".format(Decimal(self.multies[3]))),
+                                                                         "{:.2e}".format(Decimal(self.multies[3]*self.get_extra_mult(3)))),
                                                                      fill='#7d0000', justify='center',
                                                                      font=('bahnschrift', 12)))
         self.boxes.append(multies)
@@ -464,10 +489,10 @@ class Doom:
                     self.game.main_canvas.itemconfigure(counter,text=str("{:.2e}".format(Decimal(list[x]))))
                 x+=1
             for counter in self.boxes[2]:
-                if self.multies[x_1]<1000:
-                    self.game.main_canvas.itemconfigure(counter, text='x'+str(round(self.multies[x_1], 1)))
-                elif self.multies[x_1] >= 1000:
-                    self.game.main_canvas.itemconfigure(counter,text='x'+str("{:.2e}".format(Decimal(self.multies[x_1]))))
+                if self.multies[x_1]*self.get_extra_mult(x+1)<1000:
+                    self.game.main_canvas.itemconfigure(counter, text='x'+str(round(self.multies[x_1]*self.get_extra_mult(x+1), 1)))
+                elif self.multies[x_1]*self.get_extra_mult(x+1)>= 1000:
+                    self.game.main_canvas.itemconfigure(counter,text='x'+str("{:.2e}".format(Decimal(self.multies[x_1]*self.get_extra_mult(x+1)))))
                 x_1+=1
 
     def buy_counter(self,num):
@@ -525,6 +550,7 @@ class Doom:
     def get_save(self):
         data = ''
         data+=str(self.doom_count)+','
+        data += str(self.doom_total) + ','
         data+='['+str(self.doom_counter_1)+','+str(self.doom_counter_2)+','+str(self.doom_counter_3)+','+str(self.doom_counter_4)+',],['
         for multi in self.multies:
             data+=str(multi)+','

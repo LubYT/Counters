@@ -23,7 +23,8 @@ class Achievements:
                     ['Fully upgraded!','Buy all Infinity upgrades','IC gain *2'],['New currency','Start produce Doomed Destruction','-'],
                     ['Doomed game','Buy 4th Doom Counter','DD gain *1.5'],['Destroy em all','Gain 1e8 DD','Unlock first Illusory Aspect'],
 
-                    ['GET RID OUT OF THEORY','Complete 1st Illusory Aspect','IC gain *2'],]
+                    ['Speed-runner','Reach Infinity in 10 minutes or less','IC gain *1.25'],['GET RID OUT OF THEORY','Complete 1st Illusory Aspect','IC gain *2'],
+                    ['True Timeless Infinity','Reach infinity in 1 minute or less','IC gain *2'],['Hard punch!','Gain 1e15 DD','pain ;-; (lol)'],]
         self.images=[PhotoImage(file='Data/Files/images/achievements/1.png'),PhotoImage(file='Data/Files/images/achievements/2.png'),
                      PhotoImage(file='Data/Files/images/achievements/3.png'),PhotoImage(file='Data/Files/images/achievements/4.png'),
                      PhotoImage(file='Data/Files/images/achievements/5.png'),PhotoImage(file='Data/Files/images/achievements/6.png'),
@@ -34,7 +35,8 @@ class Achievements:
                      PhotoImage(file='Data/Files/images/achievements/15.png'),PhotoImage(file='Data/Files/images/achievements/16.png'),
                      PhotoImage(file='Data/Files/images/achievements/17.png'),PhotoImage(file='Data/Files/images/achievements/18.png'),
                      PhotoImage(file='Data/Files/images/achievements/19.png'),PhotoImage(file='Data/Files/images/achievements/20.png'),
-                     PhotoImage(file='Data/Files/images/achievements/21.png'),]
+                     PhotoImage(file='Data/Files/images/achievements/21.png'),PhotoImage(file='Data/Files/images/achievements/22.png'),
+                     PhotoImage(file='Data/Files/images/achievements/23.png'),PhotoImage(file='Data/Files/images/achievements/24.png'),]
         self.placed=[]
         self.created=[]
         self.boxes={}
@@ -164,6 +166,10 @@ class Achievements:
             if self.achieve[16]=='Y':
                 x *= 2
             if self.achieve[20]=='Y':
+                x *= 1.25
+            if self.achieve[21]=='Y':
+                x *= 2
+            if self.achieve[22] == 'Y':
                 x *= 2
         if 'DD' in type:
             if self.achieve[14]=='Y':

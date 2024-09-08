@@ -40,13 +40,13 @@ class Game:
         self.Save = save_import.Save(self)
         self.Menu=menu_import.Menu(self)
         self.Automatick=import_automatick.Automatick(self)
+        self.Aspects = Aspects_import.Illusory_aspects(self)
         self.Infinity=I_import.Infinity(self)
         self.TA=TA_import.Time_accelerator(self)
         self.CB=CB_import.Counter_boost(self)
         self.Value=value_import.Value(self)
         self.Doom=Doom_import.Doom(self)
         self.Value_PS = value_per_sec_import.Value_per_second(self)
-        self.Aspects=Aspects_import.Illusory_aspects(self)
         self.Achievements=achieve_import.Achievements(self)
         self.Stats = Stats_import.Stats(self)
         self.Tickspeed = game_time_import.Tickspeed(self)
@@ -67,6 +67,9 @@ class Game:
         if self.Infinity.first:
             self.Infinity.post_save()
             self.menu_place()
+
+    def color_box(self,arg):
+        self.main_canvas.itemconfigure(self.box,outline=arg)
     def tick(self):
         self.Counter_8.produce()
         self.Counter_7.produce()
@@ -183,6 +186,9 @@ class Game:
 
         if self.Menu.curMenu == 'Achievements':
             self.Achievements.click(event)
+
+        if self.Menu.curMenu == 'Illusory':
+            self.Aspects.click(event)
 
 
         if self.Menu.curMenu == 'Infinity':

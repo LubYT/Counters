@@ -109,6 +109,9 @@ class Save:
             index=data.find(',')
             list.append(data[:index:])
             data=data[index+1::]
+            index = data.find(',')
+            list.append(data[:index:])
+            data = data[index + 1::]
             for i in range(4):
                 data = data[1::]
                 list_2 = []
