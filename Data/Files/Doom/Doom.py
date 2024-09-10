@@ -63,48 +63,56 @@ class Doom:
                 self.len += 1
             self.count_text.append(list_2)
             self.main_texts.append(list)
+            print(self.count_text)
+            print(self.main_texts)
         self.len /= 3
 
     def place(self):
-        self.init_text()
-        if not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 1):
-            self.sub_texts.append(self.game.main_canvas.create_text(self.game.geometry[0]//2,360,anchor='center',
-                                                          text='Doomed destruction decrease counters production, but increase infinity count gain.',
+        if not (self.game.Aspects.active==True and self.game.Aspects.cur_ill==3):
+            self.init_text()
+            if not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 1):
+                self.sub_texts.append(self.game.main_canvas.create_text(self.game.geometry[0]//2,360,anchor='center',
+                                                              text='Doomed destruction decrease counters production, but increase infinity count gain.',
+                                                              fill=self.colors[0], justify='center',
+                                                              font=('bahnschrift', 12)))
+            else:
+                self.sub_texts.append(self.game.main_canvas.create_text(self.game.geometry[0] // 2, 360, anchor='center',
+                                                                        text='Doomed destruction obeys Illusion. It buffs counters production',
+                                                                        fill=self.colors[0], justify='center',
+                                                                        font=('bahnschrift', 12)))
+            self.text_1=self.game.main_canvas.create_text(self.game.geometry[0]//2,390,anchor='center',
+                                                          text='Power of doomed destruction:\n'+str("{:.2e}".format(Decimal(self.doom_count**0.8))),
                                                           fill=self.colors[0], justify='center',
-                                                          font=('bahnschrift', 12)))
-        else:
-            self.sub_texts.append(self.game.main_canvas.create_text(self.game.geometry[0] // 2, 360, anchor='center',
-                                                                    text='Doomed destruction obeys Illusion. It buffs counters production',
-                                                                    fill=self.colors[0], justify='center',
-                                                                    font=('bahnschrift', 12)))
-        self.text_1=self.game.main_canvas.create_text(self.game.geometry[0]//2,390,anchor='center',
-                                                      text='Power of doomed destruction:\n'+str("{:.2e}".format(Decimal(self.doom_count**0.8))),
-                                                      fill=self.colors[0], justify='center',
-                                                      font=('bahnschrift', 12))
-        self.button_active=self.game.main_canvas.create_rectangle(self.game.geometry[0]//2+349, 229, self.game.geometry[0] // 2 + 401, 281, width=1,
-                                               fill='#0a0000', outline='#380000')
-        if self.active:
-            self.image_active=self.game.main_canvas.create_image(self.game.geometry[0]//2+375,255,anchor='center',image=self.images[1])
-        else:
-            self.image_active = self.game.main_canvas.create_image(self.game.geometry[0] // 2 + 375, 255, anchor='center',
-                                                                   image=self.images[0])
-        self.button_auto_pause = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 330, 290,
-                                                                    self.game.geometry[0] // 2 + 420, 390, width=1,
-                                                                    fill='#0a0000', outline='#380000')
-        self.text_auto_pause = self.game.main_canvas.create_text(self.game.geometry[0] // 2+ 375, 293, anchor='n',
-                                                        text='Limit\n'+self.auto_pause+' on:\n'+'\n\n'+'DD',
-                                                        fill=self.color_auto_pause_text, justify='center',
-                                                        font=('bahnschrift', 12))
-        self.button_auto_pause_input = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 340, 335,
-                                                                        self.game.geometry[0] // 2 + 410, 366, width=1,
+                                                          font=('bahnschrift', 12))
+            self.button_active=self.game.main_canvas.create_rectangle(self.game.geometry[0]//2+349, 229, self.game.geometry[0] // 2 + 401, 281, width=1,
+                                                   fill='#0a0000', outline='#380000')
+            if self.active:
+                self.image_active=self.game.main_canvas.create_image(self.game.geometry[0]//2+375,255,anchor='center',image=self.images[1])
+            else:
+                self.image_active = self.game.main_canvas.create_image(self.game.geometry[0] // 2 + 375, 255, anchor='center',
+                                                                       image=self.images[0])
+            self.button_auto_pause = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 330, 290,
+                                                                        self.game.geometry[0] // 2 + 420, 390, width=1,
                                                                         fill='#0a0000', outline='#380000')
-        self.text_auto_pause_input = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 375, 350, anchor='center',
-                                                                 text=self.auto_pause_num,
-                                                                 fill='#606060', justify='center',
-                                                                 font=('bahnschrift', 12))
-        self.game.window.bind("<KeyPress>",self.add_symbol)
-        self.place_shop()
-        self.place_counters()
+            self.text_auto_pause = self.game.main_canvas.create_text(self.game.geometry[0] // 2+ 375, 293, anchor='n',
+                                                            text='Limit\n'+self.auto_pause+' on:\n'+'\n\n'+'DD',
+                                                            fill=self.color_auto_pause_text, justify='center',
+                                                            font=('bahnschrift', 12))
+            self.button_auto_pause_input = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 340, 335,
+                                                                            self.game.geometry[0] // 2 + 410, 366, width=1,
+                                                                            fill='#0a0000', outline='#380000')
+            self.text_auto_pause_input = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 375, 350, anchor='center',
+                                                                     text=self.auto_pause_num,
+                                                                     fill='#606060', justify='center',
+                                                                     font=('bahnschrift', 12))
+            self.game.window.bind("<KeyPress>",self.add_symbol)
+            self.place_shop()
+            self.place_counters()
+        else:
+            self.text_1 = self.game.main_canvas.create_text(self.game.geometry[0] // 2, 290, anchor='center',
+                                                            text='Illusion\nThere is no Doom',
+                                                            fill='#36ffe7', justify='center',
+                                                            font=('bahnschrift', 30))
 
     def produce(self):
         if self.game.Value.lock==False and self.active:
@@ -154,14 +162,15 @@ class Doom:
             except:
                 self.game.main_canvas.itemconfigure(self.curbar, fill='#c75b5b')
     def produce_counts(self):
-        income=(self.doom_counter_1*self.multies[0]*self.produce_1*self.get_extra_mult(1))/20
-        if len(str("{:.2e}".format(Decimal(self.doom_count))))!=self.len and self.game.Menu.curMenu=='Doom':
-            self.hide_text()
-            self.init_text()
-        self.get_doomed_count(income)
-        self.doom_counter_1+=(self.doom_counter_2*self.multies[1]*self.produce_2*self.get_extra_mult(2))/20
-        self.doom_counter_2 += (self.doom_counter_3 * self.multies[2] * self.produce_3*self.get_extra_mult(3)) / 20
-        self.doom_counter_3 += (self.doom_counter_4 * self.multies[3] * self.produce_4*self.get_extra_mult(4)) / 20
+        if not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 3):
+            income=(self.doom_counter_1*self.multies[0]*self.produce_1*self.get_extra_mult(1))/20
+            if len(str("{:.2e}".format(Decimal(self.doom_count))))!=self.len and self.game.Menu.curMenu=='Doom':
+                self.hide_text()
+                self.init_text()
+            self.get_doomed_count(income)
+            self.doom_counter_1+=(self.doom_counter_2*self.multies[1]*self.produce_2*self.get_extra_mult(2))/20
+            self.doom_counter_2 += (self.doom_counter_3 * self.multies[2] * self.produce_3*self.get_extra_mult(3)) / 20
+            self.doom_counter_3 += (self.doom_counter_4 * self.multies[3] * self.produce_4*self.get_extra_mult(4)) / 20
 
     def get_extra_mult(self,arg):
         x=1
@@ -184,24 +193,30 @@ class Doom:
             amm = 0
             self.doom_total+=1
             self.doom_count=1
-        try:
-            if float(self.auto_pause_num)>=1:
-                if self.auto_pause=='enabled' and float(self.auto_pause_num)<=self.doom_count:
-                    self.doom_count=float(self.auto_pause_num)
-            elif float(self.auto_pause_num)==0:
-                if self.auto_pause=='enabled' and float(self.auto_pause_num)<=self.doom_count:
-                    self.doom_count=1
-            else:
-                self.doom_count = 1
-        except ValueError:
-            pass
-        if self.doom_count!=1 or self.auto_pause=='disabled':
-            self.doom_total += amm
-        if self.doom_count>=1e8:
-            self.game.Achievements.get_achieve(20)
-            if self.doom_count>=1e15:
-                self.game.Achievements.get_achieve(24)
-        if self.game.Menu.curMenu=='Doom':
+        if not (self.game.Aspects.active==True and self.game.Aspects.cur_ill==2) and not (self.game.Aspects.active==True and self.game.Aspects.cur_ill==3):
+            try:
+                if float(self.auto_pause_num)>=1:
+                    if self.auto_pause=='enabled' and float(self.auto_pause_num)<=self.doom_count:
+                        self.doom_count=float(self.auto_pause_num)
+                elif float(self.auto_pause_num)==0:
+                    if self.auto_pause=='enabled' and float(self.auto_pause_num)<=self.doom_count:
+                        self.doom_count=1
+                else:
+                    self.doom_count = 1
+            except ValueError:
+                pass
+            if self.doom_count!=1 or self.auto_pause=='disabled':
+                self.doom_total += amm
+            if self.doom_count>=1e8:
+                self.game.Achievements.get_achieve(20)
+                if self.doom_count>=1e15:
+                    self.game.Achievements.get_achieve(24)
+        else:
+            if self.game.Aspects.cur_ill==2:
+                self.doom_count=self.game.Aspects.conditions_2[self.game.Aspects.completions_2][1]
+            if self.game.Aspects.cur_ill == 3:
+                self.doom_count=1
+        if self.game.Menu.curMenu=='Doom' and not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 3):
             if not (self.game.Aspects.active==True and self.game.Aspects.cur_ill==1):
                 self.game.main_canvas.itemconfigure(self.text_1,text='Power of doomed destruction:\n'+str("{:.2e}".format(Decimal(self.doom_count)))+' ^ '+str(self.mult_doom)+' = '+str("{:.2e}".format(Decimal(self.doom_count**0.8))))
             else:
@@ -232,22 +247,26 @@ class Doom:
         self.main_texts,self.count_text=[],[]
 
     def hide(self):
-        self.hide_text()
-        self.game.window.unbind('<KeyPress>')
-        self.game.main_canvas.delete(self.text_1)
-        for text in self.sub_texts:
-            self.game.main_canvas.delete(text)
-        for list in self.boxes:
-            if self.boxes.index(list)!=3:
-                for item in list:
-                    self.game.main_canvas.delete(item)
-            else:
-                for list_2 in list:
-                    self.game.main_canvas.delete(list_2[0]),self.game.main_canvas.delete(list_2[1])
-        self.game.main_canvas.delete(self.image_active),self.game.main_canvas.delete(self.button_active)
-        self.game.main_canvas.delete(self.text_auto_pause_input),self.game.main_canvas.delete(self.button_auto_pause_input)
-        self.game.main_canvas.delete(self.text_auto_pause), self.game.main_canvas.delete(self.button_auto_pause)
-        self.boxes=[]
+        if not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 3):
+            self.hide_text()
+            self.game.window.unbind('<KeyPress>')
+            self.game.main_canvas.delete(self.text_1)
+            for text in self.sub_texts:
+                self.game.main_canvas.delete(text)
+            for list in self.boxes:
+                if self.boxes.index(list)!=3:
+                    for item in list:
+                        self.game.main_canvas.delete(item)
+                else:
+                    for list_2 in list:
+                        self.game.main_canvas.delete(list_2[0]),self.game.main_canvas.delete(list_2[1])
+            self.game.main_canvas.delete(self.image_active),self.game.main_canvas.delete(self.button_active)
+            self.game.main_canvas.delete(self.text_auto_pause_input),self.game.main_canvas.delete(self.button_auto_pause_input)
+            self.game.main_canvas.delete(self.text_auto_pause), self.game.main_canvas.delete(self.button_auto_pause)
+            self.boxes=[]
+        else:
+            self.game.main_canvas.delete(self.text_1)
+
 
     def place_shop(self):
         pass
@@ -441,22 +460,23 @@ class Doom:
         # label.place(x=0,y=10)
 
     def click(self,event):
-        self.curbar = 'N'
-        for box in self.boxes[3]:
-            coords=self.game.main_canvas.coords(box[0])
-            if event.x>=coords[0] and event.y>=coords[1] and event.x<=coords[2] and event.y<=coords[3]:
-                index=self.boxes[3].index(box)
-                self.buy_counter(index)
-        coords=self.game.main_canvas.coords(self.button_active)
-        if event.x >= coords[0] and event.y >= coords[1] and event.x <= coords[2] and event.y <= coords[3]:
-            self.play_pause()
-        coords = self.game.main_canvas.coords(self.button_auto_pause)
-        if event.x >= coords[0] and event.y >= coords[1] and event.x <= coords[2] and event.y <= coords[3]:
-            coords = self.game.main_canvas.coords(self.button_auto_pause_input)
+        if not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 3):
+            self.curbar = 'N'
+            for box in self.boxes[3]:
+                coords=self.game.main_canvas.coords(box[0])
+                if event.x>=coords[0] and event.y>=coords[1] and event.x<=coords[2] and event.y<=coords[3]:
+                    index=self.boxes[3].index(box)
+                    self.buy_counter(index)
+            coords=self.game.main_canvas.coords(self.button_active)
             if event.x >= coords[0] and event.y >= coords[1] and event.x <= coords[2] and event.y <= coords[3]:
-                self.curbar=self.text_auto_pause_input
-            else:
-                self.click_auto()
+                self.play_pause()
+            coords = self.game.main_canvas.coords(self.button_auto_pause)
+            if event.x >= coords[0] and event.y >= coords[1] and event.x <= coords[2] and event.y <= coords[3]:
+                coords = self.game.main_canvas.coords(self.button_auto_pause_input)
+                if event.x >= coords[0] and event.y >= coords[1] and event.x <= coords[2] and event.y <= coords[3]:
+                    self.curbar=self.text_auto_pause_input
+                else:
+                    self.click_auto()
 
     def click_auto(self):
         if self.auto_pause=='enabled':
@@ -467,7 +487,7 @@ class Doom:
             self.color_auto_pause_text='#5bc77a'
         else:
             self.color_auto_pause_text = '#c75b5b'
-        self.game.main_canvas.itemconfigure(self.text_auto_pause,text='Auto pause\n'+self.auto_pause+' on:\n'+'\n\n'+'DD',fill=self.color_auto_pause_text)
+        self.game.main_canvas.itemconfigure(self.text_auto_pause,text='Limit\n'+self.auto_pause+' on:\n'+'\n\n'+'DD',fill=self.color_auto_pause_text)
     def play_pause(self):
         if self.active:
             self.active=False
@@ -478,22 +498,23 @@ class Doom:
 
 
     def conf_counters(self):
-        if self.game.Menu.curMenu=='Doom':
-            list=[self.doom_counter_1,self.doom_counter_2,self.doom_counter_3,self.doom_counter_4]
-            x_1=0
-            x=0
-            for counter in self.boxes[1]:
-                if list[x] < 1000:
-                    self.game.main_canvas.itemconfigure(counter,text=str(round(list[x],1)))
-                elif list[x] >= 1000:
-                    self.game.main_canvas.itemconfigure(counter,text=str("{:.2e}".format(Decimal(list[x]))))
-                x+=1
-            for counter in self.boxes[2]:
-                if self.multies[x_1]*self.get_extra_mult(x+1)<1000:
-                    self.game.main_canvas.itemconfigure(counter, text='x'+str(round(self.multies[x_1]*self.get_extra_mult(x+1), 1)))
-                elif self.multies[x_1]*self.get_extra_mult(x+1)>= 1000:
-                    self.game.main_canvas.itemconfigure(counter,text='x'+str("{:.2e}".format(Decimal(self.multies[x_1]*self.get_extra_mult(x+1)))))
-                x_1+=1
+        if not (self.game.Aspects.active==True and self.game.Aspects.cur_ill==3):
+            if self.game.Menu.curMenu=='Doom':
+                list=[self.doom_counter_1,self.doom_counter_2,self.doom_counter_3,self.doom_counter_4]
+                x_1=0
+                x=0
+                for counter in self.boxes[1]:
+                    if list[x] < 1000:
+                        self.game.main_canvas.itemconfigure(counter,text=str(round(list[x],1)))
+                    elif list[x] >= 1000:
+                        self.game.main_canvas.itemconfigure(counter,text=str("{:.2e}".format(Decimal(list[x]))))
+                    x+=1
+                for counter in self.boxes[2]:
+                    if self.multies[x_1]*self.get_extra_mult(x+1)<1000:
+                        self.game.main_canvas.itemconfigure(counter, text='x'+str(round(self.multies[x_1]*self.get_extra_mult(x+1), 1)))
+                    elif self.multies[x_1]*self.get_extra_mult(x+1)>= 1000:
+                        self.game.main_canvas.itemconfigure(counter,text='x'+str("{:.2e}".format(Decimal(self.multies[x_1]*self.get_extra_mult(x+1)))))
+                    x_1+=1
 
     def buy_counter(self,num):
         if num == 0:

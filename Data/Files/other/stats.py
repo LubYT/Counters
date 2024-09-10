@@ -13,6 +13,7 @@ class Stats:
         self.time_in_inf=[self.game.Save.Stats_data[1][0],self.game.Save.Stats_data[1][1],self.game.Save.Stats_data[1][2],self.game.Save.Stats_data[1][3]]
         self.fastest_inf=[self.game.Save.Stats_data[2][0],self.game.Save.Stats_data[2][1],self.game.Save.Stats_data[2][2],self.game.Save.Stats_data[2][3]]
         self.save=self.game.Save.Stats_data
+        self.timers={}
 
     def place(self):
         self.text_0=self.game.main_canvas.create_text(self.game.geometry[0]//2,240,text="You've been in the game for \n"+self.time_get('total'),anchor='center',
@@ -42,6 +43,18 @@ class Stats:
                                                             font=('bahnschrift', 12))
         self.conf()
 
+    def add_timer(self,seconds,defin,id):
+        time_now=(datetime.datetime.now() - datetime.datetime(1, 1, 1, 0, 0)).total_seconds()
+        self.timers|={id:[seconds,time_now,defin]}
+
+    def get_timer_info(self,id):
+        return self.timers[id]
+
+    def del_timer(self,id):
+        try:
+            self.timers.pop(id)
+        except:
+            pass
 
     def conf(self):
         if self.game.Menu.curMenu=='Stats':
@@ -92,6 +105,15 @@ class Stats:
 
     def time(self):
         addd=(datetime.datetime.now() - datetime.datetime(1, 1, 1, 0, 0)).total_seconds()
+        list=[]
+        for id in self.timers:
+            self.timers[id][0]-=addd-self.timers[id][1]
+            self.timers[id][1]=addd
+            if self.timers[id][0]<0:
+                self.timers[id][2]()
+                list.append(id)
+        for i in list:
+            self.timers.pop(i)
         if self.time_get_in<addd:
             time_add=addd-self.time_get_in
             self.time_get_in=addd
@@ -128,9 +150,9 @@ class Stats:
                             self.fastest_inf[3],self.fastest_inf[2],self.fastest_inf[1],self.fastest_inf[0] = self.time_in_inf[3],self.time_in_inf[2],self.time_in_inf[1],self.time_in_inf[0]
         else:
             self.fastest_inf[3],self.fastest_inf[2],self.fastest_inf[1],self.fastest_inf[0] = self.time_in_inf[3],self.time_in_inf[2],self.time_in_inf[1],self.time_in_inf[0]
-        if self.fastest_inf[3]==0 and self.fastest_inf[2]==0 and self.fastest_inf[1]<10:
+        if self.fastest_inf[0]==0 and self.fastest_inf[1]==0 and self.fastest_inf[2]<10:
             self.game.Achievements.get_achieve(21)
-        if self.fastest_inf[3]==0 and self.fastest_inf[2]==0 and self.fastest_inf[1]<1:
+        if self.fastest_inf[0]==0 and self.fastest_inf[1]==0 and self.fastest_inf[2]<1:
             self.game.Achievements.get_achieve(23)
         self.time_in_inf[3],self.time_in_inf[2],self.time_in_inf[1],self.time_in_inf[0]=0,0,0,0
 

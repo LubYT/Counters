@@ -109,23 +109,14 @@ class Counter4:
                 self.game.Achievements.get_achieve(4)
             self.game.Value.value-=self.cost
             self.cost=self.cost*self.cost_up
+            if (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 3):
+                self.cost=self.cost**1.1
             self.count+=1
             self.conf()
 
     def buy_max(self):
         while self.game.Value.value>=self.cost and not self.game.Value.lock:
-            if self.first == False:
-                self.first = True
-                if self.game.CB.amount>=1:
-                    self.game.Counter_5.place()
-            else:
-                self.multi = self.multi * 2
-            if self.game.Infinity.first:
-                self.game.Achievements.get_achieve(4)
-            self.game.Value.value-=self.cost
-            self.cost=self.cost*self.cost_up
-            self.count+=1
-        self.conf()
+            self.buy()
 
     def get_count(self,count):
         self.count+=count

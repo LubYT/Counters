@@ -95,6 +95,7 @@ class Game:
         self.Counter_8.reset(), self.Counter_7.reset(), self.Counter_6.reset(), self.Counter_5.reset(), self.Counter_4.reset(), self.Counter_3.reset(), self.Counter_2.reset(), self.Counter_1.reset()
 
     def I_reset(self):
+        self.Stats.inf()
         self.Doom.reset(), self.Infinity.reset()
         self.TA.reset(),self.CB.reset()
         self.Value.reset(), self.Value_PS.reset(), self.Tickspeed.reset()

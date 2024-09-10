@@ -6,6 +6,7 @@ class Counter_boost:
         self.amount=int(self.game.Save.CB_data[0][0])
         self.cost=float(self.game.Save.CB_data[0][1])
         self.up_cost=float(self.game.Save.CB_data[0][2])
+        self.boost=2
         print(self.multi_list)
         self.up_cost_up=1e4
     def place(self):
@@ -21,90 +22,107 @@ class Counter_boost:
     def buy(self):
         if self.game.Value.value >= self.cost and not self.game.Value.lock:
             self.game.Value.value -= self.cost
-            self.cost = self.cost * self.up_cost
-            self.up_cost = self.up_cost*self.up_cost_up
-            if self.up_cost>1e30:
-                self.up_cost=1e30
+            if not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 3):
+                self.cost = self.cost * self.up_cost
+                self.up_cost = self.up_cost*self.up_cost_up
+                if self.up_cost>1e30:
+                    self.up_cost=1e30
+            else:
+                self.cost = self.cost * self.up_cost
+                self.up_cost = self.up_cost * self.up_cost_up
+                if self.up_cost > 1e10:
+                    self.up_cost = 1e10
+            boost=self.boost
+            if (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 3):
+                boost*=2
             self.amount+=1
             self.game.main_canvas.itemconfigure(self.text, text='Counter boosts: '+str(self.amount))
             if self.amount==1:
-                self.multi_list[0]*=2
+                self.multi_list[0]*=boost
             if self.amount==2:
-                self.multi_list[0]*=2
-                self.multi_list[1] *= 2
+                self.multi_list[0]*=boost
+                self.multi_list[1] *= boost
             if self.amount==3:
-                self.multi_list[0]*=2
-                self.multi_list[1] *= 2
-                self.multi_list[2] *= 2
+                self.multi_list[0]*=boost
+                self.multi_list[1] *= boost
+                self.multi_list[2] *= boost
             if self.amount==4:
-                self.multi_list[0]*=2
-                self.multi_list[1] *= 2
-                self.multi_list[2] *= 2
-                self.multi_list[3] *= 2
+                self.multi_list[0]*=boost
+                self.multi_list[1] *= boost
+                self.multi_list[2] *= boost
+                self.multi_list[3] *= boost
             if self.amount==5:
-                self.multi_list[0]*=2
-                self.multi_list[1] *= 2
-                self.multi_list[2] *= 2
-                self.multi_list[3] *= 2
-                self.multi_list[4] *= 2
+                self.multi_list[0]*=boost
+                self.multi_list[1] *= boost
+                self.multi_list[2] *= boost
+                self.multi_list[3] *= boost
+                self.multi_list[4] *= boost
             if self.amount == 6:
-                self.multi_list[0] *= 2
-                self.multi_list[1] *= 2
-                self.multi_list[2] *= 2
-                self.multi_list[3] *= 2
-                self.multi_list[4] *= 2
-                self.multi_list[5] *= 2
+                self.multi_list[0] *= boost
+                self.multi_list[1] *= boost
+                self.multi_list[2] *= boost
+                self.multi_list[3] *= boost
+                self.multi_list[4] *= boost
+                self.multi_list[5] *= boost
             if self.amount == 7:
-                self.multi_list[0] *= 2
-                self.multi_list[1] *= 2
-                self.multi_list[2] *= 2
-                self.multi_list[3] *= 2
-                self.multi_list[4] *= 2
-                self.multi_list[5] *= 2
-                self.multi_list[6] *= 2
+                self.multi_list[0] *= boost
+                self.multi_list[1] *= boost
+                self.multi_list[2] *= boost
+                self.multi_list[3] *= boost
+                self.multi_list[4] *= boost
+                self.multi_list[5] *= boost
+                self.multi_list[6] *= boost
             if self.amount > 7:
-                self.multi_list[0] *= 2
-                self.multi_list[1] *= 2
-                self.multi_list[2] *= 2
-                self.multi_list[3] *= 2
-                self.multi_list[4] *= 2
-                self.multi_list[5] *= 2
-                self.multi_list[6] *= 2
-                self.multi_list[7] *= 2
+                self.multi_list[0] *= boost
+                self.multi_list[1] *= boost
+                self.multi_list[2] *= boost
+                self.multi_list[3] *= boost
+                self.multi_list[4] *= boost
+                self.multi_list[5] *= boost
+                self.multi_list[6] *= boost
+                self.multi_list[7] *= boost
             self.game.CB_reset()
             self.conf_text()
 
     def conf_text(self):
+        boost=self.boost
+        if (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 3):
+            boost *= 2
         if self.amount == 0:
             self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                "{:.2e}".format(Decimal(self.cost))) + '\nUnlock 5th CNTR\nx2 to 1 CNTR')
+                "{:.2e}".format(Decimal(self.cost))) + '\nUnlock 5th CNTR\nx'+str(boost)+' to 1 CNTR')
         elif self.amount == 1:
             self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                "{:.2e}".format(Decimal(self.cost))) + '\nUnlock 6th CNTR\nx2 to 1-2 CNTR')
+                "{:.2e}".format(Decimal(self.cost))) + '\nUnlock 6th CNTR\nx'+str(boost)+' to 1-2 CNTR')
         elif self.amount==2:
             self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                "{:.2e}".format(Decimal(self.cost))) + '\nUnlock 7th CNTR\nx2 to 1-3 CNTR')
+                "{:.2e}".format(Decimal(self.cost))) + '\nUnlock 7th CNTR\nx'+str(boost)+' to 1-3 CNTR')
         elif self.amount==3:
             self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                "{:.2e}".format(Decimal(self.cost))) + '\nUnlock 8th CNTR\nx2 to 1-4 CNTR')
+                "{:.2e}".format(Decimal(self.cost))) + '\nUnlock 8th CNTR\nx'+str(boost)+' to 1-4 CNTR')
         elif self.amount == 4:
             self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                "{:.2e}".format(Decimal(self.cost))) + '\nx2 to 1-5 CNTR')
+                "{:.2e}".format(Decimal(self.cost))) + '\nx'+str(boost)+' to 1-5 CNTR')
         elif self.amount == 5:
             self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                "{:.2e}".format(Decimal(self.cost))) + '\nx2 to 1-6 CNTR')
+                "{:.2e}".format(Decimal(self.cost))) + '\nx'+str(boost)+' to 1-6 CNTR')
         elif self.amount == 6:
             self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                "{:.2e}".format(Decimal(self.cost))) + '\nx2 to 1-7 CNTR')
+                "{:.2e}".format(Decimal(self.cost))) + '\nx'+str(boost)+' to 1-7 CNTR')
         elif self.amount >= 7:
             self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                "{:.2e}".format(Decimal(self.cost))) + '\nx2 to 1-8 CNTR')
+                "{:.2e}".format(Decimal(self.cost))) + '\nx'+str(boost)+' to 1-8 CNTR')
     def reset(self):
         self.multi_list = [1, 1, 1, 1, 1, 1, 1, 1]
         self.amount = 0
-        self.cost = 1e10
-        self.up_cost = 1e6
-        self.up_cost_up = 1e4
+        if not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 3):
+            self.cost = 1e10
+            self.up_cost = 1e6
+            self.up_cost_up = 1e4
+        else:
+            self.cost=1e6
+            self.up_cost=1e4
+            self.up_cost_up=1e2
         self.game.main_canvas.itemconfigure(self.text, text='Counter boosts: ' + str(self.amount))
         self.conf_text()
 
