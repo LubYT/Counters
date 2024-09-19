@@ -14,18 +14,19 @@ class Illusory_aspects:
         self.available=self.game.Save.Aspect_data
         self.color_bord = [0,'+']
         self.size_rect=[0,'+']
-        self.illusions=['U','N','N','U']
-        self.costs=['-',1e12,1e50,1e30]
+        self.illusions=['U','U','U','N']
+        self.costs=['-',1e12,1e50,1e200]
         self.completions=['-']
         self.list_circles = []
-        self.completions_2=0
+        self.completions_2=16
         self.completion_3=True
-        self.reward_2=1
+        self.completion_4 =False
+        self.reward_2=2500000
         self.conditions_2=[[300,1e15,2.5],[270,1e17,6.3],[240,1e19,15.6],[210,1e21,39],[180,1e23,98],
                            [150,1e25,244],[120,1e28,610],[100,1e31,1526],[80,1e34,3815],[70,1e37,9537],
                            [60,1e40,23842],[50,1e43,59605],[40,1e46,149012],[30,1e49,372529],[20,1e52,931323],
                            [10,1e55,2500000]]
-        self.reward_1=1
+        self.reward_1=10000
         self.cur_page=1
         self.active=False
         self.confed=False
@@ -180,6 +181,40 @@ class Illusory_aspects:
                                                             anchor='center',
                                                             fill='#81d6d6', justify='center',
                                                             font=('bahnschrift', 15))
+        elif self.cur_page == 4 and self.illusions[3] == "U":
+            if self.completion_4==False:
+                self.text_1 = self.game.main_canvas.create_text(self.game.geometry[0] // 2, 260,
+                                                                text="The Fourth Illusory Aspect\nCondition: Doom Destruction disabled\nInfinity upgrades disabled\nCounters speed capped on 2.5\nTime accelerators have unique power",
+                                                                anchor='center',
+                                                                fill='#ed78ff', justify='center',
+                                                                font=('bahnschrift', 15))
+                self.text_2 = self.game.main_canvas.create_text(self.game.geometry[0] // 2, 540,
+                                                                text="Time is relative. Infinities can help you\nTry to understand this..",
+                                                                anchor='center',
+                                                                fill='#ed78ff', justify='center',
+                                                                font=('bahnschrift', 15))
+            else:
+                self.text_1 = self.game.main_canvas.create_text(self.game.geometry[0] // 2, 260,
+                                                                text="The Fourth Illusory Aspect\nFully completed",
+                                                                anchor='center',
+                                                                fill='#ed78ff', justify='center',
+                                                                font=('bahnschrift', 15))
+                self.text_2 = self.game.main_canvas.create_text(self.game.geometry[0] // 2, 540,
+                                                                text="Time is relative. Infinity upgrades is more important\nTry to understand this..",
+                                                                anchor='center',
+                                                                fill='#ed78ff', justify='center',
+                                                                font=('bahnschrift', 15))
+        elif self.cur_page == 4 and self.illusions[3] == "N":
+            self.text_1 = self.game.main_canvas.create_text(self.game.geometry[0] // 2, 260,
+                                                            text="The Fourth Illusory Aspect\n????????\nCost: 1e200 DD",
+                                                            anchor='center',
+                                                            fill='#ed78ff', justify='center',
+                                                            font=('bahnschrift', 15))
+            self.text_2 = self.game.main_canvas.create_text(self.game.geometry[0] // 2, 540,
+                                                            text="????",
+                                                            anchor='center',
+                                                            fill='#ed78ff', justify='center',
+                                                            font=('bahnschrift', 15))
 
 
 
@@ -316,10 +351,21 @@ class Illusory_aspects:
                     self.game.Menu.stage_get('Third Illusion', '#36ffe7', 'counters', '#36ffe7')
                     self.game.I_reset()
                     self.game.Value.Illusion()
+                if self.cur_page==4 and self.illusions[3]=='U' and self.completion_4==False:
+                    self.active = True
+                    self.cur_ill = int(self.cur_page)
+                    self.game.Menu.stage_get('Fourth Illusion', '#af26e0', 'counters', '#af26e0')
+                    self.game.I_reset()
+                    self.game.Value.Illusion()
                 elif self.cur_page==3 and self.illusions[2]=='N':
                     if self.game.Doom.doom_count>=1e50:
                         self.game.Doom.doom_count-=1e50
                         self.illusions[2]='U'
+                        self.change_page('Refresh')
+                elif self.cur_page==4 and self.illusions[3]=='N':
+                    if self.game.Doom.doom_count>=1e200:
+                        self.game.Doom.doom_count-=1e200
+                        self.illusions[3]='U'
                         self.change_page('Refresh')
             else:
                 if self.cur_ill==2:
@@ -376,6 +422,8 @@ class Illusory_aspects:
                         self.reward_1=1
                     if self.reward_1>10000:
                         self.reward_1=10000
+                    if self.reward_1>=1000:
+                        self.game.Achievements.get_achieve(25)
             else:
                 self.completions[0] = time - self.time
                 self.reward_1 = (3600 / self.completions[0]) ** 1.15
@@ -398,8 +446,12 @@ class Illusory_aspects:
                 self.game.main_canvas.delete(self.timer)
             except:
                 pass
+            if self.completions_2 ==16:
+                self.game.Achievements.get_achieve(28)
         if self.cur_ill==3:
             self.completion_3=True
+        if self.cur_ill==4:
+            self.completion_4=True
         self.exit()
 
 

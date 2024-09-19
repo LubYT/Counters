@@ -127,6 +127,8 @@ class Stats:
             if self.time_total[1]==24:
                 self.time_total[1] -= 24
                 self.time_total[0]+=1
+            if self.time_total[1]>=3:
+                self.game.Achievements.get_achieve(27)
             if self.game.Value.lock==False:
                 self.time_in_inf[3] += time_add
             if self.time_in_inf[3] >= 60:

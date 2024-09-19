@@ -8,9 +8,9 @@ reset=PhotoImage(file='Data/Files/images/auto_other/reset.png')
 class Automatick:
     def __init__(self,game):
         self.game=game
-        self.time_cycle=2000
+        self.time_cycle=int(self.game.Save.Auto_data[0][3])
         self.time_cycle_cur=2000
-        self.cycle_active=bool(self.game.Save.Auto_data[0][3])
+        self.cycle_active=bool(self.game.Save.Auto_data[0][4])
         self.allowed=self.game.Save.Auto_data[0][2]
         self.commands=self.game.Save.Auto_data[0][0]
         self.first_open=False
@@ -589,6 +589,7 @@ class Automatick:
         for allow in self.allowed:
             data+=str(allow)+','
         data += '],'
+        data+=str(self.time_cycle)+','
         if self.cycle_active==True:
             data+=str(self.cycle_active)
         else:

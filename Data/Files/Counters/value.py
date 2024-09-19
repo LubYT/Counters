@@ -47,7 +47,7 @@ class Value:
 
     def reset(self):
         self.lock=False
-        if self.game.Infinity.upgrades[2]=='Y' and not (self.game.Aspects.active==True and self.game.Aspects.cur_ill==1):
+        if self.game.Infinity.upgrades[2]=='Y' and not (self.game.Aspects.active==True and (self.game.Aspects.cur_ill==1 or self.game.Aspects.cur_ill==4)):
             self.value = 1e5
         else:
             self.value = 100

@@ -71,6 +71,7 @@ class Game:
     def color_box(self,arg):
         self.main_canvas.itemconfigure(self.box,outline=arg)
     def tick(self):
+        self.Tickspeed.tick()
         self.Counter_8.produce()
         self.Counter_7.produce()
         self.Counter_6.produce()
@@ -220,6 +221,22 @@ class Game:
             if event.x > coords_upgr_7[0] and event.y > coords_upgr_7[1] and event.x < coords_upgr_7[2] and event.y < \
                     coords_upgr_7[3]:
                 self.Infinity.buy_upgrade(7)
+            coords_upgr_8 = self.main_canvas.coords(self.Infinity.upgr_8_box)
+            if event.x > coords_upgr_8[0] and event.y > coords_upgr_8[1] and event.x < coords_upgr_8[2] and event.y < \
+                    coords_upgr_8[3]:
+                self.Infinity.buy_upgrade(8)
+            coords_upgr_9 = self.main_canvas.coords(self.Infinity.upgr_9_box)
+            if event.x > coords_upgr_9[0] and event.y > coords_upgr_9[1] and event.x < coords_upgr_9[2] and event.y < \
+                    coords_upgr_9[3]:
+                self.Infinity.buy_upgrade(9)
+            coords_upgr_10 = self.main_canvas.coords(self.Infinity.upgr_10_box)
+            if event.x > coords_upgr_10[0] and event.y > coords_upgr_10[1] and event.x < coords_upgr_10[2] and event.y < \
+                    coords_upgr_10[3]:
+                self.Infinity.buy_upgrade(10)
+            coords_upgr_11 = self.main_canvas.coords(self.Infinity.upgr_11_box)
+            if event.x > coords_upgr_11[0] and event.y > coords_upgr_11[1] and event.x < coords_upgr_11[2] and event.y < \
+                    coords_upgr_11[3]:
+                self.Infinity.buy_upgrade(11)
 
         if self.Menu.curMenu=='Counters':
             coords_1=self.main_canvas.coords(self.Counter_1.box_buy)

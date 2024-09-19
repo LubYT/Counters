@@ -51,7 +51,7 @@ class Counter6:
             self.game.Counter_7.place()
     def produce(self):
         if self.game.Counter_5.first:
-            self.produce_count=(self.produce_base*self.count*self.multi*self.game.Achievements.achieve_mult('6 Counter')*self.game.Tickspeed.tickspeed*self.game.CB.multi_list[5]
+            self.produce_count=(self.produce_base*self.count*self.multi*self.game.Achievements.achieve_mult('6 Counter')*self.game.Tickspeed.get_time()*self.game.CB.multi_list[5]
                                 *self.game.Infinity.get_boost()/25)
             self.game.Counter_5.get_count(self.produce_count)
 

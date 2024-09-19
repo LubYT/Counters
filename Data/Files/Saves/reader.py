@@ -99,6 +99,9 @@ class Save:
                     data = data[index + 1::]
                 list.append(list_2)
                 data=data[2::]
+            index = data.find(',')
+            list.append(data[:index:])
+            data=data[index+1::]
             list.append(data)
             self.Auto_data.append(list)
 

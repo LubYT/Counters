@@ -26,6 +26,8 @@ class Tickspeed:
 
     def get_boost(self,multi):
         self.tickspeed*=multi
+        if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 4 and self.tickspeed>2.5:
+            self.tickspeed=2.5
         if self.tickspeed > 1e15:
             self.game.main_canvas.itemconfigure(self.text, text='Counters speed is extremely altered: ' + str(
                 "{:.2e}".format(Decimal(self.tickspeed))), fill='#31bcf7')
@@ -39,46 +41,92 @@ class Tickspeed:
 
     def reset(self):
         self.tickspeed = 1.000*self.game.Infinity.get_boost_1()*self.game.Achievements.achieve_mult('Time speed')
+        if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 4:
+            if self.tickspeed > 2.5:
+                self.tickspeed=2.5
+            self.game.main_canvas.itemconfigure(self.text, text='Counters speed: ' + str(round(self.tickspeed,2))+' ^ '+str(round((self.game.TA.spare_time**self.game.TA.spare_time_mult),1))+' = '+str(self.tickspeed**(self.game.TA.spare_time ** self.game.TA.spare_time_mult)),
+                                                fill='#d4f065')
+        else:
+            self.game.main_canvas.itemconfigure(self.text, text='Counters speed: ' + str(round(self.tickspeed,2)),
+                                                fill='#c22f40')
         self.tickspeed_upper=1.12
         self.cost = 10
         self.cost_up = 10
-        self.game.main_canvas.itemconfigure(self.text,text='Counters speed: '+str(self.tickspeed),fill='#c22f40')
         self.game.main_canvas.itemconfigure(self.text_buy,text='Cost: ' + str(self.cost)+'\n'+'Counters speed * '+str(round(self.tickspeed_upper+(self.game.TA.accel-1),2)))
 
+    def get_time(self):
+        tick=self.tickspeed
+        if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 4:
+            tick=tick**(self.game.TA.spare_time ** self.game.TA.spare_time_mult)
+        return tick
     def buy(self):
         if self.game.Value.value >= self.cost and not self.game.Value.lock:
             self.game.Value.value -= self.cost
             self.cost = self.cost * self.cost_up
             self.tickspeed=self.tickspeed*(self.tickspeed_upper+(self.game.TA.accel-1))
+            if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 4 and self.tickspeed > 2.5:
+                self.tickspeed = 2.5
             self.conf()
     def max_buy(self):
         while self.game.Value.value >= self.cost and not self.game.Value.lock:
-            self.game.Value.value -= self.cost
-            self.cost = self.cost * self.cost_up
-            self.tickspeed=self.tickspeed*(self.tickspeed_upper+(self.game.TA.accel-1))
-            self.conf()
+            self.buy()
+
+    def tick(self):
+        if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 4:
+            self.game.TA.spare_time+=0.05*self.game.TA.amount
+        if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 4:
+            if self.tickspeed**(self.game.TA.spare_time ** self.game.TA.spare_time_mult)>10000:
+                self.game.main_canvas.itemconfigure(self.text, text='Counters speed: ' + str(self.tickspeed) + ' ^ ' + str(
+                    round((self.game.TA.spare_time ** self.game.TA.spare_time_mult), 1))+' = '+str( "{:.2e}".format(Decimal(self.tickspeed**(self.game.TA.spare_time ** self.game.TA.spare_time_mult)))),
+                                                    fill='#d4f065')
+            else:
+                self.game.main_canvas.itemconfigure(self.text,
+                                                    text='Counters speed: ' + str(self.tickspeed) + ' ^ ' + str(
+                                                        round((self.game.TA.spare_time ** self.game.TA.spare_time_mult),
+                                                              1)) + ' = ' + str(round(self.tickspeed**(self.game.TA.spare_time ** self.game.TA.spare_time_mult),2)),
+                                                    fill='#d4f065')
 
     def conf(self):
-        if self.tickspeed > 1e15:
-            self.game.main_canvas.itemconfigure(self.text, text='Counters speed is extremely altered: ' + str(
-                "{:.2e}".format(Decimal(self.tickspeed))), fill='#31bcf7')
-        elif self.tickspeed > 10000:
-            self.game.main_canvas.itemconfigure(self.text, text='Counters speed is massively altered: ' + str(
-                "{:.2e}".format(Decimal(self.tickspeed))), fill='#5d2fc2')
-        elif self.tickspeed ==1:
-            self.game.main_canvas.itemconfigure(self.text, text='Counters speed: ' + str(self.tickspeed), fill='#c22f40')
+        if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 4:
+            if self.tickspeed**(self.game.TA.spare_time ** self.game.TA.spare_time_mult)>10000:
+                self.game.main_canvas.itemconfigure(self.text, text='Counters speed: ' + str(self.tickspeed) + ' ^ ' + str(
+                    round((self.game.TA.spare_time ** self.game.TA.spare_time_mult), 1))+' = '+str( "{:.2e}".format(Decimal(self.tickspeed**(self.game.TA.spare_time ** self.game.TA.spare_time_mult)))),
+                                                    fill='#d4f065')
+            else:
+                self.game.main_canvas.itemconfigure(self.text,
+                                                    text='Counters speed: ' + str(self.tickspeed) + ' ^ ' + str(
+                                                        round((self.game.TA.spare_time ** self.game.TA.spare_time_mult),
+                                                              1)) + ' = ' + str(round(self.tickspeed**(self.game.TA.spare_time ** self.game.TA.spare_time_mult),2)),
+                                                    fill='#d4f065')
+            if self.cost > 9999:
+                self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
+                    "{:.2e}".format(Decimal(self.cost))) + '\n' + 'Counters speed * ' + str(
+                    round(self.tickspeed_upper + (self.game.TA.accel - 1), 2)))
+            else:
+                self.game.main_canvas.itemconfigure(self.text_buy,
+                                                    text='Cost: ' + str(round(self.cost, 1)) + '\n' + 'Counters speed * ' + str(
+                                                        round(self.tickspeed_upper + (self.game.TA.accel - 1), 2)))
         else:
-            self.game.main_canvas.itemconfigure(self.text,
-                                                text='Counters speed is altered: ' + str(round(self.tickspeed, 3)),
-                                                fill='#c22fa2')
-        if self.cost > 9999:
-            self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                "{:.2e}".format(Decimal(self.cost))) + '\n' + 'Counters speed * ' + str(
-                round(self.tickspeed_upper + (self.game.TA.accel - 1), 2)))
-        else:
-            self.game.main_canvas.itemconfigure(self.text_buy,
-                                                text='Cost: ' + str(round(self.cost, 1)) + '\n' + 'Counters speed * ' + str(
-                                                    round(self.tickspeed_upper + (self.game.TA.accel - 1), 2)))
+            if self.tickspeed > 1e15:
+                self.game.main_canvas.itemconfigure(self.text, text='Counters speed is extremely altered: ' + str(
+                    "{:.2e}".format(Decimal(self.tickspeed))), fill='#31bcf7')
+            elif self.tickspeed > 10000:
+                self.game.main_canvas.itemconfigure(self.text, text='Counters speed is massively altered: ' + str(
+                    "{:.2e}".format(Decimal(self.tickspeed))), fill='#5d2fc2')
+            elif self.tickspeed ==1:
+                self.game.main_canvas.itemconfigure(self.text, text='Counters speed: ' + str(self.tickspeed), fill='#c22f40')
+            else:
+                self.game.main_canvas.itemconfigure(self.text,
+                                                    text='Counters speed is altered: ' + str(round(self.tickspeed, 3)),
+                                                    fill='#c22fa2')
+            if self.cost > 9999:
+                self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
+                    "{:.2e}".format(Decimal(self.cost))) + '\n' + 'Counters speed * ' + str(
+                    round(self.tickspeed_upper + (self.game.TA.accel - 1), 2)))
+            else:
+                self.game.main_canvas.itemconfigure(self.text_buy,
+                                                    text='Cost: ' + str(round(self.cost, 1)) + '\n' + 'Counters speed * ' + str(
+                                                        round(self.tickspeed_upper + (self.game.TA.accel - 1), 2)))
 
     def get_save(self):
         data=''

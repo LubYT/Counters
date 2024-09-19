@@ -38,9 +38,9 @@ class Counter1:
         if self.first:
             self.game.Counter_2.place()
     def produce(self):
-        self.produce_count_PS=(self.produce_base*self.count*self.multi*self.game.Tickspeed.tickspeed*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]
+        self.produce_count_PS=(self.produce_base*self.count*self.multi*self.game.Tickspeed.get_time()*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]
                                *self.game.Infinity.get_boost('1 counter'))
-        self.produce_count=(self.produce_base*self.count*self.multi*self.game.Tickspeed.tickspeed*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]
+        self.produce_count=(self.produce_base*self.count*self.multi*self.game.Tickspeed.get_time()*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]
                             *self.game.Infinity.get_boost('1 counter')/25)
         if self.game.Aspects.active_1st:
             self.produce_count=self.produce_count**0.625

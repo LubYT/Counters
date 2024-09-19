@@ -24,7 +24,9 @@ class Achievements:
                     ['Doomed game','Buy 4th Doom Counter','DD gain *1.5'],['Destroy em all','Gain 1e8 DD','Unlock first Illusory Aspect'],
 
                     ['Speed-runner','Reach Infinity in 10 minutes or less','IC gain *1.25'],['GET RID OUT OF THEORY','Complete 1st Illusory Aspect','IC gain *2'],
-                    ['True Timeless Infinity','Reach infinity in 1 minute or less','IC gain *2'],['Hard punch!','Gain 1e15 DD','pain ;-; (lol)'],]
+                    ['True Timeless Infinity','Reach infinity in 1 minute or less','IC gain *2'],['Hard punch!','Gain 1e15 DD','pain ;-; (lol)'],
+                    ['Not a reference','Gain 1000 multi for Doomed Counters from first Illusory Aspect','Time speed * 1.25'],['NO! JUST NO!','Buy Infinity without any counter boosts and time accelerators','uhh.. you are cool!'],
+                    ['Get some sleep','Play a game for 3 hours','Time speed * 1.25'],['Who is next??','Complete 2nd Illusory Aspect 16 times','IC gain *2'],]
         self.images=[PhotoImage(file='Data/Files/images/achievements/1.png'),PhotoImage(file='Data/Files/images/achievements/2.png'),
                      PhotoImage(file='Data/Files/images/achievements/3.png'),PhotoImage(file='Data/Files/images/achievements/4.png'),
                      PhotoImage(file='Data/Files/images/achievements/5.png'),PhotoImage(file='Data/Files/images/achievements/6.png'),
@@ -36,7 +38,9 @@ class Achievements:
                      PhotoImage(file='Data/Files/images/achievements/17.png'),PhotoImage(file='Data/Files/images/achievements/18.png'),
                      PhotoImage(file='Data/Files/images/achievements/19.png'),PhotoImage(file='Data/Files/images/achievements/20.png'),
                      PhotoImage(file='Data/Files/images/achievements/21.png'),PhotoImage(file='Data/Files/images/achievements/22.png'),
-                     PhotoImage(file='Data/Files/images/achievements/23.png'),PhotoImage(file='Data/Files/images/achievements/24.png'),]
+                     PhotoImage(file='Data/Files/images/achievements/23.png'),PhotoImage(file='Data/Files/images/achievements/24.png'),
+                     PhotoImage(file='Data/Files/images/achievements/25.png'),PhotoImage(file='Data/Files/images/achievements/26.png'),
+                     PhotoImage(file='Data/Files/images/achievements/27.png'),PhotoImage(file='Data/Files/images/achievements/28.png'),]
         self.placed=[]
         self.created=[]
         self.boxes={}
@@ -123,7 +127,7 @@ class Achievements:
             if num==20:
                 self.game.Aspects.add()
 
-            ##box
+            ##box##
             self.create_box(num-1)
 
     def achieve_mult(self,*type):
@@ -157,6 +161,10 @@ class Achievements:
                 x*=1.01
             if self.achieve[12]=='Y':
                 x*=1.1
+            if self.achieve[24]=='Y':
+                x*=1.25
+            if self.achieve[26]=='Y':
+                x*=1.25
         if '1 Counter' in type or '2 Counter' in type or '3 Counter' in type or '4 Counter' in type or '5 Counter' in type or '6 Counter' in type or '7 Counter' in type or '8 Counter' in type:
             if self.achieve[13]=='Y':
                 x*=1.05
@@ -171,6 +179,8 @@ class Achievements:
                 x *= 2
             if self.achieve[22] == 'Y':
                 x *= 2
+            if self.achieve[27]=='Y':
+                x*=2
         if 'DD' in type:
             if self.achieve[14]=='Y':
                 x *= 1.5
