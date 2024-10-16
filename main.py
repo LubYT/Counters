@@ -1,6 +1,8 @@
 from tkinter import *
 import importlib
 import sys
+import Data.Files.Notation.Decimal as decimal_import
+import Data.Files.Eternity.Eternity as eternity_import
 import Data.Files.Menu as menu_import
 import Data.Files.Counters.value as value_import
 import Data.Files.Counters.value_per_sec as value_per_sec_import
@@ -37,8 +39,10 @@ class Game:
         self.window=window
         self.main_canvas=Canvas(width=geometry[0],height=geometry[1],bg='black')
         self.main_canvas.place(x=-2,y=-2)
+        self.Decimal = decimal_import.Decimal_counters
         self.Save = save_import.Save(self)
         self.Menu=menu_import.Menu(self)
+        self.Eternity = eternity_import.Eternity(self)
         self.Automatick=import_automatick.Automatick(self)
         self.Aspects = Aspects_import.Illusory_aspects(self)
         self.Infinity=I_import.Infinity(self)
@@ -102,6 +106,13 @@ class Game:
         self.Value.reset(), self.Value_PS.reset(), self.Tickspeed.reset()
         self.Counter_8.reset(), self.Counter_7.reset(), self.Counter_6.reset(), self.Counter_5.reset(), self.Counter_4.reset(), self.Counter_3.reset(), self.Counter_2.reset(), self.Counter_1.reset()
 
+    def E_reset(self):
+        self.Stats.reset('E'),self.Automatick.reset(),self.Aspects.reset()
+        self.Doom.reset('full'), self.Infinity.reset('full')
+        self.TA.reset(), self.CB.reset()
+        self.Value.reset(), self.Value_PS.reset(), self.Tickspeed.reset()
+        self.Counter_8.reset(), self.Counter_7.reset(), self.Counter_6.reset(), self.Counter_5.reset(), self.Counter_4.reset(), self.Counter_3.reset(), self.Counter_2.reset(), self.Counter_1.reset()
+
     def menu_place(self):
         self.Menu.place_menus()
         self.Counter_1.return_place()
@@ -161,6 +172,11 @@ class Game:
                 if event.x > coords_menu_4[0] and event.y > coords_menu_4[1] and event.x < coords_menu_4[2] and event.y < \
                         coords_menu_4[3]:
                     self.Menu.open_new_cur('doom')
+            if 'Eternity' in self.Menu.Allowed_menus:
+                coords_menu_8 = self.main_canvas.coords(self.Menu.box_7)
+                if event.x > coords_menu_8[0] and event.y > coords_menu_8[1] and event.x < coords_menu_8[2] and event.y < \
+                        coords_menu_8[3]:
+                    self.Menu.open_new_cur('Eternity')
         if self.Value.first_e10:
             coords_cb = self.main_canvas.coords(self.CB.box_buy)
             if event.x > coords_cb[0] and event.y > coords_cb[1] and event.x < coords_cb[2] and event.y < coords_cb[3]:
@@ -173,6 +189,10 @@ class Game:
             coords_I = self.main_canvas.coords(self.Infinity.box_buy)
             if event.x > coords_I[0] and event.y > coords_I[1] and event.x < coords_I[2] and event.y < coords_I[3]:
                 self.Infinity.buy()
+        if self.Eternity.first:
+            coords_E = self.main_canvas.coords(self.Eternity.box_buy)
+            if event.x > coords_E[0] and event.y > coords_E[1] and event.x < coords_E[2] and event.y < coords_E[3]:
+                self.Eternity.buy_e()
         coords_0 = self.main_canvas.coords(self.Tickspeed.box_buy)
         if event.x > coords_0[0] and event.y > coords_0[1] and event.x < coords_0[2] and event.y < coords_0[3]:
             self.Tickspeed.buy()
@@ -191,6 +211,9 @@ class Game:
 
         if self.Menu.curMenu == 'Illusory':
             self.Aspects.click(event)
+
+        if self.Menu.curMenu == 'Eternity':
+            self.Eternity.click(event)
 
 
         if self.Menu.curMenu == 'Infinity':
@@ -221,22 +244,23 @@ class Game:
             if event.x > coords_upgr_7[0] and event.y > coords_upgr_7[1] and event.x < coords_upgr_7[2] and event.y < \
                     coords_upgr_7[3]:
                 self.Infinity.buy_upgrade(7)
-            coords_upgr_8 = self.main_canvas.coords(self.Infinity.upgr_8_box)
-            if event.x > coords_upgr_8[0] and event.y > coords_upgr_8[1] and event.x < coords_upgr_8[2] and event.y < \
-                    coords_upgr_8[3]:
-                self.Infinity.buy_upgrade(8)
-            coords_upgr_9 = self.main_canvas.coords(self.Infinity.upgr_9_box)
-            if event.x > coords_upgr_9[0] and event.y > coords_upgr_9[1] and event.x < coords_upgr_9[2] and event.y < \
-                    coords_upgr_9[3]:
-                self.Infinity.buy_upgrade(9)
-            coords_upgr_10 = self.main_canvas.coords(self.Infinity.upgr_10_box)
-            if event.x > coords_upgr_10[0] and event.y > coords_upgr_10[1] and event.x < coords_upgr_10[2] and event.y < \
-                    coords_upgr_10[3]:
-                self.Infinity.buy_upgrade(10)
-            coords_upgr_11 = self.main_canvas.coords(self.Infinity.upgr_11_box)
-            if event.x > coords_upgr_11[0] and event.y > coords_upgr_11[1] and event.x < coords_upgr_11[2] and event.y < \
-                    coords_upgr_11[3]:
-                self.Infinity.buy_upgrade(11)
+            if self.Aspects.completion_4:
+                coords_upgr_8 = self.main_canvas.coords(self.Infinity.upgr_8_box)
+                if event.x > coords_upgr_8[0] and event.y > coords_upgr_8[1] and event.x < coords_upgr_8[2] and event.y < \
+                        coords_upgr_8[3]:
+                    self.Infinity.buy_upgrade(8)
+                coords_upgr_9 = self.main_canvas.coords(self.Infinity.upgr_9_box)
+                if event.x > coords_upgr_9[0] and event.y > coords_upgr_9[1] and event.x < coords_upgr_9[2] and event.y < \
+                        coords_upgr_9[3]:
+                    self.Infinity.buy_upgrade(9)
+                coords_upgr_10 = self.main_canvas.coords(self.Infinity.upgr_10_box)
+                if event.x > coords_upgr_10[0] and event.y > coords_upgr_10[1] and event.x < coords_upgr_10[2] and event.y < \
+                        coords_upgr_10[3]:
+                    self.Infinity.buy_upgrade(10)
+                coords_upgr_11 = self.main_canvas.coords(self.Infinity.upgr_11_box)
+                if event.x > coords_upgr_11[0] and event.y > coords_upgr_11[1] and event.x < coords_upgr_11[2] and event.y < \
+                        coords_upgr_11[3]:
+                    self.Infinity.buy_upgrade(11)
 
         if self.Menu.curMenu=='Counters':
             coords_1=self.main_canvas.coords(self.Counter_1.box_buy)
@@ -306,7 +330,7 @@ class Game:
         self.Infinity.get_points(1)
 
     def ass_to_much_2_1(self,event):
-        self.Infinity.get_points(self.Infinity.infinity_counter)
+        self.Infinity.get_points(self.Infinity.infinity_counter*1e10+1)
     def ass_to_much_3(self,event):
         self.Value.get_count(self.Value.value*1e10)
 Game=Game(window,[width,height])

@@ -24,6 +24,9 @@ class Automatick:
         self.chosen_block='N'
         self.cycle()
 
+    def reset(self):
+        self.time_cycle=2000
+
     def place(self):
 
         self.chosen_block = 'N'

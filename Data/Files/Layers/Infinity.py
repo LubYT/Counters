@@ -5,45 +5,40 @@ import math
 class Infinity:
     def __init__(self, game):
         self.game = game
-        self.infinities = int(self.game.Save.Infinity_data[0][0])
-        self.multi_progressive_7=float(self.game.Save.Infinity_data[0][2])
-        self.infinity_counter = float(self.game.Save.Infinity_data[0][1])
-        self.total_count=float(self.game.Save.Infinity_data[0][4])
+        self.infinities = self.game.Decimal(self.game.Save.Infinity_data[0][0][0],self.game.Save.Infinity_data[0][0][1],self.game)
+        self.multi_progressive_7=self.game.Decimal(self.game.Save.Infinity_data[2][0][0],self.game.Save.Infinity_data[2][0][1],self.game,'n')
+        self.infinity_counter = self.game.Decimal(self.game.Save.Infinity_data[1][0][0],self.game.Save.Infinity_data[1][0][1],self.game,'IC')
+        self.total_count=self.game.Decimal(self.game.Save.Infinity_data[4][0][0],self.game.Save.Infinity_data[4][0][1],self.game,'IC')
         self.cost = 1.8e308
         self.income = 1
-        self.upgrades = self.game.Save.Infinity_data[0][3]
-        self.first = bool(self.game.Save.Infinity_data[0][5])
+        self.upgrades = self.game.Save.Infinity_data[3][0]
+        self.first = bool(self.game.Save.Infinity_data[5][0])
         self.placed = False
 
     def place(self):
         self.placed=True
-        if self.infinity_counter < 20:
-            self.text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 520, 86,
+        self.text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 520, 86,
                                                           anchor='center',
-                                                          text='Infinity Count: ' + str(round(self.infinity_counter,2)),
-                                                          fill='#d99000', justify='center',
-                                                          font=('bahnschrift', 14))
-        elif 20 <= self.infinity_counter < 1000:
-            self.text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 520, 86,
-                                                          anchor='center',
-                                                          text='Infinity Count: \n' + str(
-                                                              round(self.infinity_counter, 2)),
-                                                          fill='#d99000', justify='center',
-                                                          font=('bahnschrift', 14))
-        else:
-            self.text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 520, 86,
-                                                          anchor='center',
-                                                          text='Infinity Count: \n' + "{:.2e}".format(
-                                                              Decimal(self.infinity_counter)),
-                                                          fill='#d99000', justify='center',
+                                                          text=self.get_not('text'),
+                                                          fill=self.get_not('text_c'), justify='center',
                                                           font=('bahnschrift', 14))
         self.box_buy = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 440, 110,
                                                               self.game.geometry[0] // 2 - 600, 170, width=1,
                                                               fill='black', outline='#ffbc36')
         self.text_buy = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 520, 140,
-                                                          anchor='center', justify='center', text='Cost: ' + str(
-                "{:.2e}".format(Decimal(self.cost))) + '\nGet ' + str(self.income) + ' IC', fill='#d99000',
+                                                          anchor='center', justify='center', text=self.get_not('text_buy'), fill=self.get_not('text_buy_c'),
                                                           font=('bahnschrift', 10))
+
+    def get_not(self,type):
+        if type=='text':
+            return 'Infinity Count: ' + self.infinity_counter.get(2,4)
+        elif type=='text_c':
+            return '#d99000'
+        elif type=='text_buy':
+            return 'Cost: Infinity\nGet ' + str(self.get_total()) + ' IC'
+        elif type=='text_buy_c':
+            return '#d99000'
+
 
     def hide(self):
         if not (self.game.Aspects.active == True and (self.game.Aspects.cur_ill == 3 or self.game.Aspects.cur_ill == 4)):
@@ -87,56 +82,84 @@ class Infinity:
                 self.conf_upgrades()
 
     def get_total(self):
-        total = self.income * (
-                    self.game.Doom.doom_count ** self.game.Doom.mult_inf) * self.game.Achievements.achieve_mult(
-            'IC') * self.game.Aspects.reward_2
+        dc=self.game.Decimal(self.game.Doom.doom_count.num,self.game.Doom.doom_count.e,self.game)
+        total=self.game.Decimal(1,0,self.game)
+        total *= self.income
+        value=self.game.Value.value.log()
+        if self.game.Eternity.upgrades[2]=='Y' and self.game.Value.value>1.8e308:
+            total *=((value/308)*1.5)**5
+        total*=(dc** self.game.Doom.mult_inf)
+        total*=self.game.Achievements.achieve_mult('IC') * self.game.Aspects.reward_2
+        if self.game.Eternity.upgrades[0]=='Y':
+            y = self.game.Decimal(1, 0, self.game)
+            ec = self.game.Decimal(self.game.Eternity.eternity_count.num, self.game.Eternity.eternity_count.e, self.game)
+            if self.game.Eternity.eternity_count > 0:
+                y += ec ** 0.5 / 5
+            e = self.game.Decimal(self.game.Eternity.eternities.num, self.game.Eternity.eternities.e, self.game)
+            if self.game.Eternity.eternities > 0:
+                y += e ** 0.7 / 5
+            total*=y
         if self.upgrades[7]=='Y':
-            total *= self.infinities ** 1.2
+            inf=self.game.Decimal(self.infinities.num,self.infinities.e,self.game)
+            total *= inf** 1.2
         if self.upgrades[9]=='Y':
-            total *= 10**self.game.TA.amount
+            total *= self.game.Decimal(1,int(self.game.TA.amount),self.game)
         return total
-    def reset(self):
-        self.multi_progressive_7=1
+    def reset(self,*args):
+        self.multi_progressive_7=self.game.Decimal(1,0,self.game)
+        if 'full' in args:
+            self.infinities = self.game.Decimal(1,0,self.game)
+            self.multi_progressive_7 = self.game.Decimal(1,0,self.game)
+            self.get_points('reset')
+            self.cost = 1.8e308
+            self.income = 1
+            self.upgrades = ['N','N','N','N','Y','N','N','N','N','N','N']
+            self.conf_upgrades()
+            if self.game.Menu.curMenu=='Infinity':
+                self.game.Menu.stage_get(change='infinity')
 
     def get_points(self,value,*args):
         if self.game.Aspects.active==False:
-            self.infinity_counter += value
-            if not 'buy' in args:
-                self.total_count+=value
-            if self.infinity_counter>1.79e308:
-                self.infinity_counter=1.79e308
-            if self.infinity_counter < 20:
-                self.game.main_canvas.itemconfigure(self.text, text='Infinity Count: ' + str(round(self.infinity_counter,2)))
-            elif self.infinity_counter < 1000:
-                self.game.main_canvas.itemconfigure(self.text, text='Infinity Count: \n' + str(round(self.infinity_counter,2)))
+            if value!='reset':
+                if not 'buy' in args:
+                    self.total_count+=value
+                    self.infinity_counter += value
+                else:
+                    self.infinity_counter -= value
+                if self.infinity_counter>1.79e308 and self.game.Eternity.upgrades[3]=='N':
+                    self.infinity_counter=self.game.Decimal(1.79,308,self.game)
+                self.game.main_canvas.itemconfigure(self.text, text=self.get_not('text'))
             else:
-                self.game.main_canvas.itemconfigure(self.text, text='Infinity Count: \n' + "{:.2e}".format(
-                    Decimal(self.infinity_counter)))
+                self.infinity_counter=self.game.Decimal(0,0,self.game)
+                self.total_count=self.game.Decimal(0,0,self.game)
+                self.game.main_canvas.itemconfigure(self.text, text=self.get_not('text'))
 
     def buy_upgrade(self, index):
         if index == 1 and self.upgrades[0]=='N':
             if self.infinity_counter >= 1:
-                self.get_points(-1, 'buy')
+                self.get_points(1, 'buy')
                 self.upgrades[0] = 'Y'
                 self.game.main_canvas.itemconfigure(self.upgr_1_box,fill='#c28e0a')
-                y = 1
+                y = self.game.Decimal(1, 0, self.game, 'n')
+                infi = self.game.Decimal(self.infinities.num, self.infinities.e, self.game)
+                infc = self.game.Decimal(self.infinity_counter.num, self.infinity_counter.e, self.game)
+                log_1 = self.infinity_counter.log()
+                log_2 = self.infinities.log()
                 if self.infinity_counter > 0:
-                    y += round((self.infinity_counter / (5 + math.log(self.infinity_counter))), 1)
+                    y += (infc / (5 + log_1))
                 if self.infinities > 0:
-                    y += round((self.infinities / (5 + math.log(self.infinities))), 1)
-                if 0 < y <= 1000:
+                    y += (infi / (5 + log_2))
+                if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 2:
+                    y = y ** 1.25
+                if y>=1:
                     self.game.main_canvas.itemconfigure(self.upgr_1_text,fill='#4a1111',
-                                                        text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(y))
-                elif y > 1000:
-                    self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#4a1111',
-                                                        text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
-                                                            "{:.2e}".format(y)))
+                                                        text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + y.get(2,4))
                 else:
                     self.game.main_canvas.itemconfigure(self.upgr_1_text,fill='#4a1111',
                                                         text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x 1')
         elif index == 2 and self.upgrades[1] == 'N':
             if self.infinity_counter >= 2:
-                self.get_points(-2, 'buy')
+                self.get_points(2, 'buy')
                 self.game.Tickspeed.get_boost(1.25)
                 self.upgrades[1] = 'Y'
                 self.game.main_canvas.itemconfigure(self.upgr_2_box, fill='#c28e0a')
@@ -144,27 +167,26 @@ class Infinity:
                                                     text='Gain multiplier to\n counters speed * 1.25')
         elif index == 3 and self.upgrades[2] == 'N':
             if self.infinity_counter >= 2:
-                self.get_points(-2, 'buy')
+                self.get_points(2, 'buy')
                 self.upgrades[2] = 'Y'
                 self.game.main_canvas.itemconfigure(self.upgr_3_box, fill='#c28e0a')
                 self.game.main_canvas.itemconfigure(self.upgr_3_text, fill='#4a1111',
                                                     text='Start any reset\nwith 1e5 C')
         elif index == 4 and self.upgrades[3] == 'N':
             if self.infinity_counter >= 5:
-                self.get_points(-5, 'buy')
+                self.get_points(5, 'buy')
                 self.upgrades[3] = 'Y'
                 self.game.main_canvas.itemconfigure(self.upgr_4_box, fill='#c28e0a')
-                if 10<self.game.Value.value < 1.8e308:
+                if 10<self.game.Value.value:
                     self.game.main_canvas.itemconfigure(self.upgr_4_text, fill='#4a1111',
                                                         text='Gain multiplier to counters\nbased on Count:\n x ' +
-                                                             str(round((math.log(self.game.Value.value, 10) ** 0.75),
-                                                                       2)))
+                                                             str(self.game.Value.value.log() ** 0.75))
                 else:
                     self.game.main_canvas.itemconfigure(self.upgr_4_text, fill='#4a1111',
                                                         text='Gain multiplier to counters\nbased on Count:\n x ' + '1')
         elif index == 5 and self.upgrades[4] == 'N':
             if self.infinity_counter >= 10:
-                self.get_points(-10, 'buy')
+                self.get_points(10, 'buy')
                 self.upgrades[4] = 'Y'
                 self.game.Menu.add('doom')
                 self.game.main_canvas.itemconfigure(self.upgr_5_box, fill='#c28e0a')
@@ -173,7 +195,7 @@ class Infinity:
                 self.game.Achievements.get_achieve(16)
         elif index == 6 and self.upgrades[5] == 'N':
             if self.infinity_counter >= 2:
-                self.get_points(-2, 'buy')
+                self.get_points(2, 'buy')
                 self.upgrades[5] = 'Y'
                 self.game.Automatick.allowed[0]='Y'
                 self.game.Automatick.allowed[1] = 'Y'
@@ -182,36 +204,36 @@ class Infinity:
                                                     text='Unlocked boost and\ntime auto-blocks')
         elif index == 7 and self.upgrades[6] == 'N':
             if self.infinity_counter >= 4:
-                self.get_points(-4, 'buy')
+                self.get_points(4, 'buy')
                 self.upgrades[6] = 'Y'
                 self.game.main_canvas.itemconfigure(self.upgr_7_box, fill='#c28e0a')
                 self.game.main_canvas.itemconfigure(self.upgr_7_text, fill='#4a1111',text=
-                                                    'Gain progressive multi\nto 1 counter\nx' + str(round(
-                                                        self.multi_progressive_7, 2)))
+                                                    'Gain progressive multi\nto 1 counter\nx' +
+                                                        self.multi_progressive_7.get(2,4))
         elif index == 8 and self.upgrades[7] == 'N':
             if self.infinity_counter >= 1e220:
-                self.get_points(-1e220, 'buy')
+                self.get_points(1e220, 'buy')
                 self.upgrades[7] = 'Y'
                 self.game.main_canvas.itemconfigure(self.upgr_8_text, fill='#4a1111', text='Infinities boost IC gain\nx' + self.get_value(8))
                 self.game.main_canvas.itemconfigure(self.upgr_8_box, fill='#c28e0a')
 
         elif index == 9 and self.upgrades[8] == 'N':
             if self.infinity_counter >= 1e230:
-                self.get_points(-1e230, 'buy')
+                self.get_points(1e230, 'buy')
                 self.upgrades[8] = 'Y'
                 self.game.main_canvas.itemconfigure(self.upgr_9_text, fill='#4a1111', text='Infinities boost DD gain\nx' + self.get_value(9))
                 self.game.main_canvas.itemconfigure(self.upgr_9_box, fill='#c28e0a')
 
         elif index == 10 and self.upgrades[9] == 'N':
             if self.infinity_counter >= 1e240:
-                self.get_points(-1e240, 'buy')
+                self.get_points(1e240, 'buy')
                 self.upgrades[9] = 'Y'
                 self.game.main_canvas.itemconfigure(self.upgr_10_text, fill='#4a1111', text='TA boost IC gain\nx' + self.get_value(10))
                 self.game.main_canvas.itemconfigure(self.upgr_10_box, fill='#c28e0a')
 
         elif index == 11 and self.upgrades[10] == 'N':
             if self.infinity_counter >= 1e250:
-                self.get_points(-1e250, 'buy')
+                self.get_points(1e250, 'buy')
                 self.upgrades[10] = 'Y'
                 self.game.main_canvas.itemconfigure(self.upgr_11_text, fill='#4a1111', text='Total time in game\nboost DD gain\nx'+self.get_value(11))
                 self.game.main_canvas.itemconfigure(self.upgr_11_box, fill='#c28e0a')
@@ -228,32 +250,40 @@ class Infinity:
             self.game.Automatick.allowed[0] = 'Y'
             self.game.Automatick.allowed[1] = 'Y'
     def get_boost(self,*arg):
-        x = 1
+        x = self.game.Decimal(1,0,self.game)
         #inf
         if not (self.game.Aspects.active==True and self.game.Aspects.cur_ill==1) and not (self.game.Aspects.active == True and (self.game.Aspects.cur_ill == 3 or self.game.Aspects.cur_ill == 4)):
             if self.first:
                 x*=1.15
             if self.upgrades[0] == 'Y':
-                y=1
-                if self.infinity_counter>0:
-                    y+=round((self.infinity_counter / (5 + math.log(self.infinity_counter))),1)
-                if self.infinities>0:
-                    y+=round((self.infinities / (5 + math.log(self.infinities))), 1)
+                y = self.game.Decimal(1, 0, self.game, 'n')
+                infi = self.game.Decimal(self.infinities.num, self.infinities.e, self.game)
+                infc = self.game.Decimal(self.infinity_counter.num, self.infinity_counter.e, self.game)
+                log_1 = self.infinity_counter.log()
+                log_2 = self.infinities.log()
+                if self.infinity_counter > 0:
+                    y += (infc / (5 + log_1))
+                if self.infinities > 0:
+                    y += (infi / (5 + log_2))
                 if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 2:
                     y = y ** 1.25
                 x*=y
             if self.upgrades[3] == 'Y':
-                if 10 < self.game.Value.value < 1.8e308:
-                    x *= round((math.log(self.game.Value.value,10)**0.75),2)
+                value = self.game.Decimal(self.game.Value.value.num, self.game.Value.value.e, self.game).log()
+                value = value ** 0.75
+                if 10<self.game.Value.value:
+                    x *= value
                 else:
                     x *= 1
         #doom
         if not (self.game.Aspects.active == True and (self.game.Aspects.cur_ill == 3 or self.game.Aspects.cur_ill == 4)):
             if not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 1):
                 if self.upgrades[4] == 'Y':
-                    x=x/(self.game.Doom.doom_count**self.game.Doom.mult_doom)
+                    dc = self.game.Decimal(self.game.Doom.doom_count.num, self.game.Doom.doom_count.e, self.game)
+                    x=x/(dc**self.game.Doom.mult_doom)
             else:
-                x = x *(self.game.Doom.doom_count ** 0.2)
+                dc = self.game.Decimal(self.game.Doom.doom_count.num, self.game.Doom.doom_count.e, self.game)
+                x = x *(dc ** 0.2)
                 x= x/75
         #cheat
         if self.game.boost_cheat:
@@ -274,62 +304,57 @@ class Infinity:
     def conf_upgrades(self,*args):
         if self.game.Menu.curMenu=='Infinity' and not (self.game.Aspects.active == True and (self.game.Aspects.cur_ill == 3 or self.game.Aspects.cur_ill == 4)):
             if self.upgrades[0]=='N':
-                y = 1
+                y = self.game.Decimal(1,0,self.game,'n')
+                infi=self.game.Decimal(self.infinities.num,self.infinities.e,self.game)
+                infc=self.game.Decimal(self.infinity_counter.num,self.infinity_counter.e,self.game)
+                log_1=self.infinity_counter.log()
+                log_2=self.infinities.log()
                 if self.infinity_counter > 0:
-                    y += round((self.infinity_counter / (5 + math.log(self.infinity_counter))), 1)
+                    y += (infc / (5 + log_1))
                 if self.infinities > 0:
-                    y += round((self.infinities / (5 + math.log(self.infinities))), 1)
+                    y += (infi / (5 + log_2))
                 if self.game.Aspects.active==True and self.game.Aspects.cur_ill==2:
                     y=y**1.25
-                if 0 < y <= 1000:
-                    self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#d99000',
+                self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#d99000',
                                                         text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
-                                                            round(y,1))+ '\nCost: 1 IC')
-                elif y > 1000:
-                    self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#d99000',
-                                                        text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
-                                                            "{:.2e}".format(y,1))+ '\nCost: 1 IC')
-                else:
-                    self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#d99000',
-                                                        text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x 1'+ '\nCost: 1 IC')
+                                                            y.get(2,4))+ '\nCost: 1 IC')
             elif self.upgrades[0]=='Y' and 'VALUE' in args:
-                y = 1
+                y = self.game.Decimal(1, 0, self.game, 'n')
+                infi = self.game.Decimal(self.infinities.num, self.infinities.e, self.game)
+                infc = self.game.Decimal(self.infinity_counter.num, self.infinity_counter.e, self.game)
+                log_1 = self.infinity_counter.log()
+                log_2 = self.infinities.log()
                 if self.infinity_counter > 0:
-                    y += round((self.infinity_counter / (5 + math.log(self.infinity_counter))), 1)
+                    y += (infc / (5 + log_1))
                 if self.infinities > 0:
-                    y += round((self.infinities / (5 + math.log(self.infinities))), 1)
-                if self.game.Aspects.active==True and self.game.Aspects.cur_ill==2:
-                    y=y**1.25
-                if 0 < y <= 1000:
-                    self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#4a1111',
+                    y += (infi / (5 + log_2))
+                if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 2:
+                    y = y ** 1.25
+                self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#4a1111',
                                                         text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
-                                                            round(y,1)))
-                elif y > 1000:
-                    self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#4a1111',
-                                                        text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
-                                                            "{:.2e}".format(y)))
-                else:
-                    self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#4a1111',
-                                                        text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x 1')
+                                                            y.get(2,4)))
             if self.upgrades[3]=='N' and 'VALUE' in args:
-                if 10<self.game.Value.value < 1.8e308:
+                value=self.game.Value.value.log()
+                value=value**0.75
+                if 10<self.game.Value.value:
                     self.game.main_canvas.itemconfigure(self.upgr_4_text,text='Gain multiplier to counters\nbased on Count:\n x '+
-                                                                         str(round((math.log(self.game.Value.value,10)**0.75),2))+'\nCost: 5 IC')
+                                                                         str(round(value,2))+'\nCost: 5 IC')
                 else:
                     self.game.main_canvas.itemconfigure(self.upgr_4_text,text='Gain multiplier to counters\nbased on Count:\n x '+'1'+'\nCost: 5 IC')
             elif self.upgrades[3]=='Y' and 'VALUE' in args:
-                if 10<self.game.Value.value < 1.8e308:
+                value = self.game.Value.value.log()
+                value = value ** 0.75
+                if 10<self.game.Value.value:
                     self.game.main_canvas.itemconfigure(self.upgr_4_text,text='Gain multiplier to counters\nbased on Count:\n x '+
-                                                                         str(round((math.log(self.game.Value.value,10)**0.75),2)))
+                                                                         str(round(value,2)))
                 else:
                     self.game.main_canvas.itemconfigure(self.upgr_4_text,text='Gain multiplier to counters\nbased on Count:\n x '+'1')
             if self.upgrades[6] == 'N' and 'MULTI' in args:
-                self.game.main_canvas.itemconfigure(self.upgr_7_text,text='Gain progressive multi\nto 1 counter\nx' + str(round(
-                                                                         self.multi_progressive_7, 2)) + '\nCost: 4 IC')
+                self.game.main_canvas.itemconfigure(self.upgr_7_text,text='Gain progressive multi\nto 1 counter\nx' +
+                                                                         self.multi_progressive_7.get(2,4) + '\nCost: 4 IC')
             elif self.upgrades[6] == 'Y' and 'MULTI' in args:
                 self.game.main_canvas.itemconfigure(self.upgr_7_text,
-                                                    text='Gain progressive multi\nto 1 counter\nx' + str(round(
-                                                        self.multi_progressive_7, 2)))
+                                                    text='Gain progressive multi\nto 1 counter\nx' + self.multi_progressive_7.get(2,4))
 
             ###
 
@@ -360,16 +385,12 @@ class Infinity:
         if self.placed:
             if self.game.Aspects.active == False:
                 self.game.main_canvas.itemconfigure(self.box_buy, outline='#ffbc36')
-                if self.get_total()<10000:
-                    self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                            "{:.2e}".format(Decimal(self.cost))) + '\nGet ' + str(round(self.get_total(),1)) + ' IC', fill='#d99000')
-                elif self.get_total()>1.79e308:
-                    self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                        "{:.2e}".format(Decimal(self.cost))) + '\nGet Limited 1.79e308 IC', fill='#d99000')
+                if self.get_total()>1.79e308 and self.game.Eternity.upgrades[3]=='N':
+                    self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: Infinity\nGet Limited 1.79e308 IC', fill='#d99000')
                 else:
-                    self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(
-                        "{:.2e}".format(Decimal(self.cost))) + '\nGet ' + str(
-                        "{:.2e}".format(Decimal(round(self.get_total(), 1)))) + ' IC', fill='#d99000')
+                    self.game.main_canvas.itemconfigure(self.text_buy,
+                                                        text='Cost: Infinity\nGet ' + self.get_total().get(2,4) + ' IC',
+                                                        fill='#d99000')
             elif self.game.Aspects.active==True:
                 if self.game.Aspects.cur_ill==1:
                     self.game.main_canvas.itemconfigure(self.box_buy,outline='#93d9d9')
@@ -396,13 +417,21 @@ class Infinity:
                 self.upgr_1_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 500, 210,
                                                                          self.game.geometry[0] // 2 - 300, 310, width=1,
                                                                          fill='black', outline='#e5b045')
-                if 0 < self.infinity_counter <= 1000:
+                y = self.game.Decimal(1, 0, self.game, 'n')
+                infi = self.game.Decimal(self.infinities.num, self.infinities.e, self.game)
+                infc = self.game.Decimal(self.infinity_counter.num, self.infinity_counter.e, self.game)
+                log_1 = self.infinity_counter.log()
+                log_2 = self.infinities.log()
+                if self.infinity_counter > 0:
+                    y += (infc / (5 + log_1))
+                if self.infinities > 0:
+                    y += (infi / (5 + log_2))
+                if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 2:
+                    y = y ** 1.25
+                if y>=1:
                     self.upgr_1_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 400, 260,
                                                                          anchor='center',
-                                                                         text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
-                                                                             round(1 + (self.infinity_counter / (
-                                                                                         5 + math.log(self.infinity_counter))),
-                                                                                   1)) + '\nCost: 1 IC',
+                                                                         text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + y.get(2,4) + '\nCost: 1 IC',
                                                                          fill='#d99000', justify='center',
                                                                          font=('bahnschrift', 12))
                 else:
@@ -411,41 +440,33 @@ class Infinity:
                                                                          text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x 1' +'\nCost: 1 IC',
                                                                          fill='#d99000', justify='center',
                                                                          font=('bahnschrift', 12))
-                if self.infinity_counter > 1000:
-                    self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#d99000',
-                                                        text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
-                                                            "{:.2e}".format(Decimal(1 + (self.infinity_counter / (
-                                                                    5 + math.log(self.infinity_counter))) +
-                                                                                    (self.infinities / (
-                                                                                            5 + math.log(
-                                                                                        self.infinities)))))))
             else:
                 self.upgr_1_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 500, 210,
                                                                          self.game.geometry[0] // 2 - 300, 310, width=1,
                                                                          fill='#c28e0a', outline='#e5b045')
-                if 0 < self.infinity_counter <= 1000:
+                y = self.game.Decimal(1, 0, self.game, 'n')
+                infi = self.game.Decimal(self.infinities.num, self.infinities.e, self.game)
+                infc = self.game.Decimal(self.infinity_counter.num, self.infinity_counter.e, self.game)
+                log_1 = self.infinity_counter.log()
+                log_2 = self.infinities.log()
+                if self.infinity_counter > 0:
+                    y += (infc / (5 + log_1))
+                if self.infinities > 0:
+                    y += (infi / (5 + log_2))
+                if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 2:
+                    y = y ** 1.25
+                if y >= 1:
                     self.upgr_1_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 400, 260,
                                                                          anchor='center',
-                                                                         text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
-                                                                             round(1 + (self.infinity_counter / (
-                                                                                     5 + math.log(self.infinity_counter))),
-                                                                                   1)),fill='#4a1111'
-                                                                         , justify='center',
+                                                                         text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + y.get(2, 4),
+                                                                         fill='#d99000', justify='center',
                                                                          font=('bahnschrift', 12))
                 else:
                     self.upgr_1_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 400, 260,
                                                                          anchor='center',
                                                                          text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x 1',
-                                                                         fill='#4a1111', justify='center',
+                                                                         fill='#d99000', justify='center',
                                                                          font=('bahnschrift', 12))
-                if self.infinity_counter > 1000:
-                    self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#4a1111',
-                                                        text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
-                                                            "{:.2e}".format(Decimal(1 + (self.infinity_counter / (
-                                                                    5 + math.log(self.infinity_counter))) +
-                                                                                    (self.infinities / (
-                                                                                            5 + math.log(
-                                                                                        self.infinities)))))))
 
             if self.upgrades[1] == 'N':
                 self.upgr_2_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 250, 210,
@@ -487,11 +508,11 @@ class Infinity:
                 self.upgr_4_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 500, 210,
                                                                          self.game.geometry[0] // 2 + 300, 310, width=1,
                                                                          fill='black', outline='#e5b045')
-                if 10<self.game.Value.value < 1.8e308:
+                if 10<self.game.Value.value:
                     self.upgr_4_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 400, 260,
                                                                          anchor='center',
                                                                          text='Gain multiplier to counters\nbased on Count:\n x '+
-                                                                         str(round((math.log(self.game.Value.value,10)**0.75),2))+'\nCost: 5 IC',
+                                                                         str((self.game.Value.value.log()**0.75))+'\nCost: 5 IC',
                                                                              fill='#d99000', justify='center',
                                                                              font=('bahnschrift', 12))
                 else:
@@ -505,11 +526,11 @@ class Infinity:
                 self.upgr_4_box = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 500, 210,
                                                                          self.game.geometry[0] // 2 + 300, 310, width=1,
                                                                          fill='#c28e0a', outline='#e5b045')
-                if 10<self.game.Value.value < 1.8e308:
+                if 10<self.game.Value.value:
                     self.upgr_4_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 400, 260,
                                                                          anchor='center',
                                                                          text='Gain multiplier to counters\nbased on Count:\n x '+
-                                                                         str(round((math.log(self.game.Value.value,10)**0.75),2)),
+                                                                         str((self.game.Value.value.log()**0.75)),
                                                                          fill='#4a1111', justify='center',
                                                                          font=('bahnschrift', 12))
                 else:
@@ -561,7 +582,7 @@ class Infinity:
                                                                          fill='black', outline='#e5b045')
                 self.upgr_7_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 250, 380,
                                                                      anchor='center',
-                                                                     text='Gain progressive multi\nto 1 counter\nx'+str(round(self.multi_progressive_7,2))+'\nCost: 4 IC',
+                                                                     text='Gain progressive multi\nto 1 counter\nx'+self.multi_progressive_7.get(2,4)+'\nCost: 4 IC',
                                                                          fill='#d99000', justify='center',
                                                                          font=('bahnschrift', 12))
             else:
@@ -570,7 +591,7 @@ class Infinity:
                                                                          fill='#c28e0a', outline='#e5b045')
                 self.upgr_7_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 250, 380,
                                                                      anchor='center',
-                                                                     text='Gain progressive multi\nto 1 counter\nx' + str(round(self.multi_progressive_7,2)),
+                                                                     text='Gain progressive multi\nto 1 counter\nx' +self.multi_progressive_7.get(2,4),
                                                                      fill='#4a1111', justify='center',
                                                                      font=('bahnschrift', 12))
             if self.game.Aspects.completion_4:
@@ -654,46 +675,55 @@ class Infinity:
 
     def get_value(self,num):
         if num==8:
-            if self.infinities**1.2>1000:
-                value="{:.2e}".format(Decimal(self.infinities**1.2))
-            else:
-                value=round(self.infinities**1.2,1)
-            return str(value)
+            inf=self.game.Decimal(self.infinities.num,self.infinities.e,self.game)**1.2
+            if inf<1:
+                inf=self.game.Decimal(1,0,self.game)
+            return inf.get(2,4)
         if num==9:
-            if self.infinities**1.3>1000:
-                value="{:.2e}".format(Decimal(self.infinities**1.3))
-            else:
-                value=round(self.infinities**1.3,1)
-            return str(value)
+            inf = self.game.Decimal(self.infinities.num, self.infinities.e, self.game) ** 1.3
+            if inf<1:
+                inf=self.game.Decimal(1,0,self.game)
+            return inf.get(2, 4)
         if num==10:
-            if 10**self.game.TA.amount>1000:
-                value="{:.2e}".format(Decimal(10**self.game.TA.amount))
-            else:
-                value=round(10**self.game.TA.amount,1)
-            return str(value)
+            ta=self.game.Decimal(self.game.TA.amount.num,self.game.TA.amount.e,self.game)**10
+            if ta<1:
+                ta=self.game.Decimal(1,0,self.game)
+            return ta.get(2,4)
         if num == 11:
             time=self.game.Stats.time_total[2]
             for i in range(self.game.Stats.time_total[1]):
                 time+=60
-            if time**1.2 > 1000:
-                value = "{:.2e}".format(Decimal(time**1.2))
+            for i in range(self.game.Stats.time_total[0]):
+                time+=1440
+            if time**0.4 > 1000:
+                value = "{:.2e}".format(Decimal(time**0.4))
             else:
-                value = round(time**1.2, 1)
+                value = round(time**0.4, 1)
+            if value<1:
+                value=1
             return str(value)
 
     def other_funcs(self):
-        self.multi_progressive_7+=math.log(self.multi_progressive_7+1,(self.multi_progressive_7*50)**(1.6+self.multi_progressive_7/100))/20
+        log_2=self.game.Decimal(self.multi_progressive_7.num,self.multi_progressive_7.e,self.game).log()**0.6
+        log_3=(self.game.Decimal(self.multi_progressive_7.num, self.multi_progressive_7.e, self.game).log()*10)
+        if log_2==0:
+            log_2=self.game.Decimal(1,0,self.game)
+        if log_3==0:
+            log_3=self.game.Decimal(1,0,self.game)
+        log_3/=log_2
+        time=self.game.Decimal(self.game.Eternity.time_speed.num,self.game.Eternity.time_speed.e,self.game)
+        self.multi_progressive_7+=time*((log_2/log_3)/5+0.0001)
         self.conf_upgrades('MULTI')
 
     def get_save(self):
         data=''
-        data+=str(self.infinities)+','+str(self.infinity_counter)+','+str(self.multi_progressive_7)+','
+        data+=str(self.infinities.get_save())+','+str(self.infinity_counter.get_save())+','+str(self.multi_progressive_7.get_save())+','
         data+='['
         for upgrade in self.upgrades:
             print(upgrade)
             data+=upgrade+','
         data+='],'
-        data+=str(self.total_count)+','
+        data+=str(self.total_count.get_save())+','
         if self.first:
             data+='True\n'
         else:

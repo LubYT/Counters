@@ -11,17 +11,24 @@ class Save:
         self.Infinity_data=[]
         self.Achieve_data=[]
         with (open('Data/Files/Saves/SAVE.txt','r') as file):
-            self.total_count=float(file.readline()[:-1:])
+            data = file.readline()
+            e=data.find('e')
+            self.total_count=[float(data[:e:]),int(data[e+1::])]
+
             for i in range(8):
                 list=[]
                 data=file.readline()
                 while data.find(',')!=-1:
                     index=data.find(',')
-                    list.append(data[:index:])
+                    e = data.find('e')
+                    total_count = [float(data[:e:]), int(data[e + 1:index:])]
+                    list.append(total_count)
                     data=data[index+1::]
                 else:
                     list.append(data[:-1:])
                 self.counters_data.append(list)
+            print(self.counters_data)
+
             data=file.readline()
             list = []
             while data.find(',')!=-1:
@@ -30,41 +37,58 @@ class Save:
                     data=data[1:-2:]
                     print(data)
                     while data.find(',')!=-1:
-                        index=data.find(',')
-                        list_2.append(int(data[:index:]))
+                        index = data.find(',')
+                        e = data.find('e')
+                        total_count = self.game.Decimal(float(data[:e:]), int(data[e + 1:index:]),self.game)
+                        list_2.append(total_count)
                         data=data[index+1::]
                         print(data)
                     list.append(list_2)
                 else:
-                    index=data.find(',')
-                    list.append(data[:index:])
+                    index = data.find(',')
+                    e = data.find('e')
+                    total_count = [float(data[:e:]), int(data[e + 1:index:])]
+                    list.append(total_count)
                     data=data[index+1::]
             self.CB_data.append(list)
+            print(self.CB_data)
+
             data=file.readline()
             list=[]
             while data.find(',') != -1:
                 index = data.find(',')
-                list.append(data[:index:])
+                e = data.find('e')
+                total_count = [float(data[:e:]), int(data[e + 1:index:])]
+                list.append(total_count)
                 data = data[index + 1::]
             else:
-                list.append(data[:-1:])
+                e = data.find('e')
+                total_count = [float(data[:e:]), int(data[e + 1:-1:])]
+                list.append(total_count)
             self.TA_data.append(list)
+            print(self.TA_data)
+
             data = file.readline()
             list = []
             while data.find(',') != -1:
                 index = data.find(',')
-                list.append(data[:index:])
+                e = data.find('e')
+                list.append([float(data[:e:]), int(data[e + 1:index:])])
                 data = data[index + 1::]
             else:
-                list.append(data[:-1:])
+                index = data.find(',')
+                e = data.find('e')
+                list.append([float(data[:e:]), int(data[e + 1:index:])])
             self.TS_data.append(list)
+            print(self.TS_data)
 
             data=file.readline()
-            list=[]
             for i in range(6):
+                list = []
                 if i<3:
-                    index=data.find(',')
-                    list.append(data[:index:])
+                    index = data.find(',')
+                    e = data.find('e')
+                    list.append([float(data[:e:]), int(data[e + 1:index:])])
                     data=data[index+1::]
                 elif i==3:
                     list_2=[]
@@ -78,7 +102,8 @@ class Save:
                     data=data[2::]
                 elif i == 4:
                     index = data.find(',')
-                    list.append(data[:index:])
+                    e = data.find('e')
+                    list.append([float(data[:e:]), int(data[e + 1:index:])])
                     data = data[index + 1::]
                 elif i == 5:
                     list.append(data[:-1:])
@@ -109,21 +134,24 @@ class Save:
             data=file.readline()
             data = data[:-1:]
             list=[]
-            index=data.find(',')
-            list.append(data[:index:])
+            index = data.find(',')
+            e = data.find('e')
+            list.append([float(data[:e:]), int(data[e + 1:index:])])
             data=data[index+1::]
             index = data.find(',')
-            list.append(data[:index:])
+            e = data.find('e')
+            list.append([float(data[:e:]), int(data[e + 1:index:])])
             data = data[index + 1::]
             for i in range(4):
                 data = data[1::]
                 list_2 = []
                 while data.find(']') != 0:
                     index = data.find(',')
+                    e = data.find('e')
                     if i==0 or i==1 or i==2:
-                        list_2.append(float(data[:index:]))
+                        list.append([float(data[:e:]), int(data[e + 1:index:])])
                     else:
-                        list_2.append(int(data[:index:]))
+                        list.append([float(data[:e:]), int(data[e + 1:index:])])
                     data = data[index + 1::]
                 list.append(list_2)
                 data = data[2::]
@@ -141,7 +169,12 @@ class Save:
             self.Achieve_data=list
 
             data=file.readline()
-            data = data[:-1:]
+            data = data[1:-1:]
+            print(data)
+            print(data.find(']'))
+            # while data.find(']')!=1:
+            #     print(data)
+            #     data=data[1::]
             self.Aspect_data =data
 
             data = file.readline()

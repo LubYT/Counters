@@ -41,6 +41,13 @@ class Stats:
                                                             anchor='center',
                                                             fill='#606060', justify='center',
                                                             font=('bahnschrift', 12))
+        if 'Eternity' in self.game.Menu.Allowed_menus:
+            self.text_5 = self.game.main_canvas.create_text(self.game.geometry[0] // 2, 460,
+                                                            text="During all"+str(self.game.Eternity.eternities)+" Eternities you have received " + self.time_get(
+                                                                'EC') + " EC",
+                                                            anchor='center',
+                                                            fill='#82109e', justify='center',
+                                                            font=('bahnschrift', 12))
         self.conf()
 
     def add_timer(self,seconds,defin,id):
@@ -65,11 +72,22 @@ class Stats:
                                                 text="Your fastest infinity: \n" + self.time_get(
                                                     'inf fast'))
             self.game.main_canvas.itemconfigure(self.text_3,
-                                                text="During all "+str(self.game.Infinity.infinities)+" infinities you have received " +self.time_get('IC')+" IC")
+                                                text="During all "+str(self.game.Infinity.infinities.get(2,4))+" infinities you have received " +self.time_get('IC')+" IC")
             if 'doom' in self.game.Menu.Allowed_menus:
                 self.game.main_canvas.itemconfigure(self.text_4,
                                                     text="During all DOOM you have received " +self.time_get('DD')+" DD")
+            if 'Eternity' in self.game.Menu.Allowed_menus:
+                self.game.main_canvas.itemconfigure(self.text_5,
+                                                    text="During all " + str(
+                                                        self.game.Eternity.eternities.get(2,4)) + " Eternities you have received " + self.time_get(
+                                                        'EC') + " EC")
             self.game.window.after(40,self.conf)
+
+    def reset(self,*args):
+        if 'E' in args:
+            self.time_in_inf = [0,0,0,0]
+            self.fastest_inf = [-1,0,0,0]
+            self.save = self.game.Save.Stats_data
 
     def time_get(self,arg):
         if arg=='total':
@@ -91,16 +109,13 @@ class Stats:
             time+='hours: '+str(self.fastest_inf[1])+', '+'minutes: '+str(self.fastest_inf[2])+', '+'seconds: '+str(int(round(self.fastest_inf[3],0)))+'.'
             return time
         if arg=='IC':
-            if self.game.Infinity.total_count>=1000:
-                x="{:.2e}".format(Decimal(self.game.Infinity.total_count))
-            else:
-                x=round(self.game.Infinity.total_count,2)
+            x=self.game.Infinity.total_count.get('2',4)
+            return str(x)
+        if arg=='EC':
+            x=self.game.Eternity.eternity_count.get('2',4)
             return str(x)
         if arg=='DD':
-            if self.game.Doom.doom_total>=1000:
-                x="{:.2e}".format(Decimal(self.game.Doom.doom_total))
-            else:
-                x=round(self.game.Doom.doom_total,2)
+            x=self.game.Doom.doom_total.get('2',4)
             return str(x)
 
     def time(self):
@@ -163,6 +178,10 @@ class Stats:
         self.game.main_canvas.delete(self.text_0),self.game.main_canvas.delete(self.text_1),self.game.main_canvas.delete(self.text_3),self.game.main_canvas.delete(self.text_2)
         try:
             self.game.main_canvas.delete(self.text_4)
+        except:
+            pass
+        try:
+            self.game.main_canvas.delete(self.text_5)
         except:
             pass
 

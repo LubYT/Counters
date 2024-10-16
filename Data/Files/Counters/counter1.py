@@ -3,31 +3,25 @@ from decimal import Decimal
 class Counter1:
     def __init__(self,game):
         self.game=game
-        self.count=float(self.game.Save.counters_data[0][0])
-        self.multi=float(self.game.Save.counters_data[0][1])
-        self.cost=float(self.game.Save.counters_data[0][2])
-        self.cost_up=100
+        self.count=game.Decimal(self.game.Save.counters_data[0][0][0],self.game.Save.counters_data[0][0][1],game)
+        self.multi=game.Decimal(self.game.Save.counters_data[0][1][0],self.game.Save.counters_data[0][1][1],game)
+        self.cost=game.Decimal(self.game.Save.counters_data[0][2][0],self.game.Save.counters_data[0][2][1],game)
+        self.cost_up=game.Decimal(1,2,game)
+        self.cost_up_inf=8
         self.produce_base=1
         self.first=bool(self.game.Save.counters_data[0][3])
 
     def place(self):
         self.box=self.game.main_canvas.create_rectangle(self.game.geometry[0]-60,200,self.game.geometry[0]-(self.game.geometry[0]-60),270,width=2,fill='black',outline='#a244ab')
-        self.text=self.game.main_canvas.create_text(self.game.geometry[0]-(self.game.geometry[0]-85),230,anchor='w',text=str(self.count),fill='#c22f40',font=('bahnschrift',24))
-        if self.multi * self.game.CB.multi_list[0]*self.game.Infinity.get_boost('1 counter')*self.game.Achievements.achieve_mult('1 Counter') < 1000:
-            self.text_multi = self.game.main_canvas.create_text(self.game.geometry[0] - (self.game.geometry[0] - 83), 255,
-                                                          anchor='w', text='x'+str(self.multi*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]*self.game.Infinity.get_boost('1 counter')), fill='#61c449',
+        self.text=self.game.main_canvas.create_text(self.game.geometry[0]-(self.game.geometry[0]-85),230,anchor='w',text=self.notation('total'),fill='#c22f40',font=('bahnschrift',24))
+        self.text_multi = self.game.main_canvas.create_text(self.game.geometry[0] - (self.game.geometry[0] - 83), 255,
+                                                          anchor='w', text='x'+str(self.notation('x_val')), fill=self.notation('color_x'),
                                                           font=('bahnschrift', 12))
-        else:
-            self.text_multi = self.game.main_canvas.create_text(self.game.geometry[0] - (self.game.geometry[0] - 83),255,
-                                                                anchor='w',
-                                                                text='x'+str("{:.2e}".format(Decimal(self.multi*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]*self.game.Infinity.get_boost('1 counter')))),
-                                                                fill='#61c449',
-                                                                font=('bahnschrift', 12))
         self.box_buy=self.game.main_canvas.create_rectangle(self.game.geometry[0]-70,210,self.game.geometry[0]-270,260,width=2,fill='black',outline='#95db84')
         self.box_1_buy = self.game.main_canvas.create_rectangle(self.game.geometry[0] - 71, 211,
                                                               self.game.geometry[0] - 269, 259, width=0, fill='#63855a')
         self.text_buy = self.game.main_canvas.create_text(self.game.geometry[0]-265, 235,
-                                                            anchor='w', text='Cost: ' + str(self.cost), fill='#e0d900',
+                                                            anchor='w', text='Cost: ' + self.notation('cost'), fill='#e0d900',
                                                             font=('bahnschrift', 16))
         self.box_buy_max = self.game.main_canvas.create_rectangle(self.game.geometry[0] - 280, 210,
                                                               self.game.geometry[0] - 340, 260, width=2, fill='#63855a',
@@ -38,27 +32,45 @@ class Counter1:
         if self.first:
             self.game.Counter_2.place()
     def produce(self):
-        self.produce_count_PS=(self.produce_base*self.count*self.multi*self.game.Tickspeed.get_time()*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]
+        mult = self.game.Decimal(self.multi.num, self.multi.e, self.game)
+        self.produce_count_PS=(mult*self.produce_base*self.count*self.game.Tickspeed.get_time()*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]
                                *self.game.Infinity.get_boost('1 counter'))
-        self.produce_count=(self.produce_base*self.count*self.multi*self.game.Tickspeed.get_time()*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]
+        mult = self.game.Decimal(self.multi.num, self.multi.e, self.game)
+        self.produce_count=(mult*self.produce_base*self.count*self.game.Eternity.time_speed*self.game.Tickspeed.get_time()*self.game.Achievements.achieve_mult('1 Counter')*self.game.CB.multi_list[0]
                             *self.game.Infinity.get_boost('1 counter')/25)
-        if self.game.Aspects.active_1st:
-            self.produce_count=self.produce_count**0.625
-            self.produce_count_PS = self.produce_count * 25
-            self.game.Value_PS.conf(self.produce_count_PS,'Aspect 1')
-        else:
-            self.game.Value_PS.conf(self.produce_count_PS)
+        self.game.Value_PS.conf(self.produce_count_PS.get(2,4))
         self.game.Value.get_count(self.produce_count)
 
     def reset(self):
-        self.count = 0
-        self.multi = 1
-        self.cost = 10
-        self.cost_up = 100
-        self.produce_base = 1
+        self.count = self.game.Decimal(0,0,self.game)
+        self.multi = self.game.Decimal(1,0,self.game)
+        self.cost = self.game.Decimal(1,1,self.game)
+        self.cost_up = self.game.Decimal(1,2,self.game)
+        self.produce_base = self.game.Decimal(1,0,self.game)
         self.first = False
         self.conf()
         self.game.main_canvas.itemconfigure(self.text_buy, fill='#e0d900')
+
+    def notation(self,type):
+        if type=='total':
+            return self.count.get(2,4)
+        elif type=='x_val':
+            mult = self.game.Decimal(self.multi.num, self.multi.e, self.game)
+            mult * self.game.CB.multi_list[0] * self.game.Infinity.get_boost(
+                '1 counter') * self.game.Achievements.achieve_mult('1 Counter')
+            return mult.get(2,4)
+        elif type=='color_x':
+            mult = self.game.Decimal(self.multi.num, self.multi.e, self.game)
+            mult * self.game.CB.multi_list[0] * self.game.Infinity.get_boost(
+                '1 counter') * self.game.Achievements.achieve_mult('1 Counter')
+            if mult>= 1:
+                return '#61c449'
+            else:
+                return '#454443'
+        elif type=='cost':
+            return self.cost.get(2, 4)
+
+
 
     def return_place(self):
         self.game.main_canvas.coords(self.text,self.game.geometry[0]-(self.game.geometry[0]-155),230)
@@ -82,63 +94,95 @@ class Counter1:
         self.game.main_canvas.coords(self.box_buy_max, -999,-999, -999,-999)
         self.game.main_canvas.coords(self.text_buy_max, -999,-999)
     def buy(self):
+        print(self.game.Value.value.num)
+        print(self.cost.num)
+        print(self.game.Value.value>=self.cost)
         if self.game.Value.value>=self.cost and not self.game.Value.lock:
             if self.first == False:
                 self.first = True
+                print('placed 1')
                 self.game.Counter_2.place()
             else:
                 self.multi = self.multi * 2
             if self.game.Infinity.first:
                 self.game.Achievements.get_achieve(1)
             self.game.Value.value-=self.cost
-            self.cost=self.cost*self.cost_up
+            self.cost = self.cost * self.cost_up
             if (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 3):
                 self.cost=self.cost**1.1
             self.count+=1
             self.conf()
 
     def buy_max(self):
-        while self.game.Value.value >= self.cost and not self.game.Value.lock:
-            self.buy()
+        if self.game.Value.value >= self.cost and not self.game.Value.lock:
+            times = int((self.game.Value.value.log() - self.cost.log()) / self.cost_up.log())
+
+            if (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 3):
+                while self.game.Value.value >= self.cost and not self.cost>1.8e308:
+                    self.buy()
+                    pass
+            else:
+                cost = self.game.Decimal(self.cost.num, self.cost.e)
+                cost_up = self.game.Decimal(self.cost_up.num, self.cost_up.e)
+                cost_up2 = self.game.Decimal(self.cost_up.num, self.cost_up.e)
+                while self.game.Value.value<(cost*(cost_up**times-1))/(cost_up2-1):
+                    cost = self.game.Decimal(self.cost.num, self.cost.e)
+                    cost_up = self.game.Decimal(self.cost_up.num, self.cost_up.e)
+                    cost_up2 = self.game.Decimal(self.cost_up.num, self.cost_up.e)
+                    times-=1
+                self.count+=times
+                ##
+                if self.first == False and times!=0:
+                    self.first = True
+                    if self.game.Infinity.first:
+                        self.game.Achievements.get_achieve(1)
+                    print('placed')
+                    self.game.Counter_2.place()
+                    if times-1>0:
+                        self.multi *= self.game.Decimal(2,0)**(times-1)
+                else:
+                    self.multi *= self.game.Decimal(2, 0) ** times
+                ##
+                cost=self.game.Decimal(self.cost.num,self.cost.e)
+                cost_up = self.game.Decimal(self.cost_up.num, self.cost_up.e)
+                cost_up2 = self.game.Decimal(self.cost_up.num, self.cost_up.e)
+                self.game.Value.value -= (cost*(cost_up**times-1))/(cost_up2-1)
+                ##
+
+                cost_up = self.game.Decimal(self.cost_up.num, self.cost_up.e)
+                self.cost = self.cost * (cost_up**times)
+                self.buy()
     def conf_cur(self):
         if self.first==False:
             self.conf()
-            self.game.main_canvas.after(100,self.conf_cur)
+            self.game.main_canvas.after(50,self.conf_cur)
 
     def get_count(self,count):
         self.count+=count
         self.conf()
 
     def conf(self):
+        mult = self.game.Decimal(self.multi.num, self.multi.e, self.game)
+        mult * self.game.CB.multi_list[0] * self.game.Infinity.get_boost(
+            '1 counter') * self.game.Achievements.achieve_mult('1 Counter')
+        self.game.main_canvas.itemconfigure(self.text_multi, text='x'+str(self.notation('x_val')), fill=self.notation('color_x'))
 
-        if self.multi * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter')*self.game.Achievements.achieve_mult('1 Counter') > 1000:
-            self.game.main_canvas.itemconfigure(self.text_multi, fill='#61c449', text='x' + str(
-                "{:.2e}".format(Decimal(self.multi * self.game.CB.multi_list[0]*self.game.Achievements.achieve_mult('1 Counter') * self.game.Infinity.get_boost('1 counter')))))
-        elif self.multi * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter')*self.game.Achievements.achieve_mult('1 Counter') < 1:
-            self.game.main_canvas.itemconfigure(self.text_multi, fill='#454443', text='x' + str(
-                round(self.multi * self.game.CB.multi_list[0]*self.game.Achievements.achieve_mult('1 Counter') * self.game.Infinity.get_boost('1 counter'), 3)))
-        else:
-            self.game.main_canvas.itemconfigure(self.text_multi, fill='#61c449', text='x' + str(
-                round(self.multi * self.game.CB.multi_list[0]*self.game.Achievements.achieve_mult('1 Counter') * self.game.Infinity.get_boost('1 counter'), 1)))
-        if self.game.Infinity.first and self.game.Infinity.first and self.multi * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter')*self.game.Achievements.achieve_mult('1 Counter')>=1e50:
+        if self.game.Infinity.first and mult * self.game.CB.multi_list[0] * self.game.Infinity.get_boost('1 counter')*self.game.Achievements.achieve_mult('1 Counter')>=1e50:
             self.game.Achievements.get_achieve(11)
 
-        if self.count>10000:
-            self.game.main_canvas.itemconfigure(self.text, text=str("{:.2e}".format(Decimal(self.count))))
-        else:
-            self.game.main_canvas.itemconfigure(self.text, text=str(round(self.count, 1)))
+        self.game.main_canvas.itemconfigure(self.text, text=self.notation('total'))
 
         if self.game.Menu.curMenu == 'Counters':
             try:
-                log=math.log10(self.game.Value.value)
+                log=self.game.Value.value.log()
             except:
                 log=1
             try:
-                log_1=math.log10(self.cost)
+                log_1=self.cost.log()
             except:
                 log_1=1
             try:
-                log_2=math.log10(self.cost_up)
+                log_2=self.cost_up.log()
             except:
                 log_2=1
             main_log=(log_1-log)/log_2
@@ -159,14 +203,11 @@ class Counter1:
                 self.game.main_canvas.coords(self.box_1_buy, self.game.geometry[0] - 71 - (198 * coords_mult), 211,
                                              self.game.geometry[0] - 269, 259)
 
-        if self.cost > 10000:
-            self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str("{:.2e}".format(Decimal(self.cost))))
-        else:
-            self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + str(round(self.cost, 1)))
+        self.game.main_canvas.itemconfigure(self.text_buy, text='Cost: ' + self.notation('cost'))
 
     def get_save(self):
         data=''
-        data+=str(self.count)+','+str(self.multi)+','+str(self.cost)+','
+        data+=str(self.count.get_save())+','+str(self.multi.get_save())+','+str(self.cost.get_save())+','
         if self.first==False:
             data+=''+'\n'
         else:

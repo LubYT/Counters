@@ -9,18 +9,26 @@ class Menu:
         self.image_5 = PhotoImage(file='Data/Files/images/achievementes.png')
         self.image_6 = PhotoImage(file='Data/Files/images/illusory_aspect.png')
         self.image_7 = PhotoImage(file='Data/Files/images/stats.png')
+        self.image_8 = PhotoImage(file='Data/Files/images/Eternity.png')
         self.game=game
         self.active=False
         self.curMenu='Counters'
         self.Allowed_menus=[]
+        self.base=['Basic mode','#707070','#ad0000']
         self.curStage='Basic mode'
-        self.colorStage='#707070'
+        self.colorStage = '#707070'
         self.textStage=self.game.main_canvas.create_text(self.game.geometry[0] // 2, 10, anchor='n',
                                                         text=self.curStage,
                                                         fill=self.colorStage, justify='center',
                                                         font=('bahnschrift', 12))
 
-    def stage_get(self,stage='Basic mode',color='#707070',change='-',color_box='#ad0000'):
+    def stage_get(self,stage=0,color=1,change='-',color_box=2):
+        if stage==0:
+            stage=self.base[0]
+        if color == 1:
+            color = self.base[1]
+        if color_box == 2:
+            color_box = self.base[2]
         self.curStage=stage
         self.colorStage=color
         self.game.main_canvas.itemconfigure(self.textStage,text=self.curStage,fill=self.colorStage)
@@ -30,6 +38,8 @@ class Menu:
 
     def place_menus(self):
         self.active=True
+        if self.game.Eternity.first:
+            self.base=['Basic Eternity','#d38ff2','#ad0048']
         self.Allowed_menus.append('counters'),self.Allowed_menus.append('infinity'),self.Allowed_menus.append('automatick'),self.Allowed_menus.append('achievements'),self.Allowed_menus.append('Stats')
         self.box=self.game.main_canvas.create_rectangle(0,190,110,270,width=2,fill='black',outline='#e80923')
         self.box_1 = self.game.main_canvas.create_rectangle(0, 280, 110, 360, width=2, fill='black', outline='#e88009')
@@ -67,6 +77,9 @@ class Menu:
         if argument=='Stats' and argument in self.Allowed_menus:
             self.curMenu='Stats'
             self.game.Stats.place()
+        if argument=='Eternity' and argument in self.Allowed_menus:
+            self.curMenu='Eternity'
+            self.game.Eternity.place()
 
     def add(self,argument):
         self.Allowed_menus.append(argument)
@@ -76,6 +89,9 @@ class Menu:
         if argument=='Illusory':
             self.box_6 = self.game.main_canvas.create_rectangle(self.game.geometry[0]+5, 370, self.game.geometry[0]-112, 450, width=2, fill='black', outline='#56dbd2')
             self.image_7_cnvs = self.game.main_canvas.create_image(self.game.geometry[0]-55, 410, anchor='center', image=self.image_6)
+        if argument=='Eternity':
+            self.box_7 = self.game.main_canvas.create_rectangle(self.game.geometry[0]+5, 460, self.game.geometry[0]-112, 540, width=2, fill='black', outline='#b030ff')
+            self.image_8_cnvs = self.game.main_canvas.create_image(self.game.geometry[0]-55, 500, anchor='center', image=self.image_8)
 
 
     def close_cur(self):
@@ -93,3 +109,5 @@ class Menu:
             self.game.Aspects.hide()
         elif self.curMenu == 'Stats':
             self.game.Stats.hide()
+        elif self.curMenu == 'Eternity':
+            self.game.Eternity.hide()
