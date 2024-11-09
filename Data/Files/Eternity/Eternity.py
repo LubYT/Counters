@@ -23,7 +23,7 @@ class Eternity:
         self.image_3 = PhotoImage(file='Data/Files/images/eternity_3.png')
         self.image_4 = PhotoImage(file='Data/Files/images/eternity_4.png')
         self.circles=[]
-        self.upgrades=['N','N','Y','Y','Y','Y','N','Y','N']
+        self.upgrades=['N','N','N','N','N','N','N','N','N']
         self.menus_list=['Buy','Upgrades','Time','Eternities']
         self.menu_cur='Buy'
         self.sized=[1,0,'+']
