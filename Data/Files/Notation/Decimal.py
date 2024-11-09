@@ -130,7 +130,7 @@ class Decimal_counters:
         else:
             if other!=0:
                 e=int(math.log10(other))
-                e_dif=self.e-e
+                e_dif=int(self.e)-e
                 if e_dif < 100:
                     if e_dif>=1:
                         self.num+=other/10**int(math.log10(other))/10**e_dif
@@ -139,7 +139,7 @@ class Decimal_counters:
                     else:
                         self.e=e
                         if e_dif>-100:
-                            self.num += other * 10 ** e_dif
+                            self.num = other* 10 ** e_dif + self.num* 10 ** e_dif
                     if self.num>=10:
                         log=math.log10(self.num)
                         log=int(round(log,0))
@@ -192,7 +192,6 @@ class Decimal_counters:
                         self.num = self.num / 10 ** log
                         self.e += log
         return self
-
     def __mul__(self, other):
         if type(other) == type(self):
             self.e=self.e+other.e
@@ -270,6 +269,9 @@ class Decimal_counters:
     def __pow__(self, power, modulo=None):
         self.e*=power
         self.num=self.num**power
+        if self.num>1.8e308:
+            self.num=1.8
+            self.e+=308
         if type(self.e)!=int:
             inte=int(self.e)
             dif=self.e-inte

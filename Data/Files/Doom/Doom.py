@@ -45,7 +45,7 @@ class Doom:
         self.shop_boxes=[]
         self.len=0
         self.cur_word=[0,'-',60,60]
-        self.total_upgrades=[0,0,0,0]
+        self.total_upgrades=self.game.Save.Doom_data[0][22]
         self.upgrades_costs_up = [1e10, 1e15, 1e8, 1e15]
         reward_1=(self.upgrades_costs_up[0]**self.total_upgrades[0])
         reward_2 =(self.upgrades_costs_up[1]**self.total_upgrades[1])
@@ -72,7 +72,7 @@ class Doom:
         self.curbar='N'
         self.colors=['#606060','#404040','#202020']
         self.text='Doomed Destruction'
-        self.active=bool(self.game.Save.Doom_data[0][22])
+        self.active=bool(self.game.Save.Doom_data[0][23])
 
     def init_text(self):
         self.len = 0
@@ -829,6 +829,9 @@ class Doom:
         data+='],['
         for bought in self.bought_counter:
             data += str(bought.get_save()) + ','
+        data += '],['
+        for i in self.total_upgrades:
+            data+=str(i)+','
         data += '],'
         if self.active==True:
             data+=str(self.active)

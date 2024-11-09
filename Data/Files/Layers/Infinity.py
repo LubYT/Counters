@@ -11,6 +11,9 @@ class Infinity:
         self.total_count=self.game.Decimal(self.game.Save.Infinity_data[4][0][0],self.game.Save.Infinity_data[4][0][1],self.game,'IC')
         self.cost = 1.8e308
         self.income = 1
+        self.cur_page='Surpassings'
+        self.color_bord=[120,'-']
+        self.infinity_surpassings=[self.infinity_counter]
         self.upgrades = self.game.Save.Infinity_data[3][0]
         self.first = bool(self.game.Save.Infinity_data[5][0])
         self.placed = False
@@ -38,6 +41,11 @@ class Infinity:
             return 'Cost: Infinity\nGet ' + str(self.get_total()) + ' IC'
         elif type=='text_buy_c':
             return '#d99000'
+        elif type=='fill_1':
+            x = self.game.Decimal(1, 0, self.game, 'n')
+            if self.infinity_counter>=1:
+                x*=self.infinity_counter.log()**0.8
+            return x
 
 
     def hide(self):
@@ -61,11 +69,11 @@ class Infinity:
         if self.game.Value.value >= self.cost:
             if self.first:
                 self.game.Achievements.get_achieve(10)
-            if self.game.Infinity.first and self.game.TA.amount==0:
+            if self.game.Infinity.first and self.game.TA.amount<0.9:
                 self.game.Achievements.get_achieve(13)
             if self.game.Infinity.first and self.game.CB.amount<=4:
                 self.game.Achievements.get_achieve(14)
-            if self.game.CB.amount ==0 and  self.game.TA.amount==0:
+            if self.game.CB.amount<0.9 and  self.game.TA.amount<0.9:
                 self.game.Achievements.get_achieve(26)
             if self.first == False:
                 self.first = True
@@ -73,7 +81,7 @@ class Infinity:
             if self.game.Aspects.active==True:
                 self.game.Aspects.reward()
             self.infinities += 1
-            if self.infinities==25:
+            if self.infinities>=25:
                 self.game.Achievements.get_achieve(15)
             total=self.get_total()
             self.get_points(total)
@@ -130,8 +138,12 @@ class Infinity:
                     self.infinity_counter=self.game.Decimal(1.79,308,self.game)
                 self.game.main_canvas.itemconfigure(self.text, text=self.get_not('text'))
             else:
-                self.infinity_counter=self.game.Decimal(0,0,self.game)
-                self.total_count=self.game.Decimal(0,0,self.game)
+                if self.game.Eternity.upgrades[5] == 'Y':
+                    self.infinity_counter = self.game.Decimal(1.000001, 1, self.game)
+                    self.total_count = self.game.Decimal(1, 1, self.game)
+                else:
+                    self.infinity_counter=self.game.Decimal(0,0,self.game)
+                    self.total_count=self.game.Decimal(0,0,self.game)
                 self.game.main_canvas.itemconfigure(self.text, text=self.get_not('text'))
 
     def buy_upgrade(self, index):
@@ -261,9 +273,9 @@ class Infinity:
                 infc = self.game.Decimal(self.infinity_counter.num, self.infinity_counter.e, self.game)
                 log_1 = self.infinity_counter.log()
                 log_2 = self.infinities.log()
-                if self.infinity_counter > 0:
+                if self.infinity_counter >= 1:
                     y += (infc / (5 + log_1))
-                if self.infinities > 0:
+                if self.infinities >= 1:
                     y += (infi / (5 + log_2))
                 if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 2:
                     y = y ** 1.25
@@ -288,6 +300,16 @@ class Infinity:
         #cheat
         if self.game.boost_cheat:
             x*=5
+        #eternity
+        if self.game.Eternity.upgrades[6]=='Y':
+            y = self.game.Decimal(1, 0, self.game)
+            ec = self.game.Decimal(self.game.Eternity.eternity_count.num, self.game.Eternity.eternity_count.e, self.game)
+            if self.game.Eternity.eternity_count > 0:
+                y += ec ** 0.6 / 3
+            e = self.game.Eternity.game.Decimal(self.game.Eternity.eternities.num, self.game.Eternity.eternities.e, self.game)
+            if self.game.Eternity.eternities > 0:
+                y += e ** 0.8 / 3
+            x*=y
         #spec
         if not (self.game.Aspects.active == True and self.game.Aspects.cur_ill == 1) and not (self.game.Aspects.active == True and (self.game.Aspects.cur_ill == 3 or self.game.Aspects.cur_ill == 4)):
             if '1 counter' in arg:
@@ -303,82 +325,109 @@ class Infinity:
 
     def conf_upgrades(self,*args):
         if self.game.Menu.curMenu=='Infinity' and not (self.game.Aspects.active == True and (self.game.Aspects.cur_ill == 3 or self.game.Aspects.cur_ill == 4)):
-            if self.upgrades[0]=='N':
-                y = self.game.Decimal(1,0,self.game,'n')
-                infi=self.game.Decimal(self.infinities.num,self.infinities.e,self.game)
-                infc=self.game.Decimal(self.infinity_counter.num,self.infinity_counter.e,self.game)
-                log_1=self.infinity_counter.log()
-                log_2=self.infinities.log()
-                if self.infinity_counter > 0:
-                    y += (infc / (5 + log_1))
-                if self.infinities > 0:
-                    y += (infi / (5 + log_2))
-                if self.game.Aspects.active==True and self.game.Aspects.cur_ill==2:
-                    y=y**1.25
-                self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#d99000',
-                                                        text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
-                                                            y.get(2,4))+ '\nCost: 1 IC')
-            elif self.upgrades[0]=='Y' and 'VALUE' in args:
-                y = self.game.Decimal(1, 0, self.game, 'n')
-                infi = self.game.Decimal(self.infinities.num, self.infinities.e, self.game)
-                infc = self.game.Decimal(self.infinity_counter.num, self.infinity_counter.e, self.game)
-                log_1 = self.infinity_counter.log()
-                log_2 = self.infinities.log()
-                if self.infinity_counter > 0:
-                    y += (infc / (5 + log_1))
-                if self.infinities > 0:
-                    y += (infi / (5 + log_2))
-                if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 2:
-                    y = y ** 1.25
-                self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#4a1111',
-                                                        text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
-                                                            y.get(2,4)))
-            if self.upgrades[3]=='N' and 'VALUE' in args:
-                value=self.game.Value.value.log()
-                value=value**0.75
-                if 10<self.game.Value.value:
-                    self.game.main_canvas.itemconfigure(self.upgr_4_text,text='Gain multiplier to counters\nbased on Count:\n x '+
-                                                                         str(round(value,2))+'\nCost: 5 IC')
-                else:
-                    self.game.main_canvas.itemconfigure(self.upgr_4_text,text='Gain multiplier to counters\nbased on Count:\n x '+'1'+'\nCost: 5 IC')
-            elif self.upgrades[3]=='Y' and 'VALUE' in args:
-                value = self.game.Value.value.log()
-                value = value ** 0.75
-                if 10<self.game.Value.value:
-                    self.game.main_canvas.itemconfigure(self.upgr_4_text,text='Gain multiplier to counters\nbased on Count:\n x '+
-                                                                         str(round(value,2)))
-                else:
-                    self.game.main_canvas.itemconfigure(self.upgr_4_text,text='Gain multiplier to counters\nbased on Count:\n x '+'1')
-            if self.upgrades[6] == 'N' and 'MULTI' in args:
-                self.game.main_canvas.itemconfigure(self.upgr_7_text,text='Gain progressive multi\nto 1 counter\nx' +
-                                                                         self.multi_progressive_7.get(2,4) + '\nCost: 4 IC')
-            elif self.upgrades[6] == 'Y' and 'MULTI' in args:
-                self.game.main_canvas.itemconfigure(self.upgr_7_text,
-                                                    text='Gain progressive multi\nto 1 counter\nx' + self.multi_progressive_7.get(2,4))
+            if self.cur_page == 'Upgrades':
+                if self.upgrades[0]=='N':
+                    y = self.game.Decimal(1,0,self.game,'n')
+                    infi=self.game.Decimal(self.infinities.num,self.infinities.e,self.game)
+                    infc=self.game.Decimal(self.infinity_counter.num,self.infinity_counter.e,self.game)
+                    log_1=self.infinity_counter.log()
+                    log_2=self.infinities.log()
+                    if self.infinity_counter > 0:
+                        y += (infc / (5 + log_1))
+                    if self.infinities > 0:
+                        y += (infi / (5 + log_2))
+                    if self.game.Aspects.active==True and self.game.Aspects.cur_ill==2:
+                        y=y**1.25
+                    self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#d99000',
+                                                            text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
+                                                                y.get(2,4))+ '\nCost: 1 IC')
+                elif self.upgrades[0]=='Y' and 'VALUE' in args:
+                    y = self.game.Decimal(1, 0, self.game, 'n')
+                    infi = self.game.Decimal(self.infinities.num, self.infinities.e, self.game)
+                    infc = self.game.Decimal(self.infinity_counter.num, self.infinity_counter.e, self.game)
+                    log_1 = self.infinity_counter.log()
+                    log_2 = self.infinities.log()
+                    if self.infinity_counter >= 1:
+                        y += (infc / (5 + log_1))
+                    if self.infinities >= 1:
+                        y += (infi / (5 + log_2))
+                    if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 2:
+                        y = y ** 1.25
+                    self.game.main_canvas.itemconfigure(self.upgr_1_text, fill='#4a1111',
+                                                            text='Gain multiplier to counters\nbased on IC\nand Infinities:\n x' + str(
+                                                                y.get(2,4)))
+                if self.upgrades[3]=='N' and 'VALUE' in args:
+                    value=self.game.Value.value.log()
+                    value=value**0.75
+                    if 10<self.game.Value.value:
+                        self.game.main_canvas.itemconfigure(self.upgr_4_text,text='Gain multiplier to counters\nbased on Count:\n x '+
+                                                                             str(round(value,2))+'\nCost: 5 IC')
+                    else:
+                        self.game.main_canvas.itemconfigure(self.upgr_4_text,text='Gain multiplier to counters\nbased on Count:\n x '+'1'+'\nCost: 5 IC')
+                elif self.upgrades[3]=='Y' and 'VALUE' in args:
+                    value = self.game.Value.value.log()
+                    value = value ** 0.75
+                    if 10<self.game.Value.value:
+                        self.game.main_canvas.itemconfigure(self.upgr_4_text,text='Gain multiplier to counters\nbased on Count:\n x '+
+                                                                             str(round(value,2)))
+                    else:
+                        self.game.main_canvas.itemconfigure(self.upgr_4_text,text='Gain multiplier to counters\nbased on Count:\n x '+'1')
+                if self.upgrades[6] == 'N' and 'MULTI' in args:
+                    self.game.main_canvas.itemconfigure(self.upgr_7_text,text='Gain progressive multi\nto 1 counter\nx' +
+                                                                             self.multi_progressive_7.get(2,4) + '\nCost: 4 IC')
+                elif self.upgrades[6] == 'Y' and 'MULTI' in args:
+                    self.game.main_canvas.itemconfigure(self.upgr_7_text,
+                                                        text='Gain progressive multi\nto 1 counter\nx' + self.multi_progressive_7.get(2,4))
 
-            ###
+                ###
 
-            if self.game.Aspects.completion_4 and 'MULTI' in args:
-                if self.upgrades[7] == 'N':
-                    text='Infinities boost IC gain\nx' + self.get_value(8) + '\nCost: 1e220 IC'
+                if self.game.Aspects.completion_4 and 'MULTI' in args:
+                    if self.upgrades[7] == 'N':
+                        text='Infinities boost IC gain\nx' + self.get_value(8) + '\nCost: 1e220 IC'
+                    else:
+                        text='Infinities boost IC gain\nx' + self.get_value(8)
+                    self.game.main_canvas.itemconfigure(self.upgr_8_text,text=text)
+                    if self.upgrades[8] == 'N':
+                        text='Infinities boost DD gain\nx' + self.get_value(9) + '\nCost: 1e230 IC'
+                    else:
+                        text='Infinities boost DD gain\nx' + self.get_value(9)
+                    self.game.main_canvas.itemconfigure(self.upgr_9_text,text=text)
+                    if self.upgrades[9] == 'N':
+                        text='TA boost IC gain\nx' + self.get_value(10) + '\nCost: 1e240 IC'
+                    else:
+                        text='TA boost IC gain\nx' + self.get_value(10)
+                    self.game.main_canvas.itemconfigure(self.upgr_10_text,text=text)
+                    if self.upgrades[10] == 'N':
+                        text = 'Total time in game\nboost DD gain\nx'+self.get_value(11) + '\nCost: 1e250 IC'
+                    else:
+                        text = 'Total time in game\nboost DD gain\nx'+self.get_value(11)
+                    self.game.main_canvas.itemconfigure(self.upgr_11_text, text=text)
+            elif self.cur_page == 'Surpassings':
+                log = self.infinity_surpassings[0].log() / 1000
+                if log > 1:
+                    log = 1
+                self.infinity_surpassings[0]*=20
+                if self.color_bord[1]=='-':
+                    self.color_bord[0]-=2
+                    if self.color_bord[0]==0:
+                        self.color_bord[1]='+'
                 else:
-                    text='Infinities boost IC gain\nx' + self.get_value(8)
-                self.game.main_canvas.itemconfigure(self.upgr_8_text,text=text)
-                if self.upgrades[8] == 'N':
-                    text='Infinities boost DD gain\nx' + self.get_value(9) + '\nCost: 1e230 IC'
-                else:
-                    text='Infinities boost DD gain\nx' + self.get_value(9)
-                self.game.main_canvas.itemconfigure(self.upgr_9_text,text=text)
-                if self.upgrades[9] == 'N':
-                    text='TA boost IC gain\nx' + self.get_value(10) + '\nCost: 1e240 IC'
-                else:
-                    text='TA boost IC gain\nx' + self.get_value(10)
-                self.game.main_canvas.itemconfigure(self.upgr_10_text,text=text)
-                if self.upgrades[10] == 'N':
-                    text = 'Total time in game\nboost DD gain\nx'+self.get_value(11) + '\nCost: 1e250 IC'
-                else:
-                    text = 'Total time in game\nboost DD gain\nx'+self.get_value(11)
-                self.game.main_canvas.itemconfigure(self.upgr_11_text, text=text)
+                    self.color_bord[0] += 2
+                    if self.color_bord[0] == 120:
+                        self.color_bord[1] = '-'
+                self.game.main_canvas.itemconfigure(self.filled, fill="#%02x%02x%02x" % (255, self.color_bord[0], 0))
+                self.game.main_canvas.coords(self.filled,self.game.geometry[0] // 2 - self.game.geometry[0] // 20 +3,
+                    self.game.geometry[1] - 200,
+                    self.game.geometry[0] // 2 + self.game.geometry[0] // 20 - 2,
+                    self.game.geometry[1] - 200 - ((self.game.geometry[1] - 450) * log))
+                self.game.main_canvas.coords(self.box_bank, self.game.geometry[0] // 2 + self.game.geometry[0] // 20 + 50,
+                    self.game.geometry[1] - 200 - ((self.game.geometry[1] - 450) * log),
+                    self.game.geometry[0] // 2 + self.game.geometry[0] // 20 + 250,
+                    self.game.geometry[1] - 100 - ((self.game.geometry[1] - 450) * log))
+                self.game.main_canvas.itemconfigure(self.bank_box_text, text=self.infinity_surpassings[0].get(2, 4) + ' / 1.00e1000 IC\n\nClick to drain your IC')
+                self.game.main_canvas.coords(self.bank_box_text, self.game.geometry[0] // 2 + self.game.geometry[0] // 20 + 150,
+                    self.game.geometry[1] - 150 - ((self.game.geometry[1] - 450) * log))
+                self.game.main_canvas.itemconfigure(self.list_boxes_goals[0][1],text='1e50 IC\nGain more IC based on IC\nx'+self.get_not('fill_1').get(2,4))
 
 
             ###
@@ -410,6 +459,85 @@ class Infinity:
                     self.game.main_canvas.itemconfigure(self.text_buy,
                                                         text='Reach 1.8e308\nIllusion destroy Infinity\nThere is no IC',
                                                         fill='#bf0fff')
+    def place_menu(self):
+        if self.game.Eternity.upgrades[7]=='N':
+            self.place_upgrades()
+        else:
+            self.place_menu_box()
+            if self.cur_page=='Upgrades':
+                self.place_upgrades()
+            elif self.cur_page=='Surpassings':
+                self.place_sur()
+
+    def place_menu_box(self):
+        if self.cur_page == 'Upgrades':
+            fill_1=['#fa0','#241800']
+            fill_2=['black', '#d99000']
+        else:
+            fill_1 = ['black', '#d99000']
+            fill_2 = ['#fa0','#241800']
+        self.menu_box_1 = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 - 150, self.game.geometry[1]-50,
+                                                                 self.game.geometry[0] // 2, self.game.geometry[1]-130, width=1,
+                                                                 fill=fill_1[0], outline='#e5b045')
+        self.menu_box_2 = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 + 150,
+                                                                 self.game.geometry[1] - 50,
+                                                                 self.game.geometry[0] // 2,
+                                                                 self.game.geometry[1] - 130, width=1,
+                                                                 fill=fill_2[0], outline='#e5b045')
+        self.menu_text_1 = self.game.main_canvas.create_text(self.game.geometry[0] // 2 - 75,self.game.geometry[1]-90,
+                                                             anchor='center',
+                                                             text='Infinity\nUpgrades',
+                                                             fill=fill_1[1], justify='center',
+                                                             font=('bahnschrift', 12))
+        self.menu_text_2 = self.game.main_canvas.create_text(self.game.geometry[0] // 2 + 75,
+                                                             self.game.geometry[1] - 90,
+                                                             anchor='center',
+                                                             text='Infinity\nSurpassings',
+                                                             fill=fill_2[1], justify='center',
+                                                             font=('bahnschrift', 12))
+
+    def place_sur(self):
+        log = self.infinity_surpassings[0].log() / 1000
+        if log > 1:
+            log = 1
+        self.bank=self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 -self.game.geometry[0] // 20,
+                                                                 250,
+                                                                 self.game.geometry[0] // 2 +self.game.geometry[0] // 20,
+                                                                 self.game.geometry[1] - 200, width=5,
+                                                                 fill='black', outline='#f7b86f')
+        self.filled = self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 -self.game.geometry[0] // 20+3,
+                                                                 self.game.geometry[1] - 200,
+                                                                 self.game.geometry[0] // 2 +self.game.geometry[0] // 20-2,
+                                                                 self.game.geometry[1] - 200-((self.game.geometry[1]-450)*log), width=0,
+                                                                 fill="#%02x%02x%02x" % (255, self.color_bord[0], 0))
+        self.box_bank=self.game.main_canvas.create_rectangle(self.game.geometry[0] // 2 +self.game.geometry[0] // 20+50,
+                                                                 self.game.geometry[1] - 200-((self.game.geometry[1]-450)*log),
+                                                                 self.game.geometry[0] // 2 +self.game.geometry[0] // 20+250,
+                                                                 self.game.geometry[1] - 100-((self.game.geometry[1]-450)*log), width=2,
+                                                                 fill='black', outline='#f7b86f')
+        self.bank_box_text = self.game.main_canvas.create_text(self.game.geometry[0] // 2 +self.game.geometry[0] // 20+150,
+                                                             self.game.geometry[1] - 150-((self.game.geometry[1]-450)*log),
+                                                             anchor='center',
+                                                             text=self.infinity_surpassings[0].get(2,4)+' / 1.00e1000 IC\n\nClick to drain your IC',
+                                                             fill='#ff9c40', justify='center',
+                                                             font=('bahnschrift', 12))
+        self.list_boxes_goals=[[
+            self.game.main_canvas.create_rectangle(
+            self.game.geometry[0] // 2 - self.game.geometry[0] // 20 - 50,
+            self.game.geometry[1] - 200-((self.game.geometry[1]-450)*0.05),
+            self.game.geometry[0] // 2 - self.game.geometry[0] // 20 - 250,
+            self.game.geometry[1] - 120-((self.game.geometry[1]-450)*0.05), width=2,
+            fill='black', outline='#f7b86f'),
+            self.game.main_canvas.create_text(
+            self.game.geometry[0] // 2 - self.game.geometry[0] // 20 - 150,
+            self.game.geometry[1] - 160 - ((self.game.geometry[1] - 450) * 0.05),
+            anchor='center',
+            text='1e50 IC\nGain more IC based on IC\nx'+self.get_not('fill_1').get(2,4),
+            fill='#ff9c40', justify='center',
+            font=('bahnschrift', 12),width=200)
+
+            ]
+        ]
 
     def place_upgrades(self):
         if not (self.game.Aspects.active == True and (self.game.Aspects.cur_ill == 3 or self.game.Aspects.cur_ill == 4)):
@@ -422,9 +550,9 @@ class Infinity:
                 infc = self.game.Decimal(self.infinity_counter.num, self.infinity_counter.e, self.game)
                 log_1 = self.infinity_counter.log()
                 log_2 = self.infinities.log()
-                if self.infinity_counter > 0:
+                if self.infinity_counter >= 1:
                     y += (infc / (5 + log_1))
-                if self.infinities > 0:
+                if self.infinities >= 1:
                     y += (infi / (5 + log_2))
                 if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 2:
                     y = y ** 1.25

@@ -6,7 +6,7 @@ import pygame
 #                      'N','N','N','N','N',
 #                    'N','N','N','N','N',
 #                     'N',
-pygame.mixer.init()
+# pygame.mixer.init()
 
 class Achievements:
     def __init__(self,game):
@@ -123,9 +123,9 @@ class Achievements:
     def get_achieve(self,num):
         if self.achieve[num-1]=='N':
             self.achieve[num-1]='Y'
-            pygame.mixer.music.load('Data/Files/other/sound.mp3')
-            pygame.mixer.music.set_volume(0.2)
-            pygame.mixer.music.play()
+            # pygame.mixer.music.load('Data/Files/other/sound.mp3')
+            # pygame.mixer.music.set_volume(0.2)
+            # pygame.mixer.music.play()
             if self.game.Menu.curMenu=='Achievements':
                 self.game.main_canvas.itemconfigure(self.placed[num-1][0],fill='#349606')
             ##unlocks##

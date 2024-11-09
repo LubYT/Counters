@@ -12,6 +12,7 @@ import Data.Files.Layers.Infinity as I_import
 import Data.Files.other.stats as Stats_import
 import Data.Files.Doom.Doom as Doom_import
 import Data.Files.Counters.Time_accelerator as TA_import
+import Data.Music.Musicplayer as Music_import
 Aspects_import=importlib.import_module('Data.Files.Illusory aspects.Illusory aspects')
 import Data.Files.Achievements.Achievements as achieve_import
 import Data.Files.Counters.counter1 as counter1_import
@@ -32,6 +33,8 @@ height=window.winfo_screenheight()
 window.attributes("-fullscreen", True)
 window.geometry(str(width)+'x'+str(height))
 
+sound=PhotoImage(file='Data/Files/images/mp/sound2.png')
+
 import Data.Files.Automatick.automatick as import_automatick
 class Game:
     def __init__(self,window,geometry):
@@ -40,7 +43,9 @@ class Game:
         self.main_canvas=Canvas(width=geometry[0],height=geometry[1],bg='black')
         self.main_canvas.place(x=-2,y=-2)
         self.Decimal = decimal_import.Decimal_counters
+        self.Music=Music_import.Music(self)
         self.Save = save_import.Save(self)
+        self.Stats = Stats_import.Stats(self)
         self.Menu=menu_import.Menu(self)
         self.Eternity = eternity_import.Eternity(self)
         self.Automatick=import_automatick.Automatick(self)
@@ -52,7 +57,6 @@ class Game:
         self.Doom=Doom_import.Doom(self)
         self.Value_PS = value_per_sec_import.Value_per_second(self)
         self.Achievements=achieve_import.Achievements(self)
-        self.Stats = Stats_import.Stats(self)
         self.Tickspeed = game_time_import.Tickspeed(self)
         self.Counter_1=counter1_import.Counter1(self)
         self.Counter_2 = counter2_import.Counter2(self)
@@ -68,6 +72,9 @@ class Game:
         self.Value_PS.place()
         self.Tickspeed.place()
         self.Counter_1.place()
+        self.box_music = self.main_canvas.create_rectangle(geometry[0] - 9, 14, geometry[0]-61,
+                                                     66, width=2, fill='black', outline='#ad0000')
+        self.img_music=self.main_canvas.create_image(geometry[0] - 35, 40,anchor='center',image=sound)
         if self.Infinity.first:
             self.Infinity.post_save()
             self.menu_place()
@@ -142,6 +149,9 @@ class Game:
     def return_counters(self):
         self.Counter_8.return_place(), self.Counter_7.return_place(), self.Counter_6.return_place(), self.Counter_5.return_place(), self.Counter_4.return_place(), self.Counter_3.return_place(), self.Counter_2.return_place(), self.Counter_1.return_place()
     def click(self,event):
+        coords_menu_1 = self.main_canvas.coords(self.box_music)
+        if event.x > coords_menu_1[0] and event.y > coords_menu_1[1] and event.x < coords_menu_1[2] and event.y <coords_menu_1[3]:
+            self.Music.open_canvas()
         if self.Menu.active:
             coords_menu_1 = self.main_canvas.coords(self.Menu.box)
             if event.x > coords_menu_1[0] and event.y > coords_menu_1[1] and event.x < coords_menu_1[2] and event.y < coords_menu_1[3]:
@@ -333,9 +343,14 @@ class Game:
         self.Infinity.get_points(self.Infinity.infinity_counter*1e10+1)
     def ass_to_much_3(self,event):
         self.Value.get_count(self.Value.value*1e10)
+
+    def open_music(self,event):
+        self.Music.open_canvas()
 Game=Game(window,[width,height])
-window.bind('<Button-1>',Game.click)
+Game.main_canvas.bind('<Button-1>',Game.click)
 window.bind('<m>',Game.max)
+window.bind('<p>',Game.open_music)
+window.bind('<P>',Game.open_music)
 window.bind('<X>',Game.cheat)
 window.bind('<o>',Game.ass_to_much)
 window.bind('<l>',Game.ass_to_much_2)
@@ -344,6 +359,7 @@ window.bind('<Control-o>',Game.ass_to_much_3)
 window.after(50,Game.tick)
 def close(event):
     Game.Save.save()
+    Game.Music.save()
     window.withdraw() # if you want to bring it back
     sys.exit() # if you want to exit the entire thing
 

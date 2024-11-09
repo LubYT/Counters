@@ -9,17 +9,25 @@ class Illusory_aspects:
         self.game=game
         self.left=PhotoImage(file='Data/Files/images/illusory/left_arr.png')
         self.right = PhotoImage(file='Data/Files/images/illusory/right_arr.png')
-        self.save=self.game.Save.Aspect_data
-        self.available=self.game.Save.Aspect_data
+        self.available=self.game.Save.Aspect_data[1]
         self.color_bord = [0,'+']
         self.size_rect=[0,'+']
-        self.illusions=['N','N','N','N']
+        self.illusions=self.game.Save.Aspect_data[0]
         self.costs=['-',1e12,1e50,1e200]
-        self.completions=['-']
+        if self.game.Save.Aspect_data[6]=='-':
+            self.completions=[self.game.Save.Aspect_data[6]]
+        else:
+            self.completions = [float(self.game.Save.Aspect_data[6])]
         self.list_circles = []
-        self.completions_2=0
-        self.completion_3=False
-        self.completion_4 =False
+        self.completions_2=int(self.game.Save.Aspect_data[5][1])
+        if self.game.Save.Aspect_data[5][2]=='N':
+            self.completion_3=False
+        else:
+            self.completion_3 = True
+        if self.game.Save.Aspect_data[5][3] == 'N':
+            self.completion_4 =False
+        else:
+            self.completion_4 = True
         self.conditions_2=[[300,1e15,2.5],[270,1e17,6.3],[240,1e19,15.6],[210,1e21,39],[180,1e23,98],
                            [150,1e25,244],[120,1e28,610],[100,1e31,1526],[80,1e34,3815],[70,1e37,9537],
                            [60,1e40,23842],[50,1e43,59605],[40,1e46,149012],[30,1e49,372529],[20,1e52,931323],
@@ -27,12 +35,20 @@ class Illusory_aspects:
         if self.completions_2==0:
             self.reward_2=1
         else:
-            self.reward_2 = self.conditions_2[self.completions_2][2]
-        self.reward_1=1
+            self.reward_2 = self.conditions_2[self.completions_2-1][2]
+        self.reward_1=float(self.game.Save.Aspect_data[5][0])
         self.cur_page=1
-        self.active=False
+        if self.game.Save.Aspect_data[2]=='False':
+            self.active=False
+        else:
+            self.active = True
         self.confed=False
-        self.cur_ill=1
+        self.cur_ill=self.game.Save.Aspect_data[3]
+        if self.active and self.cur_ill==1:
+            self.time = (datetime.datetime.now() - datetime.datetime(1, 1, 1, 0, 0)).total_seconds()
+            self.time-=float(self.game.Save.Aspect_data[4][0])
+        if self.active and self.cur_ill == 2:
+            self.game.Stats.add_timer(float(self.game.Save.Aspect_data[4][0]),self.exit,1)
         if self.available=='True':
             self.game.Menu.add('Illusory')
 
@@ -295,6 +311,7 @@ class Illusory_aspects:
                 if self.cur_ill == 2:
                     self.game.main_canvas.itemconfigure(self.timer, text = "This Illusion will destroy Infinity in: " + str(
                         round(self.game.Stats.get_timer_info(1)[0], 1)) + ' seconds')
+                    print(self.game.Stats.get_timer_info(1))
             self.game.window.after(40,self.conf)
         else:
             self.confed=False
@@ -466,6 +483,7 @@ class Illusory_aspects:
                         self.game.Achievements.get_achieve(25)
             else:
                 self.completions[0] = time - self.time
+                print(self.completions[0])
                 self.reward_1 = (3600 / self.completions[0]) ** 1.15
                 if self.reward_1 < 1:
                     self.reward_1 = 1
@@ -498,4 +516,35 @@ class Illusory_aspects:
 
 
     def get_save(self):
-        return self.available+'\n'
+        data='['
+        for unlock in self.illusions:
+            data+=unlock+','
+        data+='],'
+        data+=self.available+','
+        if self.active:
+            data+='True,'
+        else:
+            data+='False,'
+        data+=str(self.cur_ill)+','
+        if self.cur_ill==1 and self.active:
+            time = (datetime.datetime.now() - datetime.datetime(1, 1, 1, 0, 0)).total_seconds()
+            data+='['+str(time-self.time)+',n,],'
+        elif self.cur_ill==4 and self.active:
+            data+='['+str(self.game.TA.spare_time)+','+str(self.game.TA.spare_time_mult)+',],'
+        elif self.cur_ill == 2 and self.active:
+            data+='['+str(self.game.Stats.get_timer_info(1)[0])+',n,],'
+        else:
+            data+='[n,n,],'
+        data+='['+str(self.reward_1)+','+str(self.completions_2)+','
+        if self.completion_3:
+            data+='Y,'
+        else:
+            data += 'N,'
+        if self.completion_4:
+            data+='Y,'
+        else:
+            data += 'N,'
+        data+='],'
+        data+=str(self.completions[0])+'\n'
+        print(data)
+        return data

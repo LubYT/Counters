@@ -110,7 +110,12 @@ class Tickspeed:
                 time_accel = self.game.Decimal(self.game.TA.accel.num, self.game.TA.accel.e, self.game)
                 t_u = self.game.Decimal(self.tickspeed_upper.num, self.tickspeed_upper.e, self.game)
                 t_u += (time_accel - 1)
-                self.tickspeed = self.tickspeed * (t_u**times)
+                while t_u.e<1 and times>=100:
+                    t_u=t_u**100
+                    times-=100
+#problem
+                self.tickspeed *= (t_u**times)
+
                 if self.game.Aspects.active == True and self.game.Aspects.cur_ill == 4 and self.tickspeed > 2.5:
                     self.tickspeed = self.game.Decimal(2.5, 0, self.game)
                 self.buy()

@@ -61,7 +61,7 @@ class Menu:
             self.game.return_counters()
         if argument=='infinity' and argument in self.Allowed_menus:
             self.curMenu='Infinity'
-            self.game.Infinity.place_upgrades()
+            self.game.Infinity.place_menu()
         if argument=='automatick' and argument in self.Allowed_menus:
             self.curMenu='Automatick'
             self.game.Automatick.place()

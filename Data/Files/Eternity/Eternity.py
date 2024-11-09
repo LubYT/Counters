@@ -23,7 +23,7 @@ class Eternity:
         self.image_3 = PhotoImage(file='Data/Files/images/eternity_3.png')
         self.image_4 = PhotoImage(file='Data/Files/images/eternity_4.png')
         self.circles=[]
-        self.upgrades=['N','N','N','N','Y']
+        self.upgrades=['N','N','Y','Y','Y','Y','N','Y','N']
         self.menus_list=['Buy','Upgrades','Time','Eternities']
         self.menu_cur='Buy'
         self.sized=[1,0,'+']
@@ -127,6 +127,35 @@ class Eternity:
                                                                  text=self.get_full(5),
                                                                  anchor='center',
                                                                  fill=self.get_full('5.1'), justify='center',
+                                                                 font=('bahnschrift', 12))
+            self.upgr_6_box = self.game.main_canvas.create_rectangle((self.game.geometry[0] // 8*3) - 100, 450,
+                                                                     (self.game.geometry[0] // 8*3) + 100, 550,
+                                                                     outline='#781bb3', fill=self.get_full('6.2'),
+                                                                     width=self.sized[0])
+            self.upgr_6_text = self.game.main_canvas.create_text((self.game.geometry[0] // 8*3),500,
+                                                                 text=self.get_full(6),
+                                                                 anchor='center',
+                                                                 fill=self.get_full('6.1'), justify='center',
+                                                                 font=('bahnschrift', 12))
+            self.upgr_7_box = self.game.main_canvas.create_rectangle((self.game.geometry[0] // 8 * 5) - 100, 450,
+                                                                     (self.game.geometry[0] // 8 * 5) + 100, 550,
+                                                                     outline='#781bb3', fill=self.get_full('7.2'),
+                                                                     width=self.sized[0])
+            self.upgr_7_text = self.game.main_canvas.create_text((self.game.geometry[0] // 8 * 5), 500,
+                                                                 text=self.get_full(7),
+                                                                 anchor='center',
+                                                                 fill=self.get_full('7.1'), justify='center',
+                                                                 font=('bahnschrift', 12))
+            self.upgr_8_box = self.game.main_canvas.create_rectangle(
+                    self.game.geometry[0] - self.game.geometry[0] // 4 - 100, 450,
+                    self.game.geometry[0] - self.game.geometry[0] // 4 + 100, 550,
+                    outline='#781bb3', fill=self.get_full('8.2'),
+                    width=self.sized[0])
+            self.upgr_8_text = self.game.main_canvas.create_text(self.game.geometry[0] - self.game.geometry[0] // 4,
+                                                                 500,
+                                                                 text=self.get_full(8),
+                                                                 anchor='center',
+                                                                 fill=self.get_full('8.1'), justify='center',
                                                                  font=('bahnschrift', 12))
         if self.first == True and self.placed==False:
             self.menus_box = self.game.main_canvas.create_rectangle(self.game.geometry[0]/2-100, self.game.geometry[1] - 150,
@@ -246,6 +275,63 @@ class Eternity:
                 return '#000'
             else:
                 return '#9d00ff'
+        if arg==6:
+            if self.total_ec >= 2:
+                if self.upgrades[5] == 'N':
+                    return "Start any reset with 10 IC\nCost: 2 EC"
+                else:
+                    return "Start any reset with 10 IC\nExtra power"
+            else:
+                return "????"
+
+        if arg=='6.1':
+            if self.upgrades[5]=='N':
+                return '#e98fff'
+            else:
+                return '#1a0726'
+        if arg=='6.2':
+            if self.upgrades[5]=='N':
+                return '#000'
+            else:
+                return '#9d00ff'
+        if arg==7:
+            if self.total_ec >= 3:
+                if self.upgrades[6] == 'N':
+                    return "Get multi to counters\nBased on EC and Eternities\nx" + self.notation('upgr7')+"\nCost: 3 EC"
+                else:
+                    return "Get multi to counters\nBased on EC and Eternities\nx" + self.notation('upgr7')
+            else:
+                return "????"
+
+        if arg=='7.1':
+            if self.upgrades[6]=='N':
+                return '#e98fff'
+            else:
+                return '#1a0726'
+        if arg=='7.2':
+            if self.upgrades[6]=='N':
+                return '#000'
+            else:
+                return '#9d00ff'
+        if arg==8:
+            if self.total_ec >= 5:
+                if self.upgrades[7] == 'N':
+                    return "Unlock more Infinity power\nCost: 5 EC"
+                else:
+                    return "Unlocked more Infinity power\nInfinity reborn"
+            else:
+                return "????"
+
+        if arg=='8.1':
+            if self.upgrades[7]=='N':
+                return '#e98fff'
+            else:
+                return '#1a0726'
+        if arg=='8.2':
+            if self.upgrades[7]=='N':
+                return '#000'
+            else:
+                return '#9d00ff'
 
 
 
@@ -268,6 +354,15 @@ class Eternity:
             if self.eternities>0:
                 x+=e**0.5/10
             return x.get(2,4)
+        if arg=='upgr7':
+            x = self.game.Decimal(1, 0, self.game)
+            ec = self.game.Decimal(self.eternity_count.num, self.eternity_count.e, self.game)
+            if self.eternity_count>0:
+                x+=ec**0.6/3
+            e = self.game.Decimal(self.eternities.num, self.eternities.e, self.game)
+            if self.eternities>0:
+                x+=e**0.8/3
+            return x.get(2,4)
 
 
 
@@ -275,15 +370,21 @@ class Eternity:
         self.game.main_canvas.itemconfigure(self.text_count,text='Eternity Count: ' + str(self.eternity_count.get(2,4)))
         if 'upgr' in args:
             self.game.main_canvas.itemconfigure(self.upgr_1_box,width=self.sized[0],fill=self.get_full('1.2'))
-            self.game.main_canvas.itemconfigure(self.upgr_1_text, text=self.get_full(1))
+            self.game.main_canvas.itemconfigure(self.upgr_1_text, text=self.get_full(1), fill=self.get_full('1.1'))
             self.game.main_canvas.itemconfigure(self.upgr_2_box, width=self.sized[0], fill=self.get_full('2.2'))
-            self.game.main_canvas.itemconfigure(self.upgr_2_text, text=self.get_full(2))
+            self.game.main_canvas.itemconfigure(self.upgr_2_text, text=self.get_full(2), fill=self.get_full('2.1'))
             self.game.main_canvas.itemconfigure(self.upgr_3_box, width=self.sized[0], fill=self.get_full('3.2'))
-            self.game.main_canvas.itemconfigure(self.upgr_3_text, text=self.get_full(3))
+            self.game.main_canvas.itemconfigure(self.upgr_3_text, text=self.get_full(3), fill=self.get_full('3.1'))
             self.game.main_canvas.itemconfigure(self.upgr_4_box, width=self.sized[0], fill=self.get_full('4.2'))
-            self.game.main_canvas.itemconfigure(self.upgr_4_text, text=self.get_full(4))
+            self.game.main_canvas.itemconfigure(self.upgr_4_text, text=self.get_full(4), fill=self.get_full('4.1'))
             self.game.main_canvas.itemconfigure(self.upgr_5_box, width=self.sized[0], fill=self.get_full('5.2'))
-            self.game.main_canvas.itemconfigure(self.upgr_5_text, text=self.get_full(5))
+            self.game.main_canvas.itemconfigure(self.upgr_5_text, text=self.get_full(5), fill=self.get_full('5.1'))
+            self.game.main_canvas.itemconfigure(self.upgr_6_box, width=self.sized[0], fill=self.get_full('6.2'))
+            self.game.main_canvas.itemconfigure(self.upgr_6_text, text=self.get_full(6), fill=self.get_full('6.1'))
+            self.game.main_canvas.itemconfigure(self.upgr_7_box, width=self.sized[0], fill=self.get_full('7.2'))
+            self.game.main_canvas.itemconfigure(self.upgr_7_text, text=self.get_full(7), fill=self.get_full('7.1'))
+            self.game.main_canvas.itemconfigure(self.upgr_8_box, width=self.sized[0], fill=self.get_full('8.2'))
+            self.game.main_canvas.itemconfigure(self.upgr_8_text, text=self.get_full(8), fill=self.get_full('8.1'))
 
     def move(self):
         if self.placed:
@@ -397,7 +498,19 @@ class Eternity:
         if index==5:
             if self.eternity_count>=2 and self.upgrades[4]=='N':
                 self.eternity_count-=2
-                self.upgrades[3]='Y'
+                self.upgrades[4]='Y'
+        if index==6:
+            if self.eternity_count>=2 and self.upgrades[5]=='N':
+                self.eternity_count-=2
+                self.upgrades[5]='Y'
+        if index==7:
+            if self.eternity_count>=3 and self.upgrades[6]=='N':
+                self.eternity_count-=3
+                self.upgrades[6]='Y'
+        if index==8:
+            if self.eternity_count>=5 and self.upgrades[7]=='N':
+                self.eternity_count-=5
+                self.upgrades[7]='Y'
         self.conf()
 
 
@@ -420,6 +533,18 @@ class Eternity:
             coords = self.game.main_canvas.coords(self.upgr_4_box)
             if event.x > coords[0] and event.y > coords[1] and event.x < coords[2] and event.y < coords[3]:
                 self.buy_upgrade(4)
+            coords = self.game.main_canvas.coords(self.upgr_5_box)
+            if event.x > coords[0] and event.y > coords[1] and event.x < coords[2] and event.y < coords[3]:
+                self.buy_upgrade(5)
+            coords = self.game.main_canvas.coords(self.upgr_6_box)
+            if event.x > coords[0] and event.y > coords[1] and event.x < coords[2] and event.y < coords[3]:
+                self.buy_upgrade(6)
+            coords = self.game.main_canvas.coords(self.upgr_7_box)
+            if event.x > coords[0] and event.y > coords[1] and event.x < coords[2] and event.y < coords[3]:
+                self.buy_upgrade(7)
+            coords = self.game.main_canvas.coords(self.upgr_8_box)
+            if event.x > coords[0] and event.y > coords[1] and event.x < coords[2] and event.y < coords[3]:
+                self.buy_upgrade(8)
         if self.first == True:
             coords = self.game.main_canvas.coords(self.menu_box_1)
             if event.x > coords[0] and event.y > coords[1] and event.x < coords[2] and event.y < coords[3]:
@@ -460,10 +585,13 @@ class Eternity:
             self.game.main_canvas.delete(self.text)
             self.game.main_canvas.delete(self.upgr_1_box),self.game.main_canvas.delete(self.upgr_2_box)
             self.game.main_canvas.delete(self.upgr_3_box),self.game.main_canvas.delete(self.upgr_4_box)
-            self.game.main_canvas.delete(self.upgr_5_box)
+            self.game.main_canvas.delete(self.upgr_5_box),self.game.main_canvas.delete(self.upgr_6_box)
+            self.game.main_canvas.delete(self.upgr_7_box), self.game.main_canvas.delete(self.upgr_8_box)
+
             self.game.main_canvas.delete(self.upgr_1_text), self.game.main_canvas.delete(self.upgr_2_text)
             self.game.main_canvas.delete(self.upgr_3_text), self.game.main_canvas.delete(self.upgr_4_text)
-            self.game.main_canvas.delete(self.upgr_5_text)
+            self.game.main_canvas.delete(self.upgr_5_text),self.game.main_canvas.delete(self.upgr_6_text)
+            self.game.main_canvas.delete(self.upgr_7_text), self.game.main_canvas.delete(self.upgr_8_text)
         if 'first' in arg:
             self.first=True
             self.place()

@@ -142,7 +142,7 @@ class Save:
             e = data.find('e')
             list.append([float(data[:e:]), int(data[e + 1:index:])])
             data = data[index + 1::]
-            for i in range(4):
+            for i in range(5):
                 data = data[1::]
                 list_2 = []
                 while data.find(']') != 0:
@@ -150,8 +150,12 @@ class Save:
                     e = data.find('e')
                     if i==0 or i==1 or i==2:
                         list.append([float(data[:e:]), int(data[e + 1:index:])])
-                    else:
+                    elif i==3:
                         list.append([float(data[:e:]), int(data[e + 1:index:])])
+                    elif i==4:
+                        list_2.append(int(data[:index:]))
+                        print('lister')
+                        print(list_2)
                     data = data[index + 1::]
                 list.append(list_2)
                 data = data[2::]
@@ -172,10 +176,40 @@ class Save:
             data = data[1:-1:]
             print(data)
             print(data.find(']'))
-            # while data.find(']')!=1:
-            #     print(data)
-            #     data=data[1::]
-            self.Aspect_data =data
+            m_list=[]
+            sub_list=[]
+            while data.find(']')!=0:
+                index=data.find(',')
+                sub_list.append(data[:index:])
+                data=data[index+1::]
+            m_list.append(sub_list)
+            data=data[2::]
+            index = data.find(',')
+            m_list.append(data[:index:])
+            data = data[index + 1::]
+            index = data.find(',')
+            m_list.append(data[:index:])
+            data = data[index + 1::]
+            index = data.find(',')
+            m_list.append(int(data[:index:]))
+            data = data[index + 2::]
+            sub_list = []
+            while data.find(']') != 0:
+                index = data.find(',')
+                sub_list.append(data[:index:])
+                data = data[index + 1::]
+            m_list.append(sub_list)
+            data = data[3::]
+            sub_list = []
+            while data.find(']')!=0:
+                index=data.find(',')
+                sub_list.append(data[:index:])
+                data=data[index+1::]
+            m_list.append(sub_list)
+            data=data[2::]
+            m_list.append(data)
+            print(m_list)
+            self.Aspect_data =m_list
 
             data = file.readline()
             data = data[1:-1:]
@@ -234,7 +268,7 @@ class Save:
     def save(self):
         with open('Data/Files/Saves/SAVE.txt','w') as file:
             full_save_data=''
-            full_save_data+=str(self.game.Value.value)+'\n'
+            full_save_data+=str(self.game.Value.value.get_save())+'\n'
             full_save_data+=self.game.Counter_1.get_save()
             full_save_data += self.game.Counter_2.get_save()
             full_save_data+=self.game.Counter_3.get_save()
